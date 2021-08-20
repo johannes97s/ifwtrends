@@ -1,4 +1,3 @@
-setwd("~/Google Trends")
 library(tidyverse)
 library(gtrendsR)
 library(trendecon)
