@@ -3,6 +3,11 @@ library(gtrendsR)
 library(trendecon)
 library(openxlsx)
 
+
+dates <- seq.Date(from = as.Date( "2004-01-01"), to = as.Date("2021-08-01"), by = "month")
+
+
+####################Tibble mit Kategorien aus dem Paper erstellen
 cat_paper <- as_tibble(read.csv("Kategorien_Woloszko.csv", head = F))
 names(cat_paper) = "name"
 cat<- as_tibble(categories)
@@ -10,12 +15,9 @@ cat<- as_tibble(categories)
 cat_paper %>%
   left_join(cat, by = "name") %>%
   unique() -> cat_paper
+##################################################
 
-dates <- seq.Date(from = as.Date( "2004-01-01"), to = as.Date("2021-08-01"), by = "month")
-
-
-as_tibble(gtrends(geo = "DE", time = "all", category = c(47))$interest_over_time)
-
+##################Tibble mit Zeitreihen erstellen
 series <- tibble(date = dates)
 
 missing = NULL
@@ -32,16 +34,18 @@ series %>%
   pivot_longer(cols = -date, names_to = "id", values_to = "hits") -> series
 pc <- ts_pick(ts_prcomp(series), c("PC1", "PC2", "PC3", "PC4", "PC5"))
 
+#####Exportieren
+# series <- pivot_wider(series, names_from = id, values_from = hits)
+# pc <- rename(pivot_wider(pc, names_from = id, values_from = value), date = time)
+#
+# write.xlsx(left_join(pc, series, by = "date"), file = "Kategorien_und_PC.xlsx")
 
-series <- pivot_wider(series, names_from = id, values_from = hits)
-pc <- rename(pivot_wider(pc, names_from = id, values_from = value), date = time)
 
-write.xlsx(left_join(pc, series, by = "date"), file = "Kategorien_und_PC.xlsx")
-
-
+########plots
 ggplot(series, aes(x = date, y = hits, color = id)) +
   geom_line() +
   theme(legend.position = "none")
 
 ggplot(pc, aes(x = time, y = value, color = id)) +
   geom_line()
+####################################
