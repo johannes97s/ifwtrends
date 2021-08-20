@@ -6,10 +6,10 @@ library(corrr)
 library(lubridate)
 
 kw = c("Wirtschaftskrise", "Kurzarbeit", "arbeitslos", "Insolvenz")
-
+kw <- ind_activ
 ts_gtrends(
   keyword = kw,
-  geo = "DE",
+  geo = "US",
   time = "all"
 ) %>%
   filter(time >= as.Date("2006-01-01") & time <= as.Date("2021-06-01")) -> dat
