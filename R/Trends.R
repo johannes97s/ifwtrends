@@ -6,7 +6,7 @@ library(corrr)
 library(lubridate)
 
 kw = c("Wirtschaftskrise", "Kurzarbeit", "arbeitslos", "Insolvenz")
-kw <- ind_activ
+
 ts_gtrends(
   keyword = kw,
   geo = "US",

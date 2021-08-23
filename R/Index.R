@@ -6,6 +6,8 @@ library(openxlsx)
 library(corrr)
 library(lubridate)
 
+############################
+#Damit kann unter Angabe von
 g_index <- function(keywords = NA,
                     categories = 0,
                     end,
@@ -29,16 +31,6 @@ g_index <- function(keywords = NA,
       }
     }
   }
-  return(dat)
+  return(pivot_wider(ts_prcomp(dat), names_from = id, values_from = value))
 }
-g_index(categories = "651", end = "2021-01-01")
 
-
-dates = seq.Date(as.Date("2004-01-01"), as.Date("2021-01-01"), by = "month")
-t <- gtrends(keyword = c("Wirtschaftskrise"), geo = "DE", time = "all")$interest_over_time
-t %>%
-  mutate(date = as.Date(date)) %>%
-  select(date, keyword, value = hits) %>%
-  filter(date %in% dates) -> tt
-
-prcomp(ts_ts(tt)[-1])
