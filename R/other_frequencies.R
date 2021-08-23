@@ -7,4 +7,5 @@ library(corrr)
 library(lubridate)
 
 proc_keyword_init("arbeitslos", "DE")
+
 proc_index("arbeitslos", "DE", "arbeitslos_ind")
