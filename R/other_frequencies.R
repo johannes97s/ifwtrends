@@ -19,7 +19,7 @@ h <- function (keyword = "Insolvenz", geo = "CH")
   {
     if (length(keyword) > 1)
       stop("Only a single keyword is allowed.")
-    from <- "2016-01-01"
+    from <- "2020-01-01"
     d <- trendecon:::ts_gtrends_windows(keyword = keyword, geo = geo, from = from,
                             stepsize = "15 days", windowsize = "6 months",
                             n_windows = 348, wait = 20, retry = 10, prevent_window_shrinkage = TRUE)
@@ -27,7 +27,7 @@ h <- function (keyword = "Insolvenz", geo = "CH")
                                                                       length.out = 2, by = "-90 days")[2], stepsize = "1 day",
                              windowsize = "3 months", n_windows = 12, wait = 20,
                              retry = 10, prevent_window_shrinkage = FALSE)
-    dd <- aggregate_averages(aggregate_windows(d), aggregate_windows(d2))
+    dd <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(d), trendecon:::aggregate_windows(d2))
     w <- trendecon:::ts_gtrends_windows(keyword = keyword, geo = geo, from = from,
                             stepsize = "11 weeks", windowsize = "5 years",
                             n_windows = 68, wait = 20, retry = 10, prevent_window_shrinkage = TRUE)
@@ -35,22 +35,27 @@ h <- function (keyword = "Insolvenz", geo = "CH")
                                                                       length.out = 2, by = "-1 year")[2], stepsize = "1 week",
                              windowsize = "1 year", n_windows = 12, wait = 20,
                              retry = 10, prevent_window_shrinkage = FALSE)
-    ww <- aggregate_averages(aggregate_windows(w), aggregate_windows(w2))
+    ww <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(w), trendecon:::aggregate_windows(w2))
     m <- trendecon:::ts_gtrends_windows(keyword = keyword, geo = geo, from = from,
                             stepsize = "1 month", windowsize = "15 years",
                             n_windows = 12, wait = 20, retry = 10, prevent_window_shrinkage = FALSE)
     m2 <- trendecon:::ts_gtrends_windows(keyword = keyword, geo = geo, from = from,
                              stepsize = "1 month", windowsize = "20 years",
                              n_windows = 12, wait = 20, retry = 10, prevent_window_shrinkage = FALSE)
-    mm <- aggregate_averages(aggregate_windows(m), aggregate_windows(m2))
+    mm <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(m), trendecon:::aggregate_windows(m2))
     dd <- select(dd, -n)
     ww <- select(ww, -n)
     mm <- select(mm, -n)
-    print(dd)
+    #return(list(mm = mm, dd = dd, ww = ww))
     wd <- tempdisagg::td(ww ~ dd, method = "fast", conversion = "mean")
+    #return(list(mm = mm, dd = dd, ww = ww))
     wd <- predict(wd)
     mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
     mwd <- predict(mwd)
     mwd
 }
-h("arbeitslos", "DE")
+s <- h("arbeitslos", "DE")
+s1 <- h("arbeitslos", "DE")
+class(as.ts(s$ww))
+
+tempdisagg::td(s$ww[[2]] ~ as.ts(s$dd), method = "fast", conversion = "mean")
