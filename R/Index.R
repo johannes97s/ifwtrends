@@ -7,7 +7,9 @@ library(corrr)
 library(lubridate)
 
 ############################
-#Damit kann unter Angabe von
+
+
+
 pca <- function(keywords = NA,
                 categories = 0,
                 start = as.Date("2006-01-01"),
