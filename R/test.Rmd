@@ -1,0 +1,628 @@
+
+Skip to content
+
+    Why GitHub?
+                          
+
+
+                    
+Team
+Enterprise
+Explore
+                      
+
+                    
+Marketplace
+Pricing
+                       
+
+
+                        
+
+Sign in
+Sign up
+angelicambg /
+trendecon_presentation
+
+0
+
+    0
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+
+    Insights
+
+trendecon_presentation/trendecon.Rmd
+@angelicambg
+angelicambg spaces on the website slide
+Latest commit ce64cb0 on 29 May 2020
+History
+1 contributor
+565 lines (504 sloc) 16.4 KB
+---
+title: "trendEcon"
+subtitle: "Daily economic indicators based on Google searches"
+author: "<br>Angelica Becerra (ETH KOF)<br>Vera Z. Eichenauer (ETH KOF)<br>Ronald Indergand (SECO)<br>Stefan Legge (University of St.Gallen)<br>Isabel Martinez (ETH KOF, formerly SGB)<br>Nina Mühlebach (ETH KOF)<br>Furkan Oguz (ETH KOF)<br>Christoph Sax (cynkra)<br>Kristina Schuepbach (SGB and University of Bern)<br>Severin Thöni (ETH KOF)<br>Uwe Thümmel (University of Zurich)"
+date: "<br>pre-conference eRum2020::CovidR / 2020-05-29"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["css_files/shinobi.css", "css_files/ninpo.css", "css_files/ninjutsu.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+exclude: true
+<style type="text/css">
+code.r{
+  font-size: 16px;
+}
+pre {
+  font-size: 16px !important;
+}
+</style>
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(gtrendsR)
+library(ggplot2)
+library(tidyverse)
+library(trendecon)
+library(gtrendsR)
+library(widgetframe)
+```
+---
+class: bg-main1
+
+# Why trendEcon?
+<br><br>
+
+--
+### During the Covid-19 pandemic, information about the economic and social situation has changed rapidly. `r emo::ji("metrics")`
+<br><br>
+
+--
+### Traditional economic indicators have a significant .yellow[lag] of up to 3 months, and are .yellow[not sufficiently frequent] to monitor the economy and social activity at high frequency during times of rapid change `r emo::ji("clock")`
+<br><br>
+
+--
+### The project was initiated during the [#versusvirus](https://www.versusvirus.ch/) hackathon from April 3 to April 5.
+<br><br>
+
+---
+class: bg-main1
+
+# Our solution
+
+--
+### We use Google search trends to overcome this data gap and create meaningful indicators. 
+
+--
+### We extract daily search data on keywords reflecting consumers' perception.
+
+<img src="slide_img/gtrend_ex.gif" width=80%>
+
+---
+layout: true
+class: split-two with-border border-white
+
+.column[
+  .split-three[
+  .row.bg-main1[.content.font2[
+Indicators based on Google Trends.
+  ]]
+  .row.bg-main2[.content.font2[
+R package [trendecon](https://trendecon.github.io/trendecon/)
+  ]]
+  .row.bg-main3[.content.font2[
+Website [www.trendecon.org](https://www.trendecon.org/) using flexdashboard.
+]]
+]]
+
+.column.bg-main1[.content.center.vmiddle[
+{{content}}
+]]
+
+---
+class: hide-row2-col1 hide-row3-col1
+<img src="slide_img/trendecon.gif" width=100%>
+
+---
+class: hide-row3-col1
+<img src="slide_img/package.png" width=100%>
+
+---
+class:
+<img src="slide_img/web.png" width=100%>
+
+---
+class: fade-row2-col1 fade-row3-col1
+<img src="slide_img/trendecon.gif" width=100%>
+
+
+---
+layout: false
+class: bg-main1
+
+# General steps
+.blockquote.font_large[
+Use Google Trends data for keywords such as “Wirtschaftskrise” and “Insolvenz”. </br></br>
+]
+ 
+---
+class: bg-main1
+
+# General steps
+.blockquote.font_large[
+Use Google Trends data for keywords such as “Wirtschaftskrise” and “Insolvenz”. </br></br>
+Retrieve Google Trends data through the Google API.</br></br>
+]
+ 
+---
+class: bg-main1
+
+# General steps
+.blockquote.font_large[
+Use Google Trends data for keywords such as “Wirtschaftskrise” and “Insolvenz”. </br></br>
+Retrieve Google Trends  data through the Google API.</br></br>
+Construct indicators using PCA.</br></br>
+]
+ 
+---
+class: bg-main1
+
+# General steps
+.blockquote.font_large[
+Use Google Trends data for keywords such as “Wirtschaftskrise” and “Insolvenz”. </br></br>
+Retrieve Google Trends data through the Google API.</br></br>
+Construct indicators using PCA.</br></br>
+Compare the data to existing economic indicators.</br></br>
+]
+
+---
+class: middle bg-main1
+
+# It looks very simple....but
+
+<img src="slide_img/no.gif" width=50%>
+
+---
+class: bg-main1
+
+#Sampling issues
+##If you query Google Trends for a search term, e.g., insolvenz, the result is based on a subsample of all search results.
+</br>
+--
+```{r, echo=FALSE, fig.height=5, fig.width=15, message=FALSE, warning=FALSE}
+since2015 <- ts_gtrends("insolvenz", geo = "CH")
+since2004 <- ts_gtrends("insolvenz", geo = "CH", time = "all")
+tsbox::ts_plot(since2004,since2015)
+```
+--
+
+---
+class: bg-main1
+
+#Available data
+</br>
+##Google search results are available on a daily, weekly or monthly frequency; depending on the time window queried.
+</br>
+##Our goal is to produce long daily time series, ideally from 2006, but Google does not provide daily or weekly data for such a long time period. 
+
+---
+
+class: middle bg-main1
+
+# How did we solve this?
+</br>
+# You can check [www.trendecon.org/#method](https://www.trendecon.org/#method)
+</br>
+# We create the R package [trendecon](https://trendecon.github.io/trendecon/)
+</br>
+
+---
+class: split-two with-border border-white fade-row1-col1 fade-row3-col1
+.column[
+  .split-three[
+  .row.bg-main1[.content.font2[
+Indicators based on Google Trends.
+  ]]
+  .row.bg-main2[.content.font2[
+R package [trendecon](https://trendecon.github.io/trendecon/)
+  ]]
+  .row.bg-main3[.content.font2[
+Website .yellow[www.trendecon.org] using flexdashboard.
+]]
+]]
+.column.bg-main1[.content.center.vmiddle[
+<img src="slide_img/package.png" width=100%>
+]]
+
+---
+
+class: bg-main1
+#[trendecon](https://trendecon.github.io/trendecon/) package
+</br>
+</br>
+.font_large[
++ Construct long daily time series from Google Trends
+]
+---
+class: bg-main1
+#[trendecon](https://trendecon.github.io/trendecon/) package
+</br>
+</br>
+.font_large[
++ Construct long daily time series from Google Trends.
+</br>
+</br>
++ Robustness of the data is achieved by querying Google mulitple times.
+]
+
+---
+class: bg-main1
+#[trendecon](https://trendecon.github.io/trendecon/) package
+</br>
+</br>
+.font_large[
++ Construct long daily time series from Google Trends.
+</br>
+</br>
++ Robustness of the data is achieved by querying Google mulitple times.
+</br>
+</br>
++ The queries are sampled at daily, weekly and monthly frequencies and then harmonized such that the long term trend is preserved.
+]
+
+---
+class: bg-main1
+#[trendecon](https://trendecon.github.io/trendecon/) package
+</br>
+</br>
+.font_large[
++ Construct long daily time series from Google Trends.
+</br>
+</br>
++ Robustness of the data is achieved by querying Google mulitple times.
+</br>
+</br>
++ The queries are sampled at daily, weekly and monthy frequencies and then harmonized such that the long term trend is preserved.
+</br>
+</br>
++ The download itself relies on the [gtrendsR](https://cran.r-project.org/web/packages/gtrendsR/index.html) package by Philippe Massicotte and Dirk Eddelbuettel.
+]
+
+---
+class: bg-main1
+
+# Installation
+
+## You can install the trendecon package from GitHub.
+
+```{r, warning=FALSE, message=FALSE}
+# install.packages("remotes")
+remotes::install_github("trendecon/trendecon")
+```
+
+---
+class: bg-main1
+
+# Usage
+
+## To download a series from Google Trends:
+
+```{r,  warning=FALSE, fig.height=3.5, fig.width=15}
+x <- ts_gtrends("cinema", geo = "CH")
+#> Downloading data for today+5-y
+tsbox::ts_plot(x)
+```
+
+---
+class: split-25 bg-main1 fade-row2-col2 with-border
+
+.row[
+#Usage
+Same parameters as ``gtrendsR::gtrends()``.<br>But with ``trendecon::ts_gtrends()``  you will have independent downloads for each keyword.]
+.row[
+  .split-two.with-border[
+  .column.bg-main2[.content[
+.center[``gtrendsR::gtrends()``]
+```{r, eval=FALSE,message=FALSE, warning=FALSE}
+gtrends_dwload <- gtrends(keyword = c("theater","kino"), 
+                          geo = "CH", 
+                          time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(...)
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+gtrends_dwload <- gtrends(keyword = c("theater","kino"), geo = "CH", time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(
+  aes(date, hits, group = keyword, color = factor(keyword))
+) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+    ]]
+  .column.bg-main3[.content[
+.center[``trendecon::ts_gtrends()``]
+```{r,eval=FALSE,message=FALSE, warning=FALSE}
+trendecon_dwload <- ts_gtrends(keyword = c("theater","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) + ...
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+trendecon_dwload <- ts_gtrends(keyword = c("theater","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+  ]]
+]]
+
+---
+class: split-25 bg-main1 fade-row2-col1 with-border
+
+.row[
+#Usage
+Same parameters as ``gtrendsR::gtrends()``.<br>But with ``trendecon::ts_gtrends()``  you will have independent downloads for each keyword.]
+.row[
+  .split-two.with-border[
+  .column.bg-main2[.content[
+.center[``gtrendsR::gtrends()``]
+```{r, eval=FALSE,message=FALSE, warning=FALSE}
+gtrends_dwload <- gtrends(keyword = c("theater","kino"), 
+                          geo = "CH", 
+                          time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(...)
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+gtrends_dwload <- gtrends(keyword = c("theater","kino"), geo = "CH", time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(
+  aes(date, hits, group = keyword, color = factor(keyword))
+) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+    ]]
+  .column.bg-main3[.content[
+.center[``trendecon::ts_gtrends()``]
+```{r,eval=FALSE,message=FALSE, warning=FALSE}
+trendecon_dwload <- ts_gtrends(keyword = c("theater","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) + ...
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+trendecon_dwload <- ts_gtrends(keyword = c("theater","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+  ]]
+]]
+
+---
+class: split-25 bg-main1 fade-row2-col2 with-border
+
+.row[
+#Usage
+Independent download is important because you might end up with many zeros.]
+.row[
+  .split-two.with-border[
+  .column.bg-main2[.content[
+.center[``gtrendsR::gtrends()``]
+```{r, eval=FALSE,message=FALSE, warning=FALSE}
+gtrends_dwload <- gtrends(keyword = c("insolvenz","kino"), 
+                          geo = "CH", 
+                          time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(...)
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+gtrends_dwload <- gtrends(keyword = c("insolvenz","kino"), geo = "CH", time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(
+  aes(date, ifelse(is.na(as.numeric(hits)),0, as.numeric(hits)) , group = keyword, color = factor(keyword))
+) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+    ]]
+  .column.bg-main3[.content[
+.center[``trendecon::ts_gtrends()``]
+```{r,eval=FALSE,message=FALSE, warning=FALSE}
+trendecon_dwload <- ts_gtrends(keyword = c("insolvenz","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) + ...
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+trendecon_dwload <- ts_gtrends(keyword = c("insolvenz","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+  ]]
+]]
+
+---
+class: split-25 bg-main1 fade-row2-col1 with-border
+
+.row[
+#Usage
+Independent download is important because you might end up with many zeros.]
+.row[
+  .split-two.with-border[
+  .column.bg-main2[.content[
+.center[``gtrendsR::gtrends()``]
+```{r, eval=FALSE,message=FALSE, warning=FALSE}
+gtrends_dwload <- gtrends(keyword = c("insolvenz","kino"), 
+                          geo = "CH", 
+                          time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(...)
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+gtrends_dwload <- gtrends(keyword = c("insolvenz","kino"), geo = "CH", time = "today 12-m")
+gtrends_dwload$interest_over_time %>% ggplot(
+  aes(date, ifelse(is.na(as.numeric(hits)),0, as.numeric(hits)) , group = keyword, color = factor(keyword))
+) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+    ]]
+  .column.bg-main3[.content[
+.center[``trendecon::ts_gtrends()``]
+```{r,eval=FALSE,message=FALSE, warning=FALSE}
+trendecon_dwload <- ts_gtrends(keyword = c("insolvenz","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) + ...
+```
+```{r, echo=FALSE,message=FALSE, warning=FALSE, fig.height=4, fig.width=7.5}
+trendecon_dwload <- ts_gtrends(keyword = c("insolvenz","kino"),
+                               geo = "CH", 
+                               time = "today 12-m")
+tsbox::ts_ggplot(trendecon_dwload) +
+  geom_line() +
+  scale_color_viridis_d(end = .7, direction = -1) +
+  labs(x = "", y = "") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black"),
+    legend.position = "top",
+    legend.title = (element_blank())
+  )
+```
+  ]]
+]]
+
+---
+class: split-two with-border border-white fade-row1-col1 fade-row2-col1
+.column[
+  .split-three[
+  .row.bg-main1[.content.font2[
+Indicators based on Google Trends.
+  ]]
+  .row.bg-main2[.content.font2[
+R package [trendecon](https://trendecon.github.io/trendecon/)
+  ]]
+  .row.bg-main3[.content.font2[
+Website [www.trendecon.org](https://www.trendecon.org/) using flexdashboard.
+]]
+]]
+.column.bg-main1[.content.center.vmiddle[
+Indicators.
+<br><br>Data available online.
+<br><br>R package.<br><br>
+<img src="slide_img/web.png" width=100%>
+
+]]
+
+---
+class: middle bg-main1
+
+<img src="slide_img/thank_you.gif" width=50%>
+
+# [www.trendecon.org](https://www.trendecon.org/)
+
+    © 2021 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
+Loading complete
