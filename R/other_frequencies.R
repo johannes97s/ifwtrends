@@ -7,14 +7,14 @@ library(corrr)
 library(lubridate)
 
 
-proc_keyword_init("arbeitslos", "DE")
-proc_keyword_init("Hartz 4", "DE")
-proc_index("arbeitslos", "DE", "arbeitslos_ind")
-
-
-s <- ts_gtrends_mwd("amazon", "DE")
-
-
+# proc_keyword_init("arbeitslos", "DE")
+# proc_keyword_init("Hartz 4", "DE")
+# proc_index("arbeitslos", "DE", "arbeitslos_ind")
+#
+#
+# s <- ts_gtrends_mwd("amazon", "DE")
+#
+#
 
 
 keyword = c("arbeitslos")
@@ -108,4 +108,7 @@ wd <- predict(wd)
 mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
 mwd <- predict(mwd)
 
-
+write.xlsx(mwd, "mwd.xlsx")
+write.xlsx(wd, "wd.xlsx")
+write.xlsx(mm, "mm.xlsx")
+write.xlsx(ww, "ww.xlsx")
