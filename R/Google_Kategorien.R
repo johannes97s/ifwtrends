@@ -22,13 +22,13 @@ cat_paper %>%
 series <- tibble(date = dates)
 
 missing = NULL
-for (i in cat_paper$id){
+for (i in cat_paper$id[21:50]){
   g <- gtrends(geo = "DE", time = "all", category = i)$interest_over_time
-  if (is.null(g)) missing <- c(missing, cat_paper$name[cat_paper$id == i])
+  if (is.null(g)) missing <- c(missing, cat_paper$name[21:50][cat_paper$id[21:50] == i])
   else series <- bind_cols(series, i = g$hits)
 }
 
-names(series) <- c("date", setdiff(cat_paper$name, missing))
+names(series) <- c("date", setdiff(cat_paper$name[21:50], missing))
 
 
 series %>%
@@ -49,8 +49,7 @@ load <- prcomp(series[-1], scale. = T)$rotation[,1:5]
 ##########################################
 ########plots
 ggplot(series2, aes(x = date, y = hits, color = id)) +
-  geom_line() +
-  theme(legend.position = "none")
+  geom_line()
 
 ggplot(pc, aes(x = time, y = value, color = id)) +
   geom_line()
