@@ -88,6 +88,11 @@ ww %>%
   filter(week <= 52) %>%
   select(time, value) -> ww
 
+ww <-  ts_regular(ts_dts(ww)) %>% na.omit()
+
+
+
+
 mm %>%
   mutate(week = week(time), year = year(time)) %>%
   group_by(week, year) %>%
@@ -112,3 +117,6 @@ write.xlsx(mwd, "mwd.xlsx")
 write.xlsx(wd, "wd.xlsx")
 write.xlsx(mm, "mm.xlsx")
 write.xlsx(ww, "ww.xlsx")
+
+
+
