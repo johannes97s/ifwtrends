@@ -22,7 +22,7 @@ keyword = c("Wirtschaftskrise")
 geo = "DE"
 
 
-from <- "2006-01-01"
+from <- "2011-01-01"
 d <- trendecon:::ts_gtrends_windows(
   keyword = keyword,
   geo = geo,
@@ -124,23 +124,23 @@ mwd <- predict(mwd)
 s = 3+3
 
 mwd %>%
-  mutate(month = floor_date(time, "month")) %>%
+  mutate(month= floor_date(time, "month")) %>%
   group_by(month) %>%
   mutate(monthl_aggr = mean(value)) %>%
   ungroup() %>%
-  select(time,value,  monthl_aggr) %>%
-  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-26", retry = 10), by = "time") -> mwd_mon
+  select(-month) %>%
+  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2011-01-01 2021-08-26", retry = 10), by = "time") -> mwd_mon
 
 
 
 names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
 mwd_mon <- fill(mwd_mon, orig, .direction = "down")
 
+write.xlsx(mwd_mon, "data_Wirtschaftskrise_2006.xlsx")
 
 
 
-
-ggplot(fill(pivot_longer(mwd_mon2, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
+ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
   geom_line()
 
 correlate(mwd_mon$monthl_aggr, mwd_mon$orig)
