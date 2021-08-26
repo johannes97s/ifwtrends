@@ -120,26 +120,27 @@ wd <- predict(wd)
 mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
 mwd <- predict(mwd)
 
-write.xlsx(mwd, "mwd.xlsx")
-write.xlsx(wd, "wd.xlsx")
-write.xlsx(mm, "mm.xlsx")
-write.xlsx(ww, "ww.xlsx")
 
+s = 3+3
 
 mwd %>%
-  group_by(floor_date(time, "month")) %>%
-  mutate(monthl = mean(value)) %>%
+  mutate(month = floor_date(time, "month")) %>%
+  group_by(month) %>%
+  mutate(monthl_aggr = mean(value)) %>%
   ungroup() %>%
-  select(time, value, monthl) %>%
-  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2011-01-01 2021-08-25", retry = 5), by = "time")-> mwd_mon
+  select(time,value,  monthl_aggr) %>%
+  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-26", retry = 10), by = "time") -> mwd_mon
+
+
 
 names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
-mwd_mon
+mwd_mon <- fill(mwd_mon, orig, .direction = "down")
 
-ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
+
+
+
+
+ggplot(fill(pivot_longer(mwd_mon2, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
   geom_line()
 
-
-ts_gtrends(keyword = keyword, geo = geo, time = "2011-01-01 2021-08-25")
-
-correlate(mwd_mon$monthl, mwd_mon$value.x)
+correlate(mwd_mon$monthl_aggr, mwd_mon$orig)
