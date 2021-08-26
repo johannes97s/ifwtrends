@@ -18,14 +18,11 @@ library(zoo)
 #
 
 
-keyword = c("Wirtschaftskrise" , "arbeitslos")
+keyword = c("Wirtschaftskrise")
 geo = "DE"
 
 
-setHandleParameters(proxyhost = "159.8.114.37", proxyport = 8123)
-
-
-from <- "2011-01-01"
+from <- "2006-01-01"
 d <- trendecon:::ts_gtrends_windows(
   keyword = keyword,
   geo = geo,
@@ -44,7 +41,7 @@ d2 <- trendecon:::ts_gtrends_windows(
 )
 dd <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(d), trendecon:::aggregate_windows(d2))
 
-# download weakly series
+# download weekly series
 w <- trendecon:::ts_gtrends_windows(
   keyword = keyword,
   geo = geo,
@@ -69,7 +66,7 @@ m <- trendecon:::ts_gtrends_windows(
   geo = geo,
   from = from,
   stepsize = "1 month", windowsize = "15 years",
-  n_windows = 12, wait = 20, retry = 10,
+  n_windows = 1, wait = 20, retry = 10,
   prevent_window_shrinkage = FALSE
 )
 m2 <- trendecon:::ts_gtrends_windows(
@@ -77,7 +74,7 @@ m2 <- trendecon:::ts_gtrends_windows(
   geo = geo,
   from = from,
   stepsize = "1 month", windowsize = "20 years",
-  n_windows = 12, wait = 20, retry = 10,
+  n_windows = 1, wait = 20, retry = 10,
   prevent_window_shrinkage = FALSE
 )
 mm <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(m), trendecon:::aggregate_windows(m2))
@@ -128,20 +125,21 @@ write.xlsx(wd, "wd.xlsx")
 write.xlsx(mm, "mm.xlsx")
 write.xlsx(ww, "ww.xlsx")
 
+
 mwd %>%
-  mutate(time = floor_date(time, "month")) %>%
-  group_by(time) %>%
+  group_by(floor_date(time, "month")) %>%
   mutate(monthl = mean(value)) %>%
-  select(-value) %>%
-  unique() %>%
-  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-25", retry = 5), by = "time") %>%
-  left_join(mm, by = "time")-> mwd_mon
+  ungroup() %>%
+  select(time, value, monthl) %>%
+  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2011-01-01 2021-08-25", retry = 5), by = "time")-> mwd_mon
 
+names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
+mwd_mon
 
-ggplot(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value"), aes(x = time, y = value, color = id)) +
+ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
   geom_line()
 
 
-ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-25")
+ts_gtrends(keyword = keyword, geo = geo, time = "2011-01-01 2021-08-25")
 
 correlate(mwd_mon$monthl, mwd_mon$value.x)
