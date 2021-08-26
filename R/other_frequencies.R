@@ -5,6 +5,7 @@ library(tsbox)
 library(openxlsx)
 library(corrr)
 library(lubridate)
+library(zoo)
 
 
 # proc_keyword_init("arbeitslos", "DE")
@@ -17,10 +18,14 @@ library(lubridate)
 #
 
 
-keyword = c("arbeitslos")
+keyword = c("Wirtschaftskrise" , "arbeitslos")
 geo = "DE"
 
-from <- "2006-01-01"
+
+setHandleParameters(proxyhost = "159.8.114.37", proxyport = 8123)
+
+
+from <- "2011-01-01"
 d <- trendecon:::ts_gtrends_windows(
   keyword = keyword,
   geo = geo,
@@ -88,21 +93,26 @@ ww %>%
   filter(week <= 52) %>%
   select(time, value) -> ww
 
-ww <-  ts_regular(ts_dts(ww)) %>% na.omit()
+dd <- ts_regular(ts_dts(dd))
+dd$value <- 0.5*(na.locf(dd$value,fromLast =TRUE) + na.locf(dd$value))
 
 
+ww <-  ts_regular(ts_dts(ww))
+ww$value <- 0.5*(na.locf(ww$value,fromLast =TRUE) + na.locf(ww$value))
 
+mm <-  ts_regular(ts_dts(mm))
+mm$value <- 0.5*(na.locf(mm$value,fromLast =TRUE) + na.locf(mm$value))
 
-mm %>%
-  mutate(week = week(time), year = year(time)) %>%
-  group_by(week, year) %>%
-  mutate(value = mean(value)) %>%
-  ungroup() %>%
-  select( - time) %>%
-  filter(week <= 52) %>%
-  unique() %>%
-  bind_cols(time = ww$time) %>%
-  select(time, value)-> mm
+# mm %>%
+#   mutate(week = week(time), year = year(time)) %>%
+#   group_by(week, year) %>%
+#   mutate(value = mean(value)) %>%
+#   ungroup() %>%
+#   select( - time) %>%
+#   filter(week <= 52) %>%
+#   unique() %>%
+#   bind_cols(time = ww$time) %>%
+#   select(time, value)-> mm
 
 
 
@@ -118,5 +128,20 @@ write.xlsx(wd, "wd.xlsx")
 write.xlsx(mm, "mm.xlsx")
 write.xlsx(ww, "ww.xlsx")
 
+mwd %>%
+  mutate(time = floor_date(time, "month")) %>%
+  group_by(time) %>%
+  mutate(monthl = mean(value)) %>%
+  select(-value) %>%
+  unique() %>%
+  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-25", retry = 5), by = "time") %>%
+  left_join(mm, by = "time")-> mwd_mon
 
 
+ggplot(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value"), aes(x = time, y = value, color = id)) +
+  geom_line()
+
+
+ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-25")
+
+correlate(mwd_mon$monthl, mwd_mon$value.x)
