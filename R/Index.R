@@ -9,7 +9,8 @@ library(lubridate)
 ############################
 
 
-
+#'
+#'
 pca <- function(keywords = NA,
                 categories = 0,
                 start = as.Date("2006-01-01"),

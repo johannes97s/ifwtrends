@@ -8,24 +8,28 @@ library(lubridate)
 library(zoo)
 
 
-# proc_keyword_init("arbeitslos", "DE")
-# proc_keyword_init("Hartz 4", "DE")
-# proc_index("arbeitslos", "DE", "arbeitslos_ind")
-#
-#
-# s <- ts_gtrends_mwd("amazon", "DE")
-#
-#
+#'Konsistente taegliche Zeitreihe
+#'\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe
+#'@param keyword Der Suchbegriff. Bis jetzt nur einer möglich
+#'@param geo Region
+#'@param from Startdatum
+#'
+#'
+#'
+#'@return Tabelle der taeglichen Werten
+#'@examples
+#'daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")
+#'@export
 
-daily_series <- function(keyword = c("Wirtschaftskrise"),
-                         geo = "DE",
+daily_series <- function(keyword = c("IKEA"),
+                         geo = "NL",
                          from = "2006-01-01"){
   d <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
     from = from,
     stepsize = "15 days", windowsize = "6 months",
-    n_windows = 348, wait = 20, retry = 10,
+    n_windows = 100, wait = 20, retry = 10,
     prevent_window_shrinkage = TRUE
   )
   d2 <- trendecon:::ts_gtrends_windows(
@@ -86,16 +90,16 @@ daily_series <- function(keyword = c("Wirtschaftskrise"),
   #   mutate(week = week(time), year = year(time)) %>%
   #   filter(week <= 52) %>%
   #   select(time, value) -> ww
-
-  dd <- ts_regular(ts_dts(dd))
-  dd$value <- 0.5*(na.locf(dd$value,fromLast =TRUE) + na.locf(dd$value))
-
-
-  ww <-  ts_regular(ts_dts(ww))
-  ww$value <- 0.5*(na.locf(ww$value,fromLast =TRUE) + na.locf(ww$value))
-
-  mm <-  ts_regular(ts_dts(mm))
-  mm$value <- 0.5*(na.locf(mm$value,fromLast =TRUE) + na.locf(mm$value))
+#
+#   dd <- ts_regular(ts_dts(dd))
+#   dd$value <- 0.5*(na.locf(dd$value,fromLast =TRUE) + na.locf(dd$value))
+#
+#
+#   ww <-  ts_regular(ts_dts(ww))
+#   ww$value <- 0.5*(na.locf(ww$value,fromLast =TRUE) + na.locf(ww$value))
+#
+#   mm <-  ts_regular(ts_dts(mm))
+#   mm$value <- 0.5*(na.locf(mm$value,fromLast =TRUE) + na.locf(mm$value))
 
   # mm %>%
   #   mutate(week = week(time), year = year(time)) %>%
@@ -115,13 +119,14 @@ daily_series <- function(keyword = c("Wirtschaftskrise"),
 
   mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
   mwd <- predict(mwd)
-  mwd
+  as_tibble(mwd)
 }
 
+keyword = "IKEA"
+geo = "NL"
+from = "2006-01-01"
 
-
-
-mwd %>%
+t %>%
   mutate(month= floor_date(time, "month")) %>%
   group_by(month) %>%
   mutate(monthl_aggr = mean(value)) %>%

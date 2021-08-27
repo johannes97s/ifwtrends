@@ -5,16 +5,25 @@ library(tsbox)
 library(openxlsx)
 library(forecast)
 
-dat <- as_tibble(read.xlsx("~/ifwtrends/Kategorien_und_PC.xlsx", detectDates = T))
-s = summary(lm(dat[[3]] ~ dat[[7]], data = dat))
-s$r.squared
 
 
 f <- function(serie, i, dat){
   summary(lm(dat[[i+1]] ~ serie[[1]]))$r.squared
 }
 
+#'R2 der Regression der Serien auf die Faktoren
+#'\code(factorR2)
+#'
+#'@param series tibble mit den Zeitreihen als Spalten.
+#'@param factors tibble mit den Faktoren als Spalten.
+#'
+#'@return Tabelle der R^2 jeder Zeitreihe auf jeden Faktor
+#'@examples
+#'2+2
+#'@export
 factorR2 <- function(series, factors){
+  series <- select(series, -1)
+  factors <- select(factors, -1)
   R2 <- tibble()
   for (i in seq_along(factors)){
     f <- function(serie) {
