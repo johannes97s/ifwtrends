@@ -64,24 +64,24 @@ roll <- function(keywords = NA,
   pc
 }
 
-# keywords = c("abitur", "abiturnote", "NC")
-# start_series = as.Date("2004-01-01")
-# period <-  seq.Date(as.Date("2005-01-01"), as.Date("2006-01-01"), by = "month")
-# n = 212
-#   d <- as.Date("2015-01-01")
-#   pca(keywords = keywords, start = start_series, end = d) %>%
-#     select(-time) -> temp
-#   rest <- as_tibble(matrix(NA_real_, n - nrow(temp), 2))
-#   names(rest) <- str_c("PC",1:2)
-#   temp <- bind_rows(temp, rest)
-#   names(temp) <- str_c(names(temp), " to ", d)
-#   print(temp)
+keywords = c("abitur", "abiturnote", "NC")
+start_series = as.Date("2004-01-01")
+period <-  seq.Date(as.Date("2005-01-01"), as.Date("2006-01-01"), by = "month")
+n = 212
+d <- as.Date("2015-01-01")
+pca(keywords = keywords, start = start_series, end = d) %>%
+  select(-time) -> temp
+rest <- as_tibble(matrix(NA_real_, n - nrow(temp), 2))
+names(rest) <- str_c("PC",1:2)
+temp <- bind_rows(temp, rest)
+names(temp) <- str_c(names(temp), " to ", d)
+print(temp)
 
 
 # pca(keywords = c("abitur", "abiturnote", "NC"), end = "2021-01-01")
-# tb <- roll(keywords = c("abitur", "abiturnote", "NC"),
-#      start_period = "2007-01-01",
-#      end = "2008-01-01")
+tb <- roll(keywords = c("abitur", "abiturnote", "NC"),
+     start_period = "2007-01-01",
+     end = "2008-01-01")
 
 
 

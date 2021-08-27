@@ -1,11 +1,12 @@
 library(tidyverse)
 library(gtrendsR)
 library(trendecon)
+library(tsbox)
 library(openxlsx)
 library(corrr)
 library(lubridate)
 
-kw = c("Wirtschaftskrise", "Kurzarbeit", "arbeitslos", "Insolvenz")
+kw = c("Immobilienkredit", "Ikea", "Gebrauchtwagen", "Handy", "Auto kaufen", "Kredit")
 
 ts_gtrends(
   keyword = kw,
@@ -16,7 +17,7 @@ ts_gtrends(
 dat$time
 #################Index aus Paper importieren
 
-index_paper <-as.tibble(read.csv("https://raw.githubusercontent.com/trendecon/data/master/data/de/trendecon_sa.csv"))
+index_paper <-as_tibble(read.csv("https://raw.githubusercontent.com/trendecon/data/master/data/de/trendecon_sa.csv"))
 
 
 index_paper %>%
@@ -61,17 +62,17 @@ write.xlsx(tb, file = "Google_Index.xlsx")
 
 
 
-# pc <- pca(dat, start = "2014-01-01")$plt_data
-#
-# pc1 <- ts_pick(ts_prcomp(dat), "PC1")
-#
-# pc <- bind_rows(pc1, pc)
-#
-#
-# plt <- ggplot(pc, aes(x = time, y = value )) +
-#   geom_line(aes(color = id))
-#
-# plt
+pc <- pca(dat, start = "2014-01-01")$plt_data
+
+pc1 <- ts_pick(ts_prcomp(dat), "PC1")
+
+pc <- bind_rows(pc1, pc)
+
+
+plt <- ggplot(pc, aes(x = time, y = value )) +
+  geom_line(aes(color = id))
+
+plt
 
 ###################Daten Einlesen und aufbereiten
 
