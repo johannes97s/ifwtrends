@@ -1,5 +1,6 @@
 ^ifwtrends\.Rproj$
 ^\.Rproj\.user$
 ^Trends\.R$
-^Google_Kategorien\.R$
+^Google_Kategorien$
 ^data$
+^LICENSE$
