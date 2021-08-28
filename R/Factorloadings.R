@@ -6,7 +6,7 @@ library(openxlsx)
 library(forecast)
 
 
-
+#Hilfsfunktion
 f <- function(serie, i, dat){
   summary(lm(dat[[i+1]] ~ serie[[1]]))$r.squared
 }

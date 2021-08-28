@@ -9,7 +9,8 @@ library(zoo)
 
 
 #'Konsistente taegliche Zeitreihe
-#'\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe
+#'\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe.
+#'
 #'@param keyword Der Suchbegriff. Bis jetzt nur einer möglich
 #'@param geo Region
 #'@param from Startdatum
@@ -21,8 +22,8 @@ library(zoo)
 #'daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")
 #'@export
 
-daily_series <- function(keyword = c("IKEA"),
-                         geo = "NL",
+daily_series <- function(keyword = c("arbeitslos"),
+                         geo = "DE",
                          from = "2006-01-01"){
   d <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
@@ -122,30 +123,30 @@ daily_series <- function(keyword = c("IKEA"),
   as_tibble(mwd)
 }
 
-keyword = "IKEA"
-geo = "NL"
-from = "2006-01-01"
-
-t %>%
-  mutate(month= floor_date(time, "month")) %>%
-  group_by(month) %>%
-  mutate(monthl_aggr = mean(value)) %>%
-  ungroup() %>%
-  select(-month) %>%
-  left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-26", retry = 10), by = "time") -> mwd_mon
-
-
-
-names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
-mwd_mon <- fill(mwd_mon, orig, .direction = "down")
-
-write.xlsx(mwd_mon, "data_Wirtschaftskrise_2010.xlsx")
-
-
-
-ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
-  geom_line()
-
-correlate(mwd_mon$monthl_aggr, mwd_mon$orig)
-
-max(abs(mwd_mon$monthl_aggr - mwd_mon$orig))
+# keyword = "IKEA"
+# geo = "NL"
+# from = "2006-01-01"
+#
+# t %>%
+#   mutate(month= floor_date(time, "month")) %>%
+#   group_by(month) %>%
+#   mutate(monthl_aggr = mean(value)) %>%
+#   ungroup() %>%
+#   select(-month) %>%
+#   left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-26", retry = 10), by = "time") -> mwd_mon
+#
+#
+#
+# names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
+# mwd_mon <- fill(mwd_mon, orig, .direction = "down")
+#
+# write.xlsx(mwd_mon, "data_Wirtschaftskrise_2010.xlsx")
+#
+#
+#
+# ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
+#   geom_line()
+#
+# correlate(mwd_mon$monthl_aggr, mwd_mon$orig)
+#
+# max(abs(mwd_mon$monthl_aggr - mwd_mon$orig))
