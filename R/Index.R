@@ -10,7 +10,7 @@ library(lubridate)
 
 
 #'Hauptkomponenten aus Suchbegriffen oder Kategorien
-#'\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
+#'@description \code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
 #'
 #'@param keywords Eine character-Vektor mit dem Suchbegriffen
 #'@param categories Ein Numeric Vektor mit den Kategorien
@@ -55,7 +55,7 @@ pca <- function(keywords = NA,
 }
 
 #' Gibt pca fuer Backtesting zurueck
-#' \code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
+#'@description \code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
 #'
 #'@param keywords Eine character-Vektor mit dem Suchbegriffen
 #'@param categories Ein Numeric Vektor mit den Kategorien

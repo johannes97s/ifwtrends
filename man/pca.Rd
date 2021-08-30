@@ -2,8 +2,7 @@
 % Please edit documentation in R/Index.R
 \name{pca}
 \alias{pca}
-\title{Hauptkomponenten aus Suchbegriffen oder Kategorien
-\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatl Zeitreihen}
+\title{Hauptkomponenten aus Suchbegriffen oder Kategorien}
 \usage{
 pca(
   keywords = NA,
@@ -31,8 +30,7 @@ pca(
 Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 }
 \description{
-Hauptkomponenten aus Suchbegriffen oder Kategorien
-\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatl Zeitreihen
+\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
 }
 \examples{
 pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1

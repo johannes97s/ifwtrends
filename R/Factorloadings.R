@@ -11,8 +11,9 @@ f <- function(serie, i, dat){
   summary(lm(dat[[i+1]] ~ serie[[1]]))$r.squared
 }
 
-#'R2 der Regression der Serien auf die Faktoren
-#'\code(factorR2)
+#' R^2 der Regression der Serien auf die Faktoren
+#'@description \code{factorR2} gibt R2 der Regression der Serien auf die Faktoren als Tabelle aus.
+#'
 #'
 #'@param series tibble mit den Zeitreihen als Spalten.
 #'@param factors tibble mit den Faktoren als Spalten.
@@ -22,6 +23,7 @@ f <- function(serie, i, dat){
 #'@examples
 #'2+2
 #'@export
+#'
 factorR2 <- function(series, factors, plot = F){
   stopifnot("series muss führende Zeitspalte enthalten" = class(series[[1]]) == "Date")
   stopifnot("factors muss führende Zeitspalte enthalten" = class(factors[[1]]) == "Date")

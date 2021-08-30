@@ -2,17 +2,39 @@
 % Please edit documentation in R/Index.R
 \name{roll}
 \alias{roll}
-\title{Gibt}
+\title{Gibt pca fuer Backtesting zurueck}
 \usage{
 roll(
   keywords = NA,
   categories = 0,
+  geo = "DE",
   start_series = "2006-01-01",
   start_period = "2014-01-01",
   end = Sys.Date(),
   components = max(length(keywords), length(categories))
 )
 }
+\arguments{
+\item{keywords}{Eine character-Vektor mit dem Suchbegriffen}
+
+\item{categories}{Ein Numeric Vektor mit den Kategorien}
+
+\item{geo}{Die Region}
+
+\item{start_series}{Das Startdatum der Zeitreihen.}
+
+\item{start_period}{Das Startdatum des Ausgabefensters.}
+
+\item{end}{Das Enddatum der Zeitreihen.}
+
+\item{components}{Die gewünschte Anzahl an Hauptkomponenten.}
+}
+\value{
+Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
+}
 \description{
-Gibt
+\code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
+}
+\examples{
+roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1
 }

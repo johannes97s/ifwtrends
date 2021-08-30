@@ -2,8 +2,7 @@
 % Please edit documentation in R/other_frequencies.R
 \name{daily_series}
 \alias{daily_series}
-\title{Konsistente taegliche Zeitreihe
-\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe.}
+\title{Konsistente taegliche Zeitreihe}
 \usage{
 daily_series(keyword = c("arbeitslos"), geo = "DE", from = "2006-01-01")
 }
@@ -12,14 +11,15 @@ daily_series(keyword = c("arbeitslos"), geo = "DE", from = "2006-01-01")
 
 \item{geo}{Region}
 
-\item{from}{Startdatum}
+\item{from}{Startdatum
+
+Vorsicht, braucht sehr lange und verursacht viele Google-Suchanfragen.}
 }
 \value{
 Tabelle der taeglichen Werten
 }
 \description{
-Konsistente taegliche Zeitreihe
-\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe.
+\code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
 }
 \examples{
 daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")

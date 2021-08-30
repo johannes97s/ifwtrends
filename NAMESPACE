@@ -3,3 +3,4 @@
 export(daily_series)
 export(factorR2)
 export(pca)
+export(roll)

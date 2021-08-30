@@ -2,22 +2,22 @@
 % Please edit documentation in R/Factorloadings.R
 \name{factorR2}
 \alias{factorR2}
-\title{R2 der Regression der Serien auf die Faktoren
-\code(factorR2)}
+\title{R^2 der Regression der Serien auf die Faktoren}
 \usage{
-factorR2(series, factors)
+factorR2(series, factors, plot = F)
 }
 \arguments{
 \item{series}{tibble mit den Zeitreihen als Spalten.}
 
 \item{factors}{tibble mit den Faktoren als Spalten.}
+
+\item{plot}{plot=TRUE gibt zusätzlich einen Barplot der R2 aus.}
 }
 \value{
-Tabelle der R^2 jeder Zeitreihe auf jeden Faktor
+Tabelle der R^2 jeder Zeitreihe auf jeden Faktor. Wenn plot=T zusätzlich Plot.
 }
 \description{
-R2 der Regression der Serien auf die Faktoren
-\code(factorR2)
+\code{factorR2} gibt R2 der Regression der Serien auf die Faktoren als Tabelle aus.
 }
 \examples{
 2+2

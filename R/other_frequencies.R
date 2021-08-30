@@ -9,13 +9,14 @@ library(zoo)
 
 
 #'Konsistente taegliche Zeitreihe
-#'\code(daily_series) Schaetzt mit Chow-Lin eine lange taegliche Reihe.
+#'@description \code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
+#'
 #'
 #'@param keyword Der Suchbegriff. Bis jetzt nur einer möglich
 #'@param geo Region
 #'@param from Startdatum
 #'
-#'
+#'Vorsicht, braucht sehr lange und verursacht viele Google-Suchanfragen.
 #'
 #'@return Tabelle der taeglichen Werten
 #'@examples
