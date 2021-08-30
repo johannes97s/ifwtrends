@@ -23,4 +23,5 @@ Tabelle der taeglichen Werten
 }
 \examples{
 daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")
+
 }
