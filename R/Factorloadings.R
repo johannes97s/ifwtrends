@@ -35,16 +35,16 @@ factorR2 <- function(series, factors, plot = F){
     pivot_longer(factors, -date, names_to = "series", values_to = "value") -> pcomp
     pivot_longer(series, -date, names_to = "series", values_to = "value") -> series
     pivot_longer(res, -factors, names_to = "series", values_to = "R2")-> r2
-    r2 %>%
-      #filter(factors == "PC1") %>%
-      ggplot(aes(x = series, y = R2))+
-      geom_bar(stat = "identity")+
-      facet_wrap(~factors, ncol = 1)+
-      theme(axis.title.x = element_blank(),
-            axis.text.x = element_text(angle = 60, size = 6, vjust = 1, hjust=1))+
-      labs(title = "Bestimmtheitsmaß der Regression auf verschiedene Hauptkomponenten")+
-      scale_y_continuous(breaks=c(0, 0.5, 1))
-    return(res)
+    plt <- r2 %>%
+        #filter(factors == "PC1") %>%
+        ggplot(aes(x = series, y = R2))+
+        geom_bar(stat = "identity")+
+        facet_wrap(~factors, ncol = 1)+
+        theme(axis.title.x = element_blank(),
+              axis.text.x = element_text(angle = 60, size = 6, vjust = 1, hjust=1))+
+        labs(title = "Bestimmtheitsmaß der Regression auf verschiedene Hauptkomponenten")+
+        scale_y_continuous(breaks=c(0, 0.5, 1))
+    return(list(res = res, plot = plt))
   }
 }
 

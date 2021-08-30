@@ -23,7 +23,7 @@ daily_series <- function(keyword = c("arbeitslos"),
     geo = geo,
     from = from,
     stepsize = "15 days", windowsize = "6 months",
-    n_windows = 100, wait = 20, retry = 10,
+    n_windows = 350, wait = 20, retry = 10,
     prevent_window_shrinkage = TRUE
   )
   d2 <- trendecon:::ts_gtrends_windows(

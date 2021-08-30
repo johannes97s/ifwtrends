@@ -14,7 +14,7 @@
 #'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 #'@examples pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1
 #'
-#'@import tidyverse gtrendsR tsbox
+#'@import tidyverse gtrendsR tsbox lubridate
 #'@export
 
 pca <- function(keywords = NA,
@@ -42,7 +42,7 @@ pca <- function(keywords = NA,
       dat <- bind_rows(dat, temp)
     }
   }
-  pc <- pivot_wider(ts_prcomp(dat), names_from = id, values_from = value)[1:(components+1)]
+  pc <- bind_cols(date = dates, as_tibble(prcomp(ts_ts(dat))$x))
   dat <-select(pivot_wider(dat, names_from = key, values_from = value), -date)
   bind_cols(pc, dat)
 }
@@ -72,7 +72,7 @@ roll <- function(keywords = NA,
                  end = Sys.Date(),
                  components = max(length(keywords), length(categories))){
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
-  dates <- seq.Date(as.Date("2006-01-01"), as.Date(end), by = "month")
+  dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
   pc <- tibble(date = dates)
   n <- length(dates)#L?nge der ganzen Reihe
   for (i in period){
@@ -83,7 +83,7 @@ roll <- function(keywords = NA,
         geo = geo,
         end = d,
         components = components) %>%
-        select(-time) -> temp
+        select(-date) -> temp
     rest <- matrix(NA, n - nrow(temp), components)
     colnames(rest) <- str_c("PC", 1:components)
     rest <- as_tibble(rest)
@@ -93,3 +93,49 @@ roll <- function(keywords = NA,
   }
   pc
 }
+
+
+
+
+keywords = c("ikea", "saturn")
+categories = 0
+geo = "DE"
+start = "2006-01-01"
+end = Sys.Date()
+components = max(length(keywords), length(categories))
+  stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
+  dates = seq.Date(as.Date(start), as.Date(end), by = "month")
+  dat = tibble()
+  for (kw in keywords){
+    for (cat in categories){
+      as_tibble(gtrends(
+        keyword = kw,
+        category = cat,
+        geo = geo,
+        time = "all")$interest_over_time) -> temp
+      if (NROW(temp) == 0) stop(str_c("Keine Daten für Kategorie ", cat))
+      if ("keyword" %in% names(temp)) temp <- select(temp, -category)
+      temp %>%
+        mutate(date = as_date(date)) %>%
+        select(date, key = any_of(c("keyword", "category")), value = hits) %>%
+        filter(date %in% dates) -> temp
+      dat <- bind_rows(dat, temp)
+    }
+  }
+
+
+  bind_cols(date = dates, as_tibble(prcomp(ts_ts(dat))$x))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
