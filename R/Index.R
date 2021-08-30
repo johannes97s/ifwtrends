@@ -10,7 +10,7 @@ library(lubridate)
 
 
 #'Hauptkomponenten aus Suchbegriffen oder Kategorien
-#'\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatl Zeitreihen
+#'\code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
 #'
 #'@param keywords Eine character-Vektor mit dem Suchbegriffen
 #'@param categories Ein Numeric Vektor mit den Kategorien
@@ -19,7 +19,7 @@ library(lubridate)
 #'@param end Das Enddatum der Zeitreihen.
 #'@param components Die gewünschte Anzahl an Hauptkomponenten.
 #'
-#'@retrun Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
+#'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 #'@examples pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1
 #'
 #'@export
@@ -54,10 +54,25 @@ pca <- function(keywords = NA,
   bind_cols(pc, dat)
 }
 
-#' Gibt
+#' Gibt pca fuer Backtesting zurueck
+#' \code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
+#'
+#'@param keywords Eine character-Vektor mit dem Suchbegriffen
+#'@param categories Ein Numeric Vektor mit den Kategorien
+#'@param geo Die Region
+#'@param start_series Das Startdatum der Zeitreihen.
+#'@param start_period Das Startdatum des Ausgabefensters.
+#'@param end Das Enddatum der Zeitreihen.
+#'@param components Die gewünschte Anzahl an Hauptkomponenten.
+#'
+#'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
+#'
+#'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1
+#'@export
 
 roll <- function(keywords = NA,
                  categories = 0,
+                 geo = "DE",
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
                  end = Sys.Date(),
@@ -71,6 +86,7 @@ roll <- function(keywords = NA,
     pca(keywords = keywords,
         categories = categories,
         start = start_series,
+        geo = geo,
         end = d,
         components = components) %>%
         select(-time) -> temp
