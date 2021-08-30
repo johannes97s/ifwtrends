@@ -1,11 +1,3 @@
-library(tidyverse)
-library(gtrendsR)
-library(trendecon)
-library(tsbox)
-library(openxlsx)
-library(forecast)
-
-
 #Hilfsfunktion
 f <- function(serie, i, dat){
   summary(lm(dat[[i+1]] ~ serie[[1]]))$r.squared
@@ -22,7 +14,9 @@ f <- function(serie, i, dat){
 #'@return Tabelle der R^2 jeder Zeitreihe auf jeden Faktor. Wenn plot=T zusätzlich Plot.
 #'@examples
 #'2+2
+#'@import tidyverse
 #'@export
+#'
 #'
 factorR2 <- function(series, factors, plot = F){
   stopifnot("series muss führende Zeitspalte enthalten" = class(series[[1]]) == "Date")

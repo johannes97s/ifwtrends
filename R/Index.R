@@ -1,11 +1,3 @@
-library(tidyverse)
-library(gtrendsR)
-library(trendecon)
-library(tsbox)
-library(openxlsx)
-library(corrr)
-library(lubridate)
-
 ############################
 
 
@@ -22,6 +14,7 @@ library(lubridate)
 #'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 #'@examples pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1
 #'
+#'@import tidyverse gtrendsR tsbox
 #'@export
 
 pca <- function(keywords = NA,
@@ -68,6 +61,7 @@ pca <- function(keywords = NA,
 #'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
 #'
 #'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1
+#'@import tidyverse
 #'@export
 
 roll <- function(keywords = NA,

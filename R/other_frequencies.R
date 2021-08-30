@@ -1,13 +1,3 @@
-library(tidyverse)
-library(gtrendsR)
-library(trendecon)
-library(tsbox)
-library(openxlsx)
-library(corrr)
-library(lubridate)
-library(zoo)
-
-
 #'Konsistente taegliche Zeitreihe
 #'@description \code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
 #'
@@ -21,6 +11,8 @@ library(zoo)
 #'@return Tabelle der taeglichen Werten
 #'@examples
 #'daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")
+#'
+#'@import tidyverse gtrendsR trendecon tsbox lubridate zoo
 #'@export
 
 daily_series <- function(keyword = c("arbeitslos"),
