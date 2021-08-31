@@ -1,0 +1,87 @@
+---
+title: "Vignette ifwtrends"
+author: ""
+date: "30.8.2021"
+output:
+  pdf_document: default
+  html_document: default
+vignette: >
+  %\VignetteIndexEntry{ifwtrends}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE,
+                      comment = "#>")
+library(ifwtrends)
+```
+
+# Funktionen
+## pca
+Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeireihen). Für die Zeitreihen wird hier momentan monatliche Frequenz angenommen.
+
+
+```{r message=FALSE}
+pca(keywords = c("ikea", "saturn"),
+    categories = 0,
+    geo = "DE",
+    start = "2006-01-01",
+    end = Sys.Date(),
+    components = max(length(keywords), length(categories)))
+
+pca(keywords = NA,
+    categories = c(651),
+    geo = "DE",
+    start = "2006-01-01",
+    end = Sys.Date(),
+    components = max(length(keywords), length(categories)))
+  
+  
+```
+
+## roll
+Roll gibt pca für jeden Zeitpunkt in einem Zeitfenster neu an.
+Dies gibt eine Tabelle mit den Zeitpunkten im Zeitfenster `start_period` bis `end` zurück.
+In jeder Spalte ist dann die Ausgabe von pca, wobei `end` der jeweilige Zeitpunkt im Zeitfenster ist. Die restlichen Zeilen zum Tabellenende sind `NA`s. Dies kann insb zur Prognoseevaluation genutzt werden.
+Sowohl `pca` als auch `roll` könnten bei Bedarf umgeschrieben werden, sodass statt den Hauptkomponenten andere Faktoren berechnet werden
+
+```{r message=FALSE}
+roll(keywords = "ikea",
+     geo = "DE",
+     start_series = "2006-01-01",
+     start_period = "2006-05-01",
+     end = "2006-12-01")
+
+```
+
+## daily_series
+
+Für lange Zeitfenster liegen keine täglichen Daten vor sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit Chow-Lin für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluierung steht hier aber noch aus, ist jedoch wegen dem noch nicht gelösten IP-Problem momentan nicht durchführbar. 
+
+```{r message=FALSE}
+daily_series(keyword = c("arbeitslos"),
+             geo = "DE",
+             from = "2021-01-01")
+```
+
+## factorR2
+
+Für schon berechnete Faktoren `factors` aus Zeitreihen `series` ist dies eine Methode, die Erklärungskraft der Faktoren zu bestimmen. Dabei wird für jeden Faktor eine Regression auf jede Zeitreihe vorgenommen und das jeweilige $R^2$ in einer Tabelle abgetragen. Mit Wahl des Parameters `plot=TRUE` wird zusätzlich ein Barplot ausgegeben.
+
+```{r, fig.width = 7, fig.asp = 1}
+
+dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
+    categories = 0,
+    geo = "DE",
+    start = "2006-01-01",
+    end = Sys.Date(),
+    components = max(length(keywords), length(categories)))
+
+series <- dat %>% select(date, 6:9)
+factors <- dat %>% select(date, 2:5)
+
+factorR2(series, factors, plot = T)
+```
+
+
