@@ -52,23 +52,31 @@
 #'ser_adj(series, trend = T, trend_method = "firstdiff")
 #'
 #'@export
-ser_adj <- function(series, trend = T, seas = T, trend_method = "firstdiff"){
-  if (!("id" %in% names(series))) mutate(series, id = "id")
+ser_adj <- function(series, trend = T, seas = T, trend_method = "firstdiff", seas_method = "firsdiff"){
   series <- mutate(series, value = log(value))
+  if(seas && seas_method == "arima"){
+    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
+    series %>%
+      group_by(id) %>%
+      mutate(value = seasonal::final(seasonal::seas()))
+  }
   if(trend && trend_method == "firstdiff"){
+    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- series %>%
       group_by(id) %>%
-      mutate(FD_1 = c(0, diff(value))) %>%
+      mutate(value = c(0, diff(value))) %>%
       ungroup()
   }
   if(trend && trend_method == "comtrend"){
-    fit <- lm(value ~ id -1 +poly(as.numeric(time), 5, raw = T), data = series)
-    series <- bind_cols(series, adj = fit$residuals)
+    if (("id" %in% names(series))) fit <- lm(value ~ id -1 +poly(as.numeric(time), 3, raw = T), data = series)
+    else fit <- lm(value ~ +poly(as.numeric(time), 3, raw = T), data = series)
+    series <- mutate(series, value = fit$residuals)
   }
-  if(seas){
+  if(seas && seas_method = "firstdiff"){
+    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- series %>%
       group_by(id) %>%
-      mutate(FD_12 = c(rep(0,12), diff(value, 12)))
+      mutate(value = c(rep(0,4), diff(value, 4)))
   }
   series
 }

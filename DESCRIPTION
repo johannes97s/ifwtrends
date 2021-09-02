@@ -24,4 +24,5 @@ Imports:
     corrr,
     trendecon,
     openxlsx,
-    lubridate
+    lubridate,
+    seasonal
