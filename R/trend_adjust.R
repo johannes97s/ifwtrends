@@ -50,15 +50,14 @@
 #'@example
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
 #'ser_adj(series, trend = T, trend_method = "firstdiff")
-#'
+#'@import tidyverse gtrendsR tsbox seasonal zoo
 #'@export
 ser_adj <- function(series, trend = T, seas = T, trend_method = "firstdiff", seas_method = "firsdiff"){
   series <- mutate(series, value = log(value))
   if(seas && seas_method == "arima"){
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
-    series %>%
-      group_by(id) %>%
-      mutate(value = seasonal::final(seasonal::seas()))
+    series <- as.list(ts_ts(series))
+    series <- ts_tbl(final(seas(series)))
   }
   if(trend && trend_method == "firstdiff"){
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
@@ -72,7 +71,7 @@ ser_adj <- function(series, trend = T, seas = T, trend_method = "firstdiff", sea
     else fit <- lm(value ~ +poly(as.numeric(time), 3, raw = T), data = series)
     series <- mutate(series, value = fit$residuals)
   }
-  if(seas && seas_method = "firstdiff"){
+  if(seas && seas_method == "firstdiff"){
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- series %>%
       group_by(id) %>%
@@ -80,3 +79,8 @@ ser_adj <- function(series, trend = T, seas = T, trend_method = "firstdiff", sea
   }
   series
 }
+
+
+
+all <- ts_gtrends(keyword = NA, category = c(651,330), time = "all")
+
