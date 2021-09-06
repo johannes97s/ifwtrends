@@ -34,19 +34,4 @@ plot(g_dat$time, g_dat$value, type = "l")
 x <- g_dat$value[-(1:4)]
 y <- dat$value[-(1:4)]
 
-ccf(x,y, lag = 2, type = "correlation", plot = F)
 
-
-plot(lag(x),y)
-
-summary(lm(y~lag(x)))
-
-
-
-
-df <- tibble(x = x, y = y) %>%
-  filter(abs(x) < quantile(abs(x), 0.95) & abs(y) < quantile(abs(y), 0.95))
-
-summary(lm(y~x, data = df))
-
-plot(df)
