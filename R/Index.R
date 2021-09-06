@@ -95,40 +95,40 @@ roll <- function(keywords = NA,
 }
 
 
-
-
-keywords = c("ikea", "saturn")
-categories = 0
-geo = "DE"
-start = "2006-01-01"
-end = Sys.Date()
-components = max(length(keywords), length(categories))
-  stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
-  dates = seq.Date(as.Date(start), as.Date(end), by = "month")
-  dat = tibble()
-  for (kw in keywords){
-    for (cat in categories){
-      as_tibble(gtrends(
-        keyword = kw,
-        category = cat,
-        geo = geo,
-        time = "all")$interest_over_time) -> temp
-      if (NROW(temp) == 0) stop(str_c("Keine Daten für Kategorie ", cat))
-      if ("keyword" %in% names(temp)) temp <- select(temp, -category)
-      temp %>%
-        mutate(date = as_date(date)) %>%
-        select(date, key = any_of(c("keyword", "category")), value = hits) %>%
-        filter(date %in% dates) -> temp
-      dat <- bind_rows(dat, temp)
-    }
-  }
-
-
-  bind_cols(date = dates, as_tibble(prcomp(ts_ts(dat))$x))
-
-
-
-
+#
+#
+# keywords = c("ikea", "saturn")
+# categories = 0
+# geo = "DE"
+# start = "2006-01-01"
+# end = Sys.Date()
+# components = max(length(keywords), length(categories))
+#   stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
+#   dates = seq.Date(as.Date(start), as.Date(end), by = "month")
+#   dat = tibble()
+#   for (kw in keywords){
+#     for (cat in categories){
+#       as_tibble(gtrends(
+#         keyword = kw,
+#         category = cat,
+#         geo = geo,
+#         time = "all")$interest_over_time) -> temp
+#       if (NROW(temp) == 0) stop(str_c("Keine Daten für Kategorie ", cat))
+#       if ("keyword" %in% names(temp)) temp <- select(temp, -category)
+#       temp %>%
+#         mutate(date = as_date(date)) %>%
+#         select(date, key = any_of(c("keyword", "category")), value = hits) %>%
+#         filter(date %in% dates) -> temp
+#       dat <- bind_rows(dat, temp)
+#     }
+#   }
+#
+#
+#   bind_cols(date = dates, as_tibble(prcomp(ts_ts(dat))$x))
+#
+#
+#
+#
 
 
 

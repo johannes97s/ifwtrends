@@ -53,12 +53,12 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'seas_adj(series, freq = "month, log.traf = T, method = "firstdiff")
 #'@import tidyverse gtrendsR tsbox seasonal zoo
 #'@export
-seas_adj <-function(series, freq = "month", log.traf = F, method = "arima"){
+seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
   if(method == "arima"){                      #Saisonbereinigung mit X-13 ARIMA
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- as.list(ts_ts(series))
-    series <- ts_tbl(final(seas(series)))
+    series <- ts_tbl(seasonal::final(seasonal::seas(series)))
   }
   if(method == "firstdiff"){     #Saisonbereinigung mit ersten Differenzen mit lag = 4
                                  #da gerade Quartalsdaten. Fuer monatsdaten lag = 12
@@ -67,9 +67,8 @@ seas_adj <-function(series, freq = "month", log.traf = F, method = "arima"){
     if (freq == "quarter") k = 4
     series <- series %>%
       group_by(id) %>%
-      mutate(value = c(rep(0,k), diff(value, k))) #Wenn Monatsdaten hier 12 statt 4
+      mutate(value = c(rep(0,k), diff(value, k))) %>% #Wenn Monatsdaten hier 12 statt 4
+      ungroup()
   }
   series
 }
-
-
