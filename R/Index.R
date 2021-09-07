@@ -70,49 +70,59 @@ roll <- function(keywords = NA,
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
                  end = Sys.Date(),
-                 pc = F,
-                 components = max(length(keywords), length(categories))){
+                 fun){
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
-  dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
-  pc <- tibble(date = dates)
-  n <- length(dates)#L?nge der ganzen Reihe
-  if (pc){
-    for (i in period){
-      d <- as.Date(i, origin = "1970-01-01")
-      pca(keywords = keywords,
-          categories = categories,
-          start = start_series,
-          geo = geo,
-          end = d,
-          components = components) %>%
-          select(-date) -> temp
-      rest <- matrix(NA, n - nrow(temp), components)
-      colnames(rest) <- str_c("PC", 1:components)
-      rest <- as_tibble(rest)
-      temp <- bind_rows(temp, rest)
-      names(temp) <- str_c(names(temp), " to ", d)
-      pc <- bind_cols(pc, temp)
-    }
-  }
-  if (!pc){
-    for (i in period){
-      d <- as.Date(i, origin = "1970-01-01")
-      pca(keywords = keywords,
-          categories = categories,
-          start = start_series,
-          geo = geo,
-          end = d,
-          components = components) %>%
-        select(-date) -> temp
-      rest <- matrix(NA, n - nrow(temp), components)
-      colnames(rest) <- str_c("ser", 1:components)
-      rest <- as_tibble(rest)
-      temp <- bind_rows(temp, rest)
-      names(temp) <- str_c(names(temp), " to ", d)
-      pc <- bind_cols(pc, temp)
-    }
-  }
-  pc
+  n <- length(seq.Date(as.Date(start_series), as.Date(end), by = "month"))
+  tb <- lapply(period, fun())
+  f <- function(d) fun(keywords = keywords,
+                       categories = categories,
+                       geo = geo,
+                       end = d)
+  tl <- lapply(period, f)
+  tl <- lapply(tl, function(x){
+                        rest <- matrix(NA, n - nrow(x), 1)
+                        colnames(rest) <- "value"
+                        rest <- as_tibble(rest)
+                        bind_rows(x, as_tibble(rest))} )
+
+  as_tibble(tl, .name_repair = "universal")
+  # if (pc){
+  #   for (i in period){
+  #     d <- as.Date(i, origin = "1970-01-01")
+  #     pca(keywords = keywords,
+  #         categories = categories,
+  #         start = start_series,
+  #         geo = geo,
+  #         end = d,
+  #         components = components) %>%
+  #         select(-date) -> temp
+  #     rest <- matrix(NA, n - nrow(temp), components)
+  #     colnames(rest) <- str_c("PC", 1:components)
+  #     rest <- as_tibble(rest)
+  #     temp <- bind_rows(temp, rest)
+  #     names(temp) <- str_c(names(temp), " to ", d)
+  #     pc <- bind_cols(pc, temp)
+  #   }
+  # }
+  # if (!pc){
+  #   for (i in period){
+  #     d <- as.Date(i, origin = "1970-01-01")
+  #     pca(keywords = keywords,
+  #         categories = categories,
+  #         start = start_series,
+  #         geo = geo,
+  #         end = d,
+  #         components = components) %>%
+  #       select(-date) -> temp
+  #     rest <- matrix(NA, n - nrow(temp), components)
+  #     colnames(rest) <- str_c("ser", 1:components)
+  #     rest <- as_tibble(rest)
+  #     temp <- bind_rows(temp, rest)
+  #     names(temp) <- str_c(names(temp), " to ", d)
+  #     pc <- bind_cols(pc, temp)
+  #   }
+  # }
+  # pc
 }
 
 
@@ -153,10 +163,18 @@ roll <- function(keywords = NA,
 
 
 
+f<-function(d){
+  ts_gtrends(keyword = "ikea",
+          time = str_c("2006-01-01 ", d))
+}
 
 
+tl <- lapply(tl, function(x){
+                        rest <- matrix(NA, 106 - nrow(x), 1)
+                        colnames(rest) <- "value"
+                        rest <- as_tibble(rest)
+                        bind_rows(x, as_tibble(rest))} )
 
-
-
+as_tibble(tl, .name_repair = "universal")
 
 

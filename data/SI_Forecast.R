@@ -147,3 +147,44 @@ xyplot(dat~ lag(s1), data = fd_tb, type = c("p","r"), col.line = "red")
 
 
 
+
+g_dat2 <- ts_gtrends(keyword = keywords,
+                     category = 0,
+                     geo = "DE",
+                     time = str_c("2006-01-01 ", end)) %>%
+  mutate(value = log(value))
+#g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
+
+g_dat <- g_dat2 %>%
+  left_join(fit, by = "time") %>%
+  mutate(time = as.yearqtr(time)) %>%
+  group_by(time, id) %>%
+  mutate(value = mean(value), fit = mean(fit)) %>%
+  ungroup() %>%
+  unique() %>%
+  mutate(time = as.Date(time)) %>%
+  filter(time <= max(dat$time)) %>%
+  mutate(adj = value - fit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
