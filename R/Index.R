@@ -70,26 +70,47 @@ roll <- function(keywords = NA,
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
                  end = Sys.Date(),
+                 pc = F,
                  components = max(length(keywords), length(categories))){
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
   dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
   pc <- tibble(date = dates)
   n <- length(dates)#L?nge der ganzen Reihe
-  for (i in period){
-    d <- as.Date(i, origin = "1970-01-01")
-    pca(keywords = keywords,
-        categories = categories,
-        start = start_series,
-        geo = geo,
-        end = d,
-        components = components) %>%
+  if (pc){
+    for (i in period){
+      d <- as.Date(i, origin = "1970-01-01")
+      pca(keywords = keywords,
+          categories = categories,
+          start = start_series,
+          geo = geo,
+          end = d,
+          components = components) %>%
+          select(-date) -> temp
+      rest <- matrix(NA, n - nrow(temp), components)
+      colnames(rest) <- str_c("PC", 1:components)
+      rest <- as_tibble(rest)
+      temp <- bind_rows(temp, rest)
+      names(temp) <- str_c(names(temp), " to ", d)
+      pc <- bind_cols(pc, temp)
+    }
+  }
+  if (!pc){
+    for (i in period){
+      d <- as.Date(i, origin = "1970-01-01")
+      pca(keywords = keywords,
+          categories = categories,
+          start = start_series,
+          geo = geo,
+          end = d,
+          components = components) %>%
         select(-date) -> temp
-    rest <- matrix(NA, n - nrow(temp), components)
-    colnames(rest) <- str_c("PC", 1:components)
-    rest <- as_tibble(rest)
-    temp <- bind_rows(temp, rest)
-    names(temp) <- str_c(names(temp), " to ", d)
-    pc <- bind_cols(pc, temp)
+      rest <- matrix(NA, n - nrow(temp), components)
+      colnames(rest) <- str_c("ser", 1:components)
+      rest <- as_tibble(rest)
+      temp <- bind_rows(temp, rest)
+      names(temp) <- str_c(names(temp), " to ", d)
+      pc <- bind_cols(pc, temp)
+    }
   }
   pc
 }

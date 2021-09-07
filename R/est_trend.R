@@ -13,7 +13,7 @@ library(zoo)
 
 
 
-end = "2019-12-31"
+end = Sys.Date
 dates <- seq.Date(from = as.Date( "2006-01-01"), to = as.Date(end), by = "month")
 
 series <- tibble(date = dates)
@@ -30,10 +30,10 @@ for (i in cat_samp){
 }
 
 series <- series %>%
-  #pivot_longer( cols = -date, names_to = "id", values_to = "value") %>%
+  pivot_longer( cols = -date, names_to = "id", values_to = "value") %>%
   mutate(value = log(value))
 
-#openxlsx::write.xlsx(series, "~/ifwtrends/data/cat_sample_Q42019.xlsx")
+openxlsx::write.xlsx(series, "~/ifwtrends/data/cat_sample_Q32021.xlsx")
 #series <- readxl::read_excel("cat_sample_Q42019.xlsx")
 
 series<-arrange(series, id)
@@ -51,5 +51,5 @@ trend_1003 <- series %>%
   filter(id == "1003") %>%
   select(-value)
 
-openxlsx::write.xlsx(trend_67, "~/ifwtrends/data/trend_67.xlsx")
-openxlsx::write.xlsx(trend_1003, "~/ifwtrends/data/trend_1003.xlsx")
+openxlsx::write.xlsx(trend_67, "~/ifwtrends/data/trend_67_0921.xlsx")
+openxlsx::write.xlsx(trend_1003, "~/ifwtrends/data/trend_1003_0921.xlsx")
