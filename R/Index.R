@@ -64,22 +64,24 @@ pca <- function(keywords = NA,
 #'@import tidyverse
 #'@export
 
-roll <- function(keywords = NA,
-                 categories = 0,
+roll <- function(keyword = NA,
+                 category = 0,
                  geo = "DE",
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
                  end = Sys.Date(),
-                 fun){
+                 fun = trendecon::ts_gtrends){
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
-  n <- length(seq.Date(as.Date(start_series), as.Date(end), by = "month"))
-  tb <- lapply(period, fun())
-  f <- function(d) fun(keywords = keywords,
-                       categories = categories,
+  dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
+  n <- length(dates)
+  print(keyword)
+  f <- function(d) fun(keyword = keyword,
+                       category = category,
                        geo = geo,
-                       end = d)
+                       time = stringr::str_c(start_series," ", d))
   tl <- lapply(period, f)
   tl <- lapply(tl, function(x){
+                        select(x, -time)
                         rest <- matrix(NA, n - nrow(x), 1)
                         colnames(rest) <- "value"
                         rest <- as_tibble(rest)
@@ -163,12 +165,14 @@ roll <- function(keywords = NA,
 
 
 
-f<-function(d){
+f<-function(k){
   ts_gtrends(keyword = "ikea",
-          time = str_c("2006-01-01 ", d))
+          time = str_c("2006-01-01 ", "2009-01-01"))
 }
 
+keywords = c("ikea", "saturn")
 
+tl <- lapply(keywords, f)
 tl <- lapply(tl, function(x){
                         rest <- matrix(NA, 106 - nrow(x), 1)
                         colnames(rest) <- "value"
