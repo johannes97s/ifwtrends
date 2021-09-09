@@ -59,7 +59,7 @@ seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- as.list(ts_ts(series))
     series <- ts_tbl(seasonal::final(seasonal::seas(series,
-                                                    transform.function = "none")))
+                                                    transform.function = "none"))
   }
   if(method == "firstdiff"){     #Saisonbereinigung mit ersten Differenzen mit lag = 4
                                  #da gerade Quartalsdaten. Fuer monatsdaten lag = 12

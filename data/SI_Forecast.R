@@ -55,11 +55,12 @@ g_index <- function(
       mutate(time = as.Date(time)) %>%
       filter(time <= max(dat$time)) %>%
       mutate(adj = value - fit) %>%
-      mutate(value = replace(value, value == -Inf, -99999), adj = replace(adj, adj == -Inf, -99999))
+      mutate(value = replace(value, value == -Inf, NA_real_), adj = replace(adj, adj == -Inf, NA_real_))
 
     print(g_dat)
     g_dat_adj <- g_dat %>%
       select(id, time, adj) %>%
+      mutate(adj = na.approx(adj)) %>%
       seas_adj(method = "arima") %>%
       rename(s_adj = value)
     if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(categories))
@@ -177,6 +178,11 @@ series <- ts_gtrends(keyword = keyword,
                      category = 67,
            geo = "DE",
            time = str_c("2006-01-01 ", "2019-12-31"))
+
+
+series[2,3] <- NA
+ts_tbl(series)
+
 
 
 series <- series %>%
