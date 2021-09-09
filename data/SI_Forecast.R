@@ -27,7 +27,7 @@ g_index <- function(
       mutate(value = log(value)) %>%
       select(time, dat = value)
 
-    fit <- as_tibble(openxlsx::read.xlsx("~/IFW/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
       filter(time >= as.Date("2012-01-01"))
 
@@ -124,7 +124,7 @@ g_index <- function(
 
 }
 
-dat <- readxl::read_xlsx("~/IFW/Service_Import.xlsx")
+dat <- readxl::read_xlsx("~/Google Trends/Service_Import.xlsx")
 names(dat) <- c("time","value")
 keywords = NA
 
