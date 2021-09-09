@@ -122,6 +122,7 @@ g_index <- function(
     #   ggplot(aes(x = time, y = values, color =key)) +
     #   #facet_grid(key ~., scales = "free_y" ) +
     #   geom_line()
+    return("ERRROR")
     if (fd) return(list(series = fd_tb, coef = coef))
     else return(list(series = index, coef = coef))
 
