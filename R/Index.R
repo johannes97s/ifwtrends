@@ -70,8 +70,7 @@ roll <- function(keyword = NA,
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
                  end = Sys.Date(),
-                 fun = trendecon::ts_gtrends,
-                 ...){
+                 fun = trendecon::ts_gtrends){
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
   dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
   n <- length(dates)
@@ -79,17 +78,16 @@ roll <- function(keyword = NA,
   f <- function(d) fun(keyword = keyword,
                        category = category,
                        geo = geo,
-                       time = stringr::str_c(start_series," ", d),
-                       ...)
+                       time = stringr::str_c(start_series," ", d))
   tl <- lapply(period, f)
-  # tl <- lapply(tl, function(x){
-  #                       select(x, -time)
-  #                       rest <- matrix(NA, n - nrow(x), 1)
-  #                       colnames(rest) <- "value"
-  #                       rest <- as_tibble(rest)
-  #                       bind_rows(x, as_tibble(rest))} )
-  tl
-  #as_tibble(tl, .name_repair = "universal")
+  tl <- lapply(tl, function(x){
+                        select(x, -time)
+                        rest <- matrix(NA, n - nrow(x), 1)
+                        colnames(rest) <- "value"
+                        rest <- as_tibble(rest)
+                        bind_rows(x, as_tibble(rest))} )
+
+  as_tibble(tl, .name_repair = "universal")
   # if (pc){
   #   for (i in period){
   #     d <- as.Date(i, origin = "1970-01-01")
