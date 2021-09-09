@@ -27,7 +27,7 @@ g_index <- function(
       mutate(value = log(value)) %>%
       select(time, dat = value)
 
-    fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- as_tibble(openxlsx::read.xlsx("~/IFW/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
       filter(time >= as.Date(start))
 
@@ -128,14 +128,20 @@ g_index <- function(
 
 }
 
-dat <- readxl::read_xlsx("~/Google Trends/Service_Import.xlsx")
+dat <- readxl::read_xlsx("~/IFW/Service_Import.xlsx")
 names(dat) <- c("time","value")
-keyword = c(NA)
-category = c(1003,203)
+keyword = c("Dienstreise",
+            "Reisepass",
+            "Spanien",
+            "Italien",
+            "koffer",
+            "Flug",
+            "Hotel")
+category = c(67)
 
 
 
-res <- g_index(keyword = keyword, category = category, time = str_c("2012-01-01 ", Sys.Date()),dat = dat, k =1)
+res <- g_index(keyword = keyword, category = category, time = str_c("2011-01-01 ", "2021-09-01"),dat = dat, k =1)
 
 res$series %>%
   select(time, dat, s1) %>%
@@ -162,6 +168,7 @@ r1 <-  roll(keyword = keyword_12,
             fun = h,
             dat = dat,
             k = 4)
+Sys.sleep(180)
 
 r2 <-  roll(keyword = keyword_12,
             category = category_12,
@@ -170,7 +177,7 @@ r2 <-  roll(keyword = keyword_12,
             fun = h,
             dat = dat,
             k = 1)
-
+Sys.sleep(180)
 ############
 keyword_34 = c("Dienstreise",
             "Reisepass",
@@ -186,6 +193,7 @@ r3 <- roll(keyword = keyword_34,
            fun = h,
            dat = dat,
            k = 4)
+Sys.sleep(180)
 r4 <- roll(keyword = keyword_34,
            category = category_34,
            start_series = "2011-01-01",
@@ -193,6 +201,7 @@ r4 <- roll(keyword = keyword_34,
            fun = h,
            dat = dat,
            k = 1)
+Sys.sleep(180)
 
 ############
 keyword_56 = c("Dienstreise",
@@ -210,6 +219,7 @@ r5 <- roll(keyword = keyword_56,
            fun = h,
            dat = dat,
            k = 4)
+Sys.sleep(180)
 r6 <- roll(keyword = keyword_56,
            category = category_56,
            start_series = "2011-01-01",
