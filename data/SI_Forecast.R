@@ -9,18 +9,18 @@ library(glmnet)
 library(lattice)
 
 g_index <- function(
-  keywords = NA,
-  categories = 0,
+  keyword = NA,
+  category = 0,
   geo = "DE",
-  end = Sys.Date(),
+  time = str_c("2006-01-01 ", Sys.Date()),
   dat,
-  fd = T,
   k = 1){
 
-
-    dates <- seq.Date(from = as.Date( "2012-01-01"), to = as.Date(end), by = "month")
+    start <- str_sub(time, 1,10)
+    end <- str_sub(time, 12,21)
+    dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
     dat <- dat %>%
-      filter(time >= as.Date("2012-01-01")) %>%
+      filter(time >= as.Date(start)) %>%
       mutate(time = as.yearqtr(as.Date(time))) %>%
       filter(time <= as.yearqtr(as.Date(end))) %>%
       mutate(time = as.Date(time)) %>%
@@ -29,19 +29,17 @@ g_index <- function(
 
     fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
-      filter(time >= as.Date("2012-01-01"))
+      filter(time >= as.Date(start))
 
-    g_dat2 <- ts_gtrends(keyword = keywords,
-                        category = categories,
+    g_dat2 <- ts_gtrends(keyword = keyword,
+                        category = category,
                         geo = "DE",
-                        time = str_c("2012-01-01 ", end)) %>%
+                        time = time) %>%
                 mutate(value = log(value)) %>%
                 mutate(value = replace(value, value == -Inf, NA_real_)) %>%
                 mutate(value = na.approx(value, rule = 2))
-    if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(categories))
+    if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(category))
     #g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
-
-    print(g_dat2, n = 250)
     g_dat <- g_dat2 %>%
       left_join(fit, by = "time") %>%
       mutate(time = as.yearqtr(time)) %>%
@@ -58,7 +56,7 @@ g_index <- function(
       select(id, time, adj) %>%
       seas_adj(freq = "quart", method = "arima") %>%
       rename(s_adj = value)
-    if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(categories))
+    if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(category))
 
 
 
@@ -112,9 +110,11 @@ g_index <- function(
     #   geom_line()
 
 
-    fd_tb <- index %>%
-      select(time, dat, s1) #%>%
-      #mutate(dat = c(rep(0,k), diff(dat,k)), s1 = c(rep(0,k), diff(s1,k)))
+    # fd_tb <- index %>%
+    #   group_by(id)
+    #   select(time, dat, s1) %>%
+    #   mutate(dat = c(rep(0,k), diff(dat,k)), s1 = c(rep(0,k), diff(s1,k)))
+    #   ungroup()
 
     # fd_tb %>%
     #   pivot_longer(cols = -time, names_to = "key", values_to = "values") %>%
@@ -122,22 +122,20 @@ g_index <- function(
     #   ggplot(aes(x = time, y = values, color =key)) +
     #   #facet_grid(key ~., scales = "free_y" ) +
     #   geom_line()
-    if (fd) return(list(series = fd_tb, coef = coef))
-    else return(list(series = index, coef = coef))
+    fd <- T
+    if (fd) return(list(series = index, coef = coef))
+    #else return(list(series = index, coef = coef))
 
 }
 
 dat <- readxl::read_xlsx("~/Google Trends/Service_Import.xlsx")
 names(dat) <- c("time","value")
-keywords = c("Reisepass",
-             "Dienstreise",
-             "Italien",
-             "Flughafen",
-             "stau")
+keyword = c(NA)
+category = c(1003,203)
 
 
 
-res <- g_index(keywords = keywords, categories = c(67), dat = dat, fd = F, k =1)
+res <- g_index(keyword = keyword, category = category, time = str_c("2012-01-01 ", Sys.Date()),dat = dat, k =1)
 
 res$series %>%
   select(time, dat, s1) %>%
@@ -151,52 +149,76 @@ res$series %>%
 summary(lm(dat~ s1 + lag(s1) + lag(s1,4), data = res$series))
 xyplot(dat~ lag(s1)+lag(s1,4), data = res$series, type = c("p","r"), col.line = "red")
 
+h <- function(...) select(g_index(...)$series, time, s1)
 
 
+############
+keyword_12 = c(NA)
+category_12 = c(67,1003)
+r1 <-  roll(keyword = keyword_12,
+            category = category_12,
+            start_series = "2011-01-01",
+            start_period = "2017-01-01",
+            fun = h,
+            dat = dat,
+            k = 4)
+
+r2 <-  roll(keyword = keyword_12,
+            category = category_12,
+            start_series = "2011-01-01",
+            start_period = "2017-01-01",
+            fun = h,
+            dat = dat,
+            k = 1)
+
+############
+keyword_34 = c("Dienstreise",
+            "Reisepass",
+            "stau",
+            "koffer",
+            "Flug",
+            "Hotel")
+category_34 = c(67)
+r3 <- roll(keyword = keyword_34,
+           category = category_34,
+           start_series = "2011-01-01",
+           start_period = "2017-01-01",
+           fun = h,
+           dat = dat,
+           k = 4)
+r4 <- roll(keyword = keyword_34,
+           category = category_34,
+           start_series = "2011-01-01",
+           start_period = "2017-01-01",
+           fun = h,
+           dat = dat,
+           k = 1)
+
+############
+keyword_56 = c("Dienstreise",
+            "Reisepass",
+            "Spanien",
+            "Italien",
+            "koffer",
+            "Flug",
+            "Hotel")
+category_56 = c(67)
+r5 <- roll(keyword = keyword_56,
+           category = category_56,
+           start_series = "2011-01-01",
+           start_period = "2017-01-01",
+           fun = h,
+           dat = dat,
+           k = 4)
+r6 <- roll(keyword = keyword_56,
+           category = category_56,
+           start_series = "2011-01-01",
+           start_period = "2017-01-01",
+           fun = h,
+           dat = dat,
+           k = 1)
 
 
-g_dat2 <- ts_gtrends(keyword = keywords,
-                     category = 0,
-                     geo = "DE",
-                     time = str_c("2006-01-01 ", end)) %>%
-  mutate(value = log(value))
-#g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
-
-g_dat <- g_dat2 %>%
-  left_join(fit, by = "time") %>%
-  mutate(time = as.yearqtr(time)) %>%
-  group_by(time, id) %>%
-  mutate(value = mean(value), fit = mean(fit)) %>%
-  ungroup() %>%
-  unique() %>%
-  mutate(time = as.Date(time)) %>%
-  filter(time <= max(dat$time)) %>%
-  mutate(adj = value - fit)
-
-
-
-
-
-x=matrix(rnorm(100*20),100,20)
-y=rnorm(100)
-g2=sample(1:2,100,replace=TRUE)
-g4=sample(1:4,100,replace=TRUE)
-cv=cv.glmnet(x,y, alpha = 0)
-mod = glmnet(x,y, alpha=  0, lambda = cv$lambda.min)
-
-coef.glmnet(mod)
-coef(mod, s = cv$lambda.min)
-
-
-mod$dev.ratio
-
-
-
-
-ts_gtrends(keyword = keywords,
-           category = c(67,1003),
-           geo = "DE",
-           time = str_c("2012-01-01 ", end))
 
 
 
