@@ -8,11 +8,6 @@ library(caret)
 library(glmnet)
 library(lattice)
 
-end = Sys.Date()
-
-
-
-
 g_index <- function(
   keywords = NA,
   categories = 0,
