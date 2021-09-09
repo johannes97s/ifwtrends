@@ -35,10 +35,13 @@ g_index <- function(
                         category = categories,
                         geo = "DE",
                         time = str_c("2012-01-01 ", end)) %>%
-                mutate(value = log(value))
+                mutate(value = log(value)) %>%
+                mutate(value = replace(value, value == -Inf, NA_real_)) %>%
+                mutate(value = na.approx(value, rule = 2))
     if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(categories))
     #g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
 
+    print(g_dat2, n = 250)
     g_dat <- g_dat2 %>%
       left_join(fit, by = "time") %>%
       mutate(time = as.yearqtr(time)) %>%
@@ -126,11 +129,15 @@ g_index <- function(
 
 dat <- readxl::read_xlsx("~/Google Trends/Service_Import.xlsx")
 names(dat) <- c("time","value")
-keywords = NA
+keywords = c("Reisepass",
+             "Dienstreise",
+             "Italien",
+             "Flughafen",
+             "stau")
 
 
 
-res <- g_index(keywords = keywords, categories = c(67,1003), dat = dat, fd = F, k =1)
+res <- g_index(keywords = keywords, categories = c(67), dat = dat, fd = F, k =1)
 
 res$series %>%
   select(time, dat, s1) %>%
