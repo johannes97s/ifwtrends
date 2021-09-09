@@ -141,7 +141,42 @@ category = c(67)
 
 
 
-res <- g_index(keyword = keyword, category = category, time = str_c("2011-01-01 ", "2021-09-01"),dat = dat, k =1)
+res <- g_index(keyword = keyword, category = category, time = str_c("2011-01-01 ", "2020-11-01"),dat = dat, k =1)
+
+
+
+t <- ts_gtrends(keyword = c("italien","spanien"),
+            category = category,
+            geo = "DE",
+            time = str_c("2011-01-01 ", "2019-11-01")) %>%
+  mutate(value = log(value)) %>%
+  mutate(value = replace(value, value == -Inf, NA_real_)) %>%
+  mutate(value = na.approx(value, rule = 2))
+if (!("id" %in% names(t))) t <- mutate(t, id = as.character(category))
+
+
+fit <- as_tibble(openxlsx::read.xlsx("~/IFW/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+  select(time = date, fit) %>%
+  filter(time >= as.Date(start))
+
+g_dat <- t %>%
+  left_join(fit, by = "time") %>%
+  mutate(time = as.yearqtr(time)) %>%
+  group_by(time, id) %>%
+  mutate(value = mean(value), fit = mean(fit)) %>%
+  ungroup() %>%
+  unique() %>%
+  mutate(time = as.Date(time)) %>%
+  filter(time <= max(dat$time)) %>%
+  mutate(adj = value - fit) %>%
+  select(id, time, adj)
+
+
+series <- as.list(ts_ts(g_dat))
+s1 <- seasonal::seas(series,
+              transform.function = "none")
+
+
 
 res$series %>%
   select(time, dat, s1) %>%
@@ -229,6 +264,31 @@ r6 <- roll(keyword = keyword_56,
            k = 1)
 
 
+keyword_34 = c("Dienstreise",
+               "Reisepass",
+               "stau",
+               "koffer",
+               "Flug",
+               "Hotel")
+category_34 = c(67)
+
+
+start_series <- "2011-01-01"
+start_period <- "2017-01-01"
+end = Sys.Date()
+
+h <- function(...) select(g_index(...)$series, time, s1)
+
+period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
+dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
+n <- length(dates)
+f <- function(d) h(keyword = keyword,
+                     category = category,
+                     geo = geo,
+                     time = stringr::str_c(start_series," ", d),
+                     dat = dat,
+                     k = 1)
+tl <- lapply(period, f)
 
 
 
