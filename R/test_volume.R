@@ -14,3 +14,8 @@ for (i in babynames$name){
 }
 
 write.csv(tb, "Test_queries_volume.csv")
+
+
+setHandleParameters(proxyhost = "192.111.129.145",
+                    proxyport = 16894)
+ts_gtrends(keyword = "ikea", geo = "DE", gprop = "web", onlyInterest = T)
