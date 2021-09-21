@@ -19,10 +19,14 @@ Suggests:
 Config/testthat/edition: 3
 Depends: 
     tidyverse
-Imports: 
-    gtrendsR,
+Imports:
+    caret,
     corrr,
-    trendecon,
-    openxlsx,
+    glmnet,
+    gtrendsR,
     lubridate,
-    seasonal
+    openxlsx,
+    seasonal,
+    trendecon,
+    zoo
+Remotes: trendecon/trendecon
