@@ -174,5 +174,5 @@ r1 <-  roll(keyword = keyword,
             start_period = "2015-01-01",
             end = "2019-12-31",
             fun = g_index)
-
+saveRDS(r1, "roll_gindex")
 
