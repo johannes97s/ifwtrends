@@ -14,7 +14,7 @@
 #'@example
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
 #'trend_adj(series, log.trafo = T, method = "firstdiff")
-#'@import tidyverse gtrendsR tsbox seasonal zoo
+#'@import tidyverse gtrendsR tsbox RJDemetra zoo
 #'@export
 trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
@@ -51,16 +51,31 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'@example
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
 #'seas_adj(series, freq = "month, log.traf = T, method = "firstdiff")
-#'@import tidyverse gtrendsR tsbox seasonal zoo
+#'@import tidyverse gtrendsR tsbox RJDemetra zoo
 #'@export
 seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
   if(method == "arima"){                      #Saisonbereinigung mit X-13 ARIMA
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
-    series <- as.list(ts_ts(series))
-    series <- ts_tbl(seasonal::final(seasonal::seas(series,
-                                                    transform.function = "none")))
+    series <- ts_ts(series)
+    h <- function(ts){
+      m <- x13(ts)
+      return(m$final$series[,"sa"])
+    }
+
+    if (dim(series)[2] == 1) series <- ts_tbl(h(series))
+    if (dim(series)[2] > 1){
+      print("blub")
+      series <- as.list(series)
+      series <- lapply(series, h)
+      n <- names(series)
+      t1 <- series[[1]]
+      for (i in 2:length(series)) t1 <- ts_c(t1, series[[i]])
+      dimnames(t1)[[2]] <- n
+      series <- ts_tbl(t1)
+    }
   }
+
   if(method == "firstdiff"){     #Saisonbereinigung mit ersten Differenzen mit lag = 4
                                  #da gerade Quartalsdaten. Fuer monatsdaten lag = 12
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
@@ -76,5 +91,24 @@ seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
 
 
 
+t <- list(a = AirPassengers, b = AirPassengers+4, c = AirPassengers+4)
+t
+h <- function(ts){
+  m <- x13(ts)
+  return(m$final$series[,"sa"])
+}
+
+t <- as.list(ts_ts(d))
+
+t <- lapply(t, h)
+n <- names(t)
+t1 <- t[[1]]
+for (i in 2:length(t)) t1 <- ts_c(t1, t[[i]])
+dimnames(t1)[[2]] <- n
+t1
+rename(ts_tbl(t1), s_adj = value)
+
+
+final(seas(as.list(t)))
 
 

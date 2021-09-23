@@ -7,6 +7,7 @@ library(lubridate)
 library(caret)
 library(glmnet)
 library(lattice)
+library(RJDemetra)
 
 g_index <- function(
   keyword = NA,
@@ -19,7 +20,7 @@ g_index <- function(
     dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
 
-    fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- as_tibble(openxlsx::read.xlsx("~/IFW/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
       filter(time >= as.Date(start))
 
@@ -30,7 +31,7 @@ g_index <- function(
                 mutate(value = log(value)) %>%
                 mutate(value = replace(value, value == -Inf, NA_real_)) %>%
                 mutate(value = na.approx(value, rule = 2))
-    if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(category))
+    if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(as.vector(sapply(category, rep, length(dates)))))
 
 
     #g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
@@ -44,7 +45,7 @@ g_index <- function(
       seas_adj(freq = "quart", method = "arima") %>%
       rename(s_adj = value)
     #print(g_dat_adj)
-    if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(category))
+    if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(rep(category, each = length(dates))))
 
 
 
@@ -74,10 +75,10 @@ g_index <- function(
 }
 
 
-start = "2011-01-01"
-end = "2019-12-30"
+start = "2006-01-01"
+end = "2021-07-01"
 
-dat <- readxl::read_xlsx("~/Google Trends/Einzelhandel.xlsx", sheet = "Abbildung") %>%
+dat <- readxl::read_xlsx("~/IFW/Einzelhandel.xlsx", sheet = "Abbildung") %>%
   select(c(1,3,12))
 dat <- dat[-c(1:182,370:375),]
 
@@ -97,7 +98,7 @@ dat <- dat %>%
   mutate(time = dates) %>%
   filter(time >= as_date(start), time <= as_date(end))
 
-dat <- dat[-c(1, nrow(dat)),]
+dat <- dat[-c(1),]
 
 keyword = c(NA)
 category_aco= c(956, 276, 179)
@@ -112,11 +113,8 @@ res <- res_raw
 est <- filter(res, time <= max(dat$time))
 
 
-
-
 y <- dat[2]
 x <- est[-1]
-
 d <- bind_cols(y,x)
 
 
@@ -148,28 +146,14 @@ index %>%
   xlim(as_date("2006-01-01"), NA) +
   ggtitle("Google Suchanfragen bis 14.09.2021")
 
+build_model <- function(series, target){
+  y <- as.matrix(target[-1])
+  x <- as.matrix(series[-1])
 
 
-
-
-
-
-############
-keyword_12 = c(NA)
-category_12 = category
-
-r1 <-  roll(keyword = keyword_12,
-            category = category_12,
-            start_series = "2006-01-01",
-            start_period = "2017-01-01",
-            fun = h,
-            dat = dat)
-
-
-
-
-forecast <- function(series){
-
+  cv <- cv.glmnet(x, y, alpha = 0)
+  model <- glmnet(x, y, alpha = 0, lambda = cv$lambda.min)
+  model
 }
 
 
@@ -178,60 +162,17 @@ forecast <- function(series){
 
 
 
+openxlsx::write.xlsx(index, "Gastgewerbe und Index.xlsx")
 
 
 
 
 
-
-
-
-t <- ts_gtrends(keyword = c("Hotel"),
-            category = 67,
-            geo = "DE",
-            time = str_c("2011-01-01 ", "2017-03-01")) %>%
-  mutate(value = log(value)) %>%
-  mutate(value = replace(value, value == -Inf, NA_real_)) %>%
-  mutate(value = na.approx(value, rule = 2))
-if (!("id" %in% names(t))) t <- mutate(t, id = as.character(category))
-
-
-fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
-  select(time = date, fit) %>%
-  filter(time >= as.Date("2011-01-01"))
-
-g_dat <- t %>%
-  left_join(fit, by = "time") %>%
-  mutate(time = as.yearqtr(time)) %>%
-  group_by(time, id) %>%
-  mutate(value = mean(value), fit = mean(fit)) %>%
-  ungroup() %>%
-  unique() %>%
-  mutate(time = as.Date(time)) %>%
-  filter(time <= max(dat$time)) %>%
-  mutate(adj = value - fit) %>%
-  select(id, time, adj)
-
-
-series <- as.list(ts_ts(g_dat))
-s1 <- seasonal::seas(series,
-              transform.function = "none")
-seasonal::final(s1)
-
-
-res$series %>%
-  select(time, dat, s1) %>%
-  pivot_longer(cols = -time, names_to = "key", values_to = "values") %>%
-  #filter(id == "Koffer") %>%
-  ggplot(aes(x = time, y = values, color =key)) +
-  #facet_grid(key ~., scales = "free_y" ) +
-  geom_line()
-
-
-summary(lm(dat~ s1 + lag(s1) + lag(s1,4), data = res$series))
-xyplot(dat~ lag(s1)+lag(s1,4), data = res$series, type = c("p","r"), col.line = "red")
-
-h <- function(...) select(g_index(...)$series, time, s1)
-
+r1 <-  roll(keyword = keyword,
+            category = category_ret,
+            start_series = "2006-01-01",
+            start_period = "2015-01-01",
+            end = "2019-12-31",
+            fun = g_index)
 
 
