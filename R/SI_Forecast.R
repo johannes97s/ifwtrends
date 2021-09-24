@@ -76,7 +76,7 @@ g_index <- function(
 
 
 start = "2006-01-01"
-end = "2019-12-30"
+end = "2021-07-01"
 
 dat <- readxl::read_xlsx("~/Google Trends/Einzelhandel.xlsx", sheet = "Abbildung") %>%
   select(c(1,3,12))
@@ -150,36 +150,43 @@ index %>%
 
 start_series = "2006-01-01"
 start_period = "2015-01-01"
-end = "2019-12-31"
+end = "2021-07-31"
 
-r1 <-  roll(keyword = keyword,
+r2 <-  roll(keyword = keyword,
             category = category_ret,
             start_series = start_series,
             start_period = start_period,
             end = end,
             fun = g_index)
-saveRDS(r1, "roll_gindex")
-r1 <- readRDS("roll_gindex")
+saveRDS(r2, "roll_gindex_0721")
+r2 <- readRDS("roll_gindex_0721")
+
+orig <- roll(keyword = keyword,
+             category = category_ret,
+             start_series = start_series,
+             start_period = start_period,
+             end = end,
+             fun = ts_gtrends)
 
 
-r1 <- lapply(r1, function(x) relocate(bind_cols(x, dat[1:nrow(x),-1]), time, dat = value))
+r2 <- lapply(r2, function(x) relocate(bind_cols(x, dat[1:nrow(x),-1]), time, dat = value))
 
 
 build_model <- function(series){
 
-  # y <- as.matrix(series[2])
-  # x <- as.matrix(series[-c(1,2)])
-  #
-  #
-  # cv <- cv.glmnet(x, y, alpha = 0)
-  # model <- glmnet(x, y, alpha = 0, lambda = cv$lambda.min)
-  # model
-  model <- lm(dat ~ ., data = series[-1])
-  summary(model)$coefficients[,4]
+  y <- as.matrix(series[2])
+  x <- as.matrix(series[-c(1,2)])
+
+
+  cv <- cv.glmnet(x, y, alpha = 0)
+  model <- glmnet(x, y, alpha = 0, lambda = cv$lambda.min)
+  model
+  # model <- lm(dat ~ ., data = series[-1])
+  # summary(model)$coefficients[,4]
 }
 
 
-models <- lapply(lag(r1)[-1], build_model)
+models <- lapply(lag(r2)[-1], build_model)
 
 
 coef <- as_tibble(t(as.data.frame(models))) %>%
