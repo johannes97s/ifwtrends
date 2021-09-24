@@ -20,7 +20,7 @@ g_index <- function(
     dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
 
-    fit <- as_tibble(openxlsx::read.xlsx("~/IFW/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
       filter(time >= as.Date(start))
 
@@ -76,9 +76,9 @@ g_index <- function(
 
 
 start = "2006-01-01"
-end = "2021-07-01"
+end = "2019-12-30"
 
-dat <- readxl::read_xlsx("~/IFW/Einzelhandel.xlsx", sheet = "Abbildung") %>%
+dat <- readxl::read_xlsx("~/Google Trends/Einzelhandel.xlsx", sheet = "Abbildung") %>%
   select(c(1,3,12))
 dat <- dat[-c(1:182,370:375),]
 
@@ -146,33 +146,76 @@ index %>%
   xlim(as_date("2006-01-01"), NA) +
   ggtitle("Google Suchanfragen bis 14.09.2021")
 
-build_model <- function(series, target){
-  y <- as.matrix(target[-1])
-  x <- as.matrix(series[-1])
 
 
-  cv <- cv.glmnet(x, y, alpha = 0)
-  model <- glmnet(x, y, alpha = 0, lambda = cv$lambda.min)
-  model
-}
-
-
-
-
-
-
-
-openxlsx::write.xlsx(index, "Gastgewerbe und Index.xlsx")
-
-
-
-
+start_series = "2006-01-01"
+start_period = "2015-01-01"
+end = "2019-12-31"
 
 r1 <-  roll(keyword = keyword,
             category = category_ret,
-            start_series = "2006-01-01",
-            start_period = "2015-01-01",
-            end = "2019-12-31",
+            start_series = start_series,
+            start_period = start_period,
+            end = end,
             fun = g_index)
 saveRDS(r1, "roll_gindex")
+r1 <- readRDS("roll_gindex")
+
+
+r1 <- lapply(r1, function(x) relocate(bind_cols(x, dat[1:nrow(x),-1]), time, dat = value))
+
+
+build_model <- function(series){
+
+  # y <- as.matrix(series[2])
+  # x <- as.matrix(series[-c(1,2)])
+  #
+  #
+  # cv <- cv.glmnet(x, y, alpha = 0)
+  # model <- glmnet(x, y, alpha = 0, lambda = cv$lambda.min)
+  # model
+  model <- lm(dat ~ ., data = series[-1])
+  summary(model)$coefficients[,4]
+}
+
+
+models <- lapply(lag(r1)[-1], build_model)
+
+
+coef <- as_tibble(t(as.data.frame(models))) %>%
+  bind_cols(time = seq.Date(as_date(start_period)+months(1), as_date(end), by = "month"))
+
+coef %>%
+  pivot_longer(cols = -time, names_to = "coef", values_to = "pValue") %>%
+  group_by(coef) %>%
+  mutate(mean = mean(pValue)) %>%
+  filter(mean <= 0.4) %>%
+  ggplot(aes(x = time, y = pValue, color = coef)) +
+  geom_line() +
+  geom_hline(yintercept = 0.1) +
+  facet_grid(coef ~ .)
+
+
+
+
+
+
+
+
+h <- function(model, series){
+  est <- predict(model, as.matrix(series[,-c(1,2)]))
+  tibble(time = series[,1], est = est, dat = series[2])
+}
+
+forc <- mapply(h, models, r1[-1], SIMPLIFY = F)
+
+
+m1 <- build_model(r1[[1]])
+h(m1, r1[[2]])
+
+
+
+
+
+
 
