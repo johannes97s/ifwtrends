@@ -1,3 +1,10 @@
+# library(tsbox)
+# library(gtrendsR)
+# library(trendecon)
+# library(tidyverse)
+# library(zoo)
+# library(lubridate)
+
 #'Konsistente taegliche Zeitreihe
 #'@description \code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
 #'
@@ -9,18 +16,15 @@
 #'Vorsicht, braucht sehr lange und verursacht viele Google-Suchanfragen.
 #'
 #'@return Tabelle der taeglichen Werten
-#'@examples
-#'daily_series(keyword = "Ikea", geo = "NL", from = "2008-01-01")
-#'
-#'@import tidyverse gtrendsR trendecon tsbox lubridate zoo
+#'@examples \dontrun{
+#' daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
+#' }
+#'@import gtrendsR trendecon tsbox lubridate zoo tibble tempdisagg magrittr
+#'@importFrom dplyr select
+#'@importFrom dplyr mutate
+#'@importFrom dplyr filter
+#'@importFrom stats time
 #'@export
-
-library(tsbox)
-library(gtrendsR)
-library(trendecon)
-library(tidyverse)
-library(zoo)
-library(lubridate)
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
                          from = "2006-01-01"){
@@ -115,10 +119,10 @@ daily_series <- function(keyword = c("arbeitslos"),
 
 
   wd <- tempdisagg::td(ww ~ dd, method = "fast", conversion = "mean")
-  wd <- predict(wd)
+  wd <- stats::predict(wd)
 
   mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
-  mwd <- predict(mwd)
+  mwd <- stats::predict(mwd)
   as_tibble(mwd)
 }
 
