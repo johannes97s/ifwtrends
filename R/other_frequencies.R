@@ -1,3 +1,10 @@
+library(tsbox)
+library(gtrendsR)
+library(trendecon)
+library(tidyverse)
+library(zoo)
+library(lubridate)
+
 #'Konsistente taegliche Zeitreihe
 #'@description \code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
 #'
@@ -14,13 +21,6 @@
 #'
 #'@import tidyverse gtrendsR trendecon tsbox lubridate zoo
 #'@export
-
-library(tsbox)
-library(gtrendsR)
-library(trendecon)
-library(tidyverse)
-library(zoo)
-library(lubridate)
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
                          from = "2006-01-01"){
