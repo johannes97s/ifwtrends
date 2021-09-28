@@ -1,21 +1,23 @@
 ---
-title: "Vignette ifwtrends"
-author: ""
-date: "30.8.2021"
-output:
-  pdf_document: default
-  html_document: default
+title: "Demo_functions"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ifwtrends}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Demo_functions}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE,
-                      comment = "#>")
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
 library(ifwtrends)
 ```
+
 
 # Funktionen
 ## pca
@@ -83,5 +85,3 @@ factors <- dat %>% select(date, 2:5)
 
 factorR2(series, factors, plot = T)
 ```
-
-
