@@ -20,7 +20,7 @@ g_index <- function(
     dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
 
-    fit <- as_tibble(openxlsx::read.xlsx("~/ifwtrends/data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- as_tibble(openxlsx::read.xlsx("data/trend_67_0921.xlsx", detectDates = T)) %>%
       select(time = date, fit) %>%
       filter(time >= as.Date(start))
 
@@ -78,7 +78,7 @@ g_index <- function(
 start = "2006-01-01"
 end = "2021-07-01"
 
-dat <- readxl::read_xlsx("~/Google Trends/Einzelhandel.xlsx", sheet = "Abbildung") %>%
+dat <- readxl::read_xlsx("data/Einzelhandel.xlsx", sheet = "Abbildung") %>%
   select(c(1,3,12))
 dat <- dat[-c(1:182,370:375),]
 
@@ -102,7 +102,7 @@ dat <- dat[-c(1),]
 
 keyword = c(NA)
 category_aco= c(956, 276, 179)
-category_ret = c(18, 78, 68, 531, 355, 121, 841)
+category_ret = c(18, 78)#, 68, 531, 355, 121, 841)
 category = category_ret
 
 res_raw <- g_index(keyword = keyword, category = category, time = str_c(start, " ", end))

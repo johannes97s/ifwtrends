@@ -55,6 +55,7 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'@export
 seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
+
   if(method == "arima"){                      #Saisonbereinigung mit X-13 ARIMA
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- ts_ts(series)

@@ -1,7 +1,3 @@
-#Hilfsfunktion
-f <- function(serie, i, dat){
-  summary(lm(dat[[i+1]] ~ serie[[1]]))$r.squared
-}
 
 #' R^2 der Regression der Serien auf die Faktoren
 #'@description \code{factorR2} gibt R2 der Regression der Serien auf die Faktoren als Tabelle aus.

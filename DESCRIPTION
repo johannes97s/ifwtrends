@@ -25,4 +25,5 @@ Imports:
     trendecon,
     openxlsx,
     lubridate,
-    seasonal
+    seasonal,
+    taskscheduleR
