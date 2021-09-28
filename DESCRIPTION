@@ -1,13 +1,12 @@
 Package: ifwtrends
-Title: What the Package Does (One Line, Title Case)
+Title: Evaluating Google Trends data for economic forecasts
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Me",
-           family = "Nachname",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Authors@R: c(
+    person("Johannes", "Schnebel", email = "johannes.schnebel@ifw-kiel.de", role = c("cre", "aut")),
+    person("Mathis", "Clausen", email = "mathis.clausen@ifw-kiel.de", role = "ctb"))
+Description: ifwtrends is used in combination with the gtrendsR package to 
+    evaluate and adjust data from Google Trends. The data then can be used 
+    to support economic forecast models.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -15,14 +14,20 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
     tidyverse
 Imports: 
-    gtrendsR,
     corrr,
-    trendecon,
-    openxlsx,
+    gtrendsR,
     lubridate,
-    seasonal
+    openxlsx,
+    seasonal,
+    trendecon,
+    tsbox,
+    zoo
+Remotes: trendecon/trendecon
+VignetteBuilder: knitr
