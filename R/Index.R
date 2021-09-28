@@ -16,7 +16,6 @@
 #'
 #'@import tidyverse gtrendsR tsbox lubridate
 #'@export
-
 pca <- function(keywords = NA,
                 categories = 0,
                 geo = "DE",
@@ -57,13 +56,13 @@ pca <- function(keywords = NA,
 #'@param start_period Das Startdatum des Ausgabefensters.
 #'@param end Das Enddatum der Zeitreihen.
 #'@param components Die gewuenschte Anzahl an Hauptkomponenten.
+#'@param fun Funktion, die auf die rollende Zeitreihe angewendet werden soll.
 #'
 #'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
 #'
-#'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1)
+#'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
 #'@import tidyverse
 #'@export
-
 roll <- function(keywords = NA,
                  categories = 0,
                  geo = "DE",
