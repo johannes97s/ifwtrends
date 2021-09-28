@@ -2,17 +2,17 @@
 
 
 #'Hauptkomponenten aus Suchbegriffen oder Kategorien
-#'@description \code{pca} Berechnet für mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
+#'@description \code{pca} Berechnet fuer mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
 #'
 #'@param keywords Eine character-Vektor mit dem Suchbegriffen
 #'@param categories Ein Numeric Vektor mit den Kategorien
 #'@param geo Die Region
 #'@param start Das Startdatum der Zeitreihen.
 #'@param end Das Enddatum der Zeitreihen.
-#'@param components Die gewünschte Anzahl an Hauptkomponenten.
+#'@param components Die gewuenschte Anzahl an Hauptkomponenten.
 #'
 #'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
-#'@examples pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1
+#'@examples pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1)
 #'
 #'@import tidyverse gtrendsR tsbox lubridate
 #'@export
@@ -33,7 +33,7 @@ pca <- function(keywords = NA,
         category = cat,
         geo = geo,
         time = "all")$interest_over_time) -> temp
-        if (NROW(temp) == 0) stop(str_c("Keine Daten für Kategorie ", cat))
+        if (NROW(temp) == 0) stop(str_c("Keine Daten fuer Kategorie ", cat))
         if ("keyword" %in% names(temp)) temp <- select(temp, -category)
         temp %>%
           mutate(date = as_date(date)) %>%
@@ -56,16 +56,16 @@ pca <- function(keywords = NA,
 #'@param start_series Das Startdatum der Zeitreihen.
 #'@param start_period Das Startdatum des Ausgabefensters.
 #'@param end Das Enddatum der Zeitreihen.
-#'@param components Die gewünschte Anzahl an Hauptkomponenten.
+#'@param components Die gewuenschte Anzahl an Hauptkomponenten.
 #'
 #'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
 #'
-#'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1
+#'@examples roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01", components = 1)
 #'@import tidyverse
 #'@export
 
-roll <- function(keyword = NA,
-                 category = 0,
+roll <- function(keywords = NA,
+                 categories = 0,
                  geo = "DE",
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
@@ -75,8 +75,8 @@ roll <- function(keyword = NA,
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
   dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
   n <- length(dates)
-  f <- function(d) fun(keyword = keyword,
-                       category = category,
+  f <- function(d) fun(keyword = keywords,
+                       category = categories,
                        geo = geo,
                        time = stringr::str_c(start_series," ", d),
                        ...)
