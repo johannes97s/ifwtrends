@@ -8,7 +8,7 @@ pca(
   keywords = NA,
   categories = 0,
   geo = "DE",
-  start = "2006-01-01",
+  start = "2006-01-01 CET",
   end = Sys.Date(),
   components = max(length(keywords), length(categories))
 )
