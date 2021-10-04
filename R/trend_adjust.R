@@ -91,25 +91,25 @@ seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
 }
 
 
-
-t <- list(a = AirPassengers, b = AirPassengers+4, c = AirPassengers+4)
-t
-h <- function(ts){
-  m <- x13(ts)
-  return(m$final$series[,"sa"])
-}
-
-t <- as.list(ts_ts(d))
-
-t <- lapply(t, h)
-n <- names(t)
-t1 <- t[[1]]
-for (i in 2:length(t)) t1 <- ts_c(t1, t[[i]])
-dimnames(t1)[[2]] <- n
-t1
-rename(ts_tbl(t1), s_adj = value)
-
-
-final(seas(as.list(t)))
+#
+# t <- list(a = AirPassengers, b = AirPassengers+4, c = AirPassengers+4)
+# t
+# h <- function(ts){
+#   m <- x13(ts)
+#   return(m$final$series[,"sa"])
+# }
+#
+# t <- as.list(ts_ts(d))
+#
+# t <- lapply(t, h)
+# n <- names(t)
+# t1 <- t[[1]]
+# for (i in 2:length(t)) t1 <- ts_c(t1, t[[i]])
+# dimnames(t1)[[2]] <- n
+# t1
+# rename(ts_tbl(t1), s_adj = value)
+#
+#
+# final(seas(as.list(t)))
 
 

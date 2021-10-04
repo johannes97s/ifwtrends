@@ -16,7 +16,41 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ifwtrends)
+library(dplyr)
+library(tibble)
+library(ggplot2)
 ```
+#Google-Trends Daten
+Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes zur Verfügung.
+Hier folgt zunächst ein grundlegende Beschreibung der Daten um dann deren statistische Besonderheiten näher zu beleuchten. 
+<!-- ## Die Daten -->
+Die Zeitreihen reichen bis 2004-01-01 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
+Hier sollte beachtet werden, dass Google in einigen Ländern, insbesondere autoritär regierten wie China, nicht verfügbar ist und für diese Länder deshalb keine Daten vorhanden sind.
+Bei den möglichen Suchanfragen unterschiedet man zwischen _terms_, _topics_ und _categories_.
+Google definiert einen _term_ wie folgt (Google 2021):
+
+
+"Search terms show matches for all terms in your query, in the language given.
+
+* If you search the term "banana", results include terms like "banana" or "banana sandwich"
+* If you specify "banana sandwich," results include searches for "banana sandwich," as well as "banana for lunch" and "peanut butter sandwich""
+
+Die Definition von eines _topic_ ist (ebd.):
+
+"Topics are a group of terms that share the same concept in any language. Topics display below search terms.
+
+If you search the topic "London," your search includes results for topics such as:
+
+* "Capital of the UK"
+* "Londres," which is "London" in Spanish"
+
+Die Eingabe eines Suchbegriffs als Topic führt also vor allem zu einer Invarianz des Suchbegriffs gegenüber der Landessprache.
+Die Differenzierung zwischen Topic und Term ist aber lediglich in der Google Suchmaske möglich.
+Bei der Nutzung der R-Funktionen zum herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_ sondern bezeichnen beides als _Suchbegriff_.
+
+Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann für einen Suchbegriff eine _category_ gewählt werden. 
+
+
 
 
 # Funktionen
@@ -64,7 +98,7 @@ Für lange Zeitfenster liegen keine täglichen Daten vor sondern nur monatliche.
 ```{r message=FALSE}
 daily_series(keyword = c("arbeitslos"),
              geo = "DE",
-             from = "2021-01-01")
+             from = "2021-08-01")
 ```
 
 ## factorR2
@@ -76,7 +110,7 @@ Für schon berechnete Faktoren `factors` aus Zeitreihen `series` ist dies eine M
 dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
     categories = 0,
     geo = "DE",
-    start = "2006-01-01",
+    start = "2006-08-01",
     end = Sys.Date(),
     components = max(length(keywords), length(categories)))
 
@@ -85,3 +119,10 @@ factors <- dat %>% select(date, 2:5)
 
 factorR2(series, factors, plot = T)
 ```
+
+
+#Quellen
+Google 2021:    https://support.google.com/trends/answer/4359550?hl=en
+
+
+
