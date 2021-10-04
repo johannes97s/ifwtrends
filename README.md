@@ -15,7 +15,7 @@ You can install the current development version of ifwtrends from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("johannes97s/ifwtrends")
+devtools::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -23,7 +23,7 @@ devtools::install_github("johannes97s/ifwtrends")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-# library(ifwtrends)
+library(ifwtrends)
 ## basic example code
 ```
 
@@ -31,7 +31,8 @@ This is a basic example which shows you how to solve a common problem:
 
 | Function         | Description                                                                      | Status        |
 |------------------|----------------------------------------------------------------------------------|---------------|
-| `pca()`          | A function to do a Principal Component Analysis on GTrends data.                 | 🟢 Implemented |
-| `roll()`         | A function to use `pca()` on backtesting.                                        | 🟢 Implemented |
 | `daily_series()` | Uses a complex econometric method to calculate daily data based on monthly data. | 🟢 Implemented |
-| `factorR2()`     | A function to calculate and plot the *R*<sup>2</sup> of the time series.         | 🟢 Implemented |
+| `est_trends()`   | Estimates the trend of a Google Trends category.                                 | 🟢 Implemented |
+| `factorR2()`     | Calculates and plots the *R*<sup>2</sup> of the time series.                     | 🟢 Implemented |
+| `roll()`         | A function to use `pca()` on backtesting.                                        | 🟢 Implemented |
+| `pca()`          | A function to do a Principal Component Analysis on GTrends data.                 | 🟢 Implemented |

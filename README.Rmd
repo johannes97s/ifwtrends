@@ -28,22 +28,23 @@ ifwtrends from [GitHub](https://github.com/johannes97s/ifwtrends) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("johannes97s/ifwtrends")
+devtools::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 ```
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-# library(ifwtrends)
+library(ifwtrends)
 ## basic example code
 ```
 
 ## Roadmap
 
-| Function         	| Description                                                                      	| Status        	|
-|------------------	|----------------------------------------------------------------------------------	|---------------	|
-| `pca()`          	| A function to do a Principal Component Analysis on GTrends data.                 	| 🟢 Implemented 	|
-| `roll()`         	| A function to use `pca()` on backtesting.                                        	| 🟢 Implemented 	|
-| `daily_series()` 	| Uses a complex econometric method to calculate daily data based on monthly data. 	| 🟢 Implemented 	|
-| `factorR2()`     	| A function to calculate and plot the $R^2$ of the time series.                   	| 🟢 Implemented 	|
+| Function | Description | Status |
+|---|---|---|
+| `daily_series()` | Uses a complex econometric method to calculate daily data based on monthly data. | 🟢 Implemented |
+| `est_trends()` | Estimates the trend of a Google Trends category. | 🟢 Implemented |
+| `factorR2()` | Calculates and plots the $R^2$ of the time series. | 🟢 Implemented |
+| `roll()` | A function to use `pca()` on backtesting. | 🟢 Implemented |
+| `pca()` | A function to do a Principal Component Analysis on GTrends data. | 🟢 Implemented |
