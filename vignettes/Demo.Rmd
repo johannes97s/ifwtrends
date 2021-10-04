@@ -1,5 +1,5 @@
 ---
-title: "Demo_functions"
+title: "Vignette ifwtrends"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Demo_functions}
@@ -20,9 +20,11 @@ library(dplyr)
 library(tibble)
 library(ggplot2)
 ```
-#Google-Trends Daten
-Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes zur Verfügung.
-Hier folgt zunächst ein grundlegende Beschreibung der Daten um dann deren statistische Besonderheiten näher zu beleuchten. 
+
+# Google-Trends Daten
+Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes 
+in Form von [Google Trends](https://trends.google.de/trends/?geo=DE) zur Verfügung.
+Hier folgt zunächst eine grundlegende Beschreibung der Daten, um dann deren statistische Besonderheiten näher zu beleuchten. 
 <!-- ## Die Daten -->
 Die Zeitreihen reichen bis 2004-01-01 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
 Hier sollte beachtet werden, dass Google in einigen Ländern, insbesondere autoritär regierten wie China, nicht verfügbar ist und für diese Länder deshalb keine Daten vorhanden sind.
@@ -30,33 +32,30 @@ Bei den möglichen Suchanfragen unterschiedet man zwischen _terms_, _topics_ und
 Google definiert einen _term_ wie folgt (Google 2021):
 
 
-"Search terms show matches for all terms in your query, in the language given.
-
-* If you search the term "banana", results include terms like "banana" or "banana sandwich"
-* If you specify "banana sandwich," results include searches for "banana sandwich," as well as "banana for lunch" and "peanut butter sandwich""
+> "Search terms show matches for all terms in your query, in the language given.
+>
+> * If you search the term 'banana,' results include terms like 'banana' or 'banana sandwich'
+> * If you specify 'banana sandwich,' results include searches for 'banana sandwich,' as well as 'banana for lunch' and 'peanut butter sandwich'".
 
 Die Definition von eines _topic_ ist (ebd.):
 
-"Topics are a group of terms that share the same concept in any language. Topics display below search terms.
-
-If you search the topic "London," your search includes results for topics such as:
-
-* "Capital of the UK"
-* "Londres," which is "London" in Spanish"
+> "Topics are a group of terms that share the same concept in any language. Topics display below search terms.
+>
+> If you search the topic 'London,' your search includes results for topics such as:
+>
+> * 'Capital of the UK'
+> * 'Londres', which is 'London' in Spanish".
 
 Die Eingabe eines Suchbegriffs als Topic führt also vor allem zu einer Invarianz des Suchbegriffs gegenüber der Landessprache.
-Die Differenzierung zwischen Topic und Term ist aber lediglich in der Google Suchmaske möglich.
-Bei der Nutzung der R-Funktionen zum herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_ sondern bezeichnen beides als _Suchbegriff_.
+Die Differenzierung zwischen Topic und Term ist aber lediglich online in der Google Suchmaske möglich.
+Bei der Nutzung der R-Funktionen zum Herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_ sondern bezeichnen beides als _Suchbegriff_.
 
 Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann für einen Suchbegriff eine _category_ gewählt werden. 
 
 
-
-
 # Funktionen
 ## pca
-Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeireihen). Für die Zeitreihen wird hier momentan monatliche Frequenz angenommen.
-
+Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeitreihen). Für die Zeitreihen wird hier momentan eine monatliche Frequenz angenommen.
 
 ```{r message=FALSE}
 pca(keywords = c("ikea", "saturn"),
@@ -72,14 +71,14 @@ pca(keywords = NA,
     start = "2006-01-01",
     end = Sys.Date(),
     components = max(length(keywords), length(categories)))
-  
-  
+
+
 ```
 
 ## roll
-Roll gibt pca für jeden Zeitpunkt in einem Zeitfenster neu an.
+Die Funktion `roll` gibt `pca` für jeden Zeitpunkt in einem gegebenen Zeitfenster neu an.
 Dies gibt eine Tabelle mit den Zeitpunkten im Zeitfenster `start_period` bis `end` zurück.
-In jeder Spalte ist dann die Ausgabe von pca, wobei `end` der jeweilige Zeitpunkt im Zeitfenster ist. Die restlichen Zeilen zum Tabellenende sind `NA`s. Dies kann insb zur Prognoseevaluation genutzt werden.
+In jeder Spalte ist dann die Ausgabe von pca, wobei `end` der jeweilige Zeitpunkt im Zeitfenster ist. Die restlichen Zeilen zum Tabellenende sind `NA`s. Dies kann insbesondere zur Prognoseevaluation genutzt werden.
 Sowohl `pca` als auch `roll` könnten bei Bedarf umgeschrieben werden, sodass statt den Hauptkomponenten andere Faktoren berechnet werden
 
 ```{r message=FALSE}
@@ -93,7 +92,7 @@ roll(keywords = "ikea",
 
 ## daily_series
 
-Für lange Zeitfenster liegen keine täglichen Daten vor sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit Chow-Lin für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluierung steht hier aber noch aus, ist jedoch wegen dem noch nicht gelösten IP-Problem momentan nicht durchführbar. 
+Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation steht hier aber noch aus, ist jedoch wegen dem noch nicht gelösten IP-Problem momentan nicht durchführbar. 
 
 ```{r message=FALSE}
 daily_series(keyword = c("arbeitslos"),
@@ -120,9 +119,22 @@ factors <- dat %>% select(date, 2:5)
 factorR2(series, factors, plot = T)
 ```
 
+# Fehlermeldungen
 
-#Quellen
-Google 2021:    https://support.google.com/trends/answer/4359550?hl=en
+Sollte beim Benutzen der Fehler 
+
+```
+Error widget$status_code == 200 is not TRUE 
+``` 
+
+auftreten, so bedeutet dies, dass das Paket nicht mehr auf Google Trends Daten zugreifen kann, da die IP des benutzten Rechners gesperrt wurde. Beheben kann man dies natürlich nicht. Die einzigen beiden Alternativen, um weiterarbeiten zu können, sind:
+
+* Mit einem anderen Rechner weiterarbeiten.
+* Warten, bis die IP-Sperre aufgehoben wurden ist. I.d.R. hält der Bann etwa einen Tag bzw. bis zum Ende des Tages an.
+
+# Quellen
+
+[Google, 2021.](https://support.google.com/trends/answer/4359550?hl=en)
 
 
 
