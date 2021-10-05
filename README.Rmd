@@ -36,7 +36,24 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(ifwtrends)
-## basic example code
+# Search keywords and do a subsequent PC analysis on a
+# GTrends time series 
+pca(keywords = c("Pluto", "Saturn"),
+    categories = 0,
+    geo = "DE",
+    start = "2006-01-01",
+    end = Sys.Date(),
+    components = max(length(keywords), length(categories)))
+
+# Search for a GTrends category and do a subsequent PC
+# analysis
+pca(keywords = NA,
+    categories = c(651),
+    geo = "DE",
+    start = "2006-01-01",
+    end = Sys.Date(),
+    components = max(length(keywords), length(categories)))
+
 ```
 
 ## Roadmap
