@@ -27,6 +27,7 @@ Imports:
     magrittr,
     openxlsx,
     readxl,
+    RJDemetra,
     rlang,
     seasonal,
     stringr,
