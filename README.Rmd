@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-ifwtrends is used to evaluate Google Trends data for economic 
+ifwtrends is used to evaluate Google Trends data to support economic 
 forecasts.
 
 ## Installation
@@ -42,8 +42,7 @@ pca(keywords = c("Pluto", "Saturn"),
     categories = 0,
     geo = "DE",
     start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    end = Sys.Date())
 
 # Search for a GTrends category and do a subsequent PC
 # analysis
@@ -51,12 +50,11 @@ pca(keywords = NA,
     categories = c(651),
     geo = "DE",
     start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    end = Sys.Date())
 
 ```
 
-## Roadmap
+## Functions and Roadmap
 
 | Function | Description | Status |
 |---|---|---|

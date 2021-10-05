@@ -6,11 +6,10 @@
 #'@param geo Die Region
 #'@param start Das Startdatum der Zeitreihen.
 #'@param end Das Enddatum der Zeitreihen.
-#'@param components Die gewuenschte Anzahl an Hauptkomponenten.
 #'
 #'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 #'@examples \dontrun{
-#'pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1)
+#'pca(keywords = c("ikea", "saturn"), end = "2020-01-01")
 #'}
 #'@import magrittr tibble gtrendsR
 #' @importFrom dplyr mutate
