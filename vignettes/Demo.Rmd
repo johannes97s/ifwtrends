@@ -24,12 +24,20 @@ library(ggplot2)
 
 
 ```
-<<<<<<< HEAD
+
+# Einordnung
+Es gibt eine große Literatur welche Google Trends Daten in unterschiedlichen Modellen benutzt um verschiedene Ökonomische variablen zu prognostizieren. Einen ausführlichen Überblick gibt hierzu der Bericht _Big Data in der makroökonomischen Analyse_ (Kieler Beiträge zur Wirtschaftspolitik Nr. 32), Abschnitt 2.3.4. Zusammenfassend lässt sich sagen, dass die zusätzliche Verwendung von Google Daten dort, wo schon andere Indikatoren vorliegen, zu keiner relevanten Verbesserung der Prognosen führt. Prognosen welche nur auf Google Daten beruhen schneiden aber meist ähnlich gut ab wie solche nur mit klassischen Indikatoren. Die Stärke der Google Daten liegt vor allem in ihrer hohen regionalen und zeitlichen Verfügbarkeit. Dies führt unserer Ansicht nach zu drei zentralen Anwendungsfeldern für Google Daten in der Prognose.
+
+1. Als Prognosevariablen, wenn klassische, quartalsweise erscheinende, Variablen noch nicht vorliegen.
+2. Als Prognosevariablen für Länder für die sonst wenige Indikatoren vorliegen.
+3. Als Echtzeitindikatoren für die wirtschaftliche Aktivität in Krisenzeiten, wenn schnell politische Entscheidungen gefällt werden müssen.
+
+
 # Google-Trends Daten
 ## Suchanfragen
 Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes zur Verfügung.
 Hier folgt zunächst ein grundlegende Beschreibung der Daten um dann deren statistische Besonderheiten näher zu beleuchten. 
-=======
+
 
 # Google-Trends Daten
 Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes 
@@ -87,6 +95,9 @@ Im Abschnitt ?? beschreiben wir, wie um diesen Trend bereinigt werden kann und w
 Die Google Daten können für Zeitfenster von 12 Monaten auf Tagesbasis abgefragt werden. Für Zeiträume bis 5 Jahre können wöchentliche Daten heruntergeladen werden. Für alle längeren Zeiträume liegen die Daten nur monatlich vor. Da wir die 12-Monatsfenster der täglichen Reihen und die 5-Jahres-Fenster der wöchentlichen Reihen beliebig wählen können, kann mit der Chow-Lin Methode für lange Zeiträume eine Reihe auf Tagesbasis erstellt werden, welche konsistent mit den wöchentlichen und monatlichen Reihen ist. Wir folgen dabei Eichenauer et. al 2020.
 
 ### Strukturbruch
+Im Januar 2011 wurde die regionale Erfassung der Suchanfragen geändert. Dadurch wird in regional eingeschränkten Reihen in 2011 ein Bruch sichtbar (\@ref(comtrend). Auch in 2016 wurde die Methode zur Datenerhebung nochmals verändert, was auch einen Strukturbruch in den Reihen zur Folge hat. Wir sind hier der Literatur gefolgt, welche diese Strukturbrüche meistens nicht weiter beachtet. Eine einfache Methode das Problem zu umgehen ist bei der Betrachtung von Änderungsraten die betreffenden Zeiträume auszulassen.
+Woloszko (2020) ist nach unserem Kenntnisstand das einzige Paper welches diese Strukturbrüche genauer adressiert.
+
 
 
 # Funktionen
@@ -127,7 +138,7 @@ roll(keywords = "ikea",
 
 ## daily_series
 
-Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation steht hier aber noch aus, ist jedoch wegen dem noch nicht gelösten IP-Problem momentan nicht durchführbar. 
+Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation konnte jedoch wegen dem noch nicht gelösten IP-Problem noch nicht durchgeführt werden, steht also noch aus. 
 
 ```{r message=FALSE}
 daily_series(keyword = c("arbeitslos"),

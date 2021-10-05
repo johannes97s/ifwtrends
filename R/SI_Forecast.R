@@ -4,75 +4,103 @@
 # library(tsbox)
 # library(zoo)
 # library(lubridate)
-# library(caret)
 # library(glmnet)
 # library(lattice)
-# library(RJDemetra)
-#
-# g_index <- function(
-#   keyword = NA,
-#   category = 0,
-#   geo = "DE",
-#   time = str_c("2006-01-01 ", Sys.Date())){
-#
-#     start <- str_sub(time, 1,10)
-#     end <- str_sub(time, 12,21)
-#     dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
-#
-#
-#     fit <- as_tibble(openxlsx::read.xlsx("data/trend_67_0921.xlsx", detectDates = T)) %>%
-#       select(time = date, fit) %>%
-#       filter(time >= as.Date(start))
-#
-#     g_dat2 <- ts_gtrends(keyword = keyword,
-#                         category = category,
-#                         geo = "DE",
-#                         time = time) %>%
-#                 mutate(value = log(value)) %>%
-#                 mutate(value = replace(value, value == -Inf, NA_real_)) %>%
-#                 mutate(value = na.approx(value, rule = 2))
-#     if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(as.vector(sapply(category, rep, length(dates)))))
-#
-#
-#     #g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
-#     g_dat <- g_dat2 %>%
-#       left_join(fit, by = "time") %>%
-#       mutate(time = as.Date(time), adj = value - fit)
-#
-#
-#     g_dat_adj <- g_dat %>%
-#       select(id, time, adj) %>%
-#       seas_adj(freq = "quart", method = "arima") %>%
-#       rename(s_adj = value)
-#     #print(g_dat_adj)
-#     if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(rep(category, each = length(dates))))
-#
-#
-#
-#
-#
-#     g_dat <- left_join(g_dat, g_dat_adj, by = c("time", "id")) %>%
-#       unique()
-#
-#
-#     index <- g_dat %>%
-#       select(id, time, s_adj) %>%
-#       group_by(id) %>%
-#       #mutate(s_adj = c(0, diff(s_adj, 1))) %>%
-#       group_by(id) %>%
-#       mutate(lag_1 = lag(s_adj),
-#              #lag_2 = lag(s_adj,2),
-#              #lag_3 = lag(s_adj,3),
-#              #lag_4 = lag(s_adj,4)
-#              ) %>%
-#       ungroup() %>%
-#       rename(lag_0 = s_adj) %>%
-#       filter(across(everything(), ~!is.na(.))) %>%
-#       pivot_longer(cols = -c(id, time), names_to = "lag", values_to = "value") %>%
-#       pivot_wider(names_from = c(id, lag), values_from = value)
-#
-#       return(index)
-# }
+
+#'Aufbereitung der Google Daten.
+#'@description \code{g_index} lädt für mehrere Suchbegriffe/Kategorien Daten herunter, führt log Trafo und Saisonbereinigung durch und gibt (gelagte) erste Differenzen aus
+#'
+#'@param keyword Eine character-Vektor mit dem Suchbegriffen
+#'@param category Ein Numeric Vektor mit den Kategorien
+#'@param geo Die Region
+#'@param time Der Zeitraum in der Angabe wie in ts_gtrends
+#'@return Für jede Reihe wird zunächst eine log-Trafo durchgeführt. Dann wird mit JDemetra eine Saisonbereinigung mit X-13 Arima durchgeführt. Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
+#'@examples \dontrun{
+#'pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1)
+#'}
+#'@import magrittr tibble gtrendsR
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr filter
+#' @importFrom dplyr bind_cols
+#' @importFrom dplyr bind_rows
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_wider
+#' @importFrom stats prcomp
+#' @importFrom tidyselect any_of
+#' @importFrom tsbox ts_ts
+#' @importFrom lubridate as_date
+#' @importFrom stringr str_c
+#' @import tsbox
+#' @import gtrendsR
+#' @import trendecon
+#' @import zoo
+#' @export
+
+g_index <- function(
+  keyword = NA,
+  category = 0,
+  geo = "DE",
+  time = str_c("2006-01-01 ", Sys.Date())){
+
+    start <- str_sub(time, 1,10)
+    end <- str_sub(time, 12,21)
+    dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
+
+
+    fit <- as_tibble(openxlsx::read.xlsx("data/trend_67_0921.xlsx", detectDates = T)) %>%
+      select(time = date, fit) %>%
+      filter(time >= as.Date(start))
+
+    g_dat2 <- ts_gtrends(keyword = keyword,
+                        category = category,
+                        geo = "DE",
+                        time = time) %>%
+                mutate(value = log(value)) %>%
+                mutate(value = replace(value, value == -Inf, NA_real_)) %>%
+                mutate(value = na.approx(value, rule = 2))
+    if (!("id" %in% names(g_dat2))) g_dat2 <- mutate(g_dat2, id = as.character(as.vector(sapply(category, rep, length(dates)))))
+
+
+    #g_dat <- ts_pick(ts_prcomp(g_dat), "PC1")
+    g_dat <- g_dat2 %>%
+      left_join(fit, by = "time") %>%
+      mutate(time = as.Date(time), adj = value - fit)
+
+
+    g_dat_adj <- g_dat %>%
+      select(id, time, adj) %>%
+      seas_adj(freq = "quart", method = "arima") %>%
+      rename(s_adj = value)
+    #print(g_dat_adj)
+    if (!("id" %in% names(g_dat_adj))) g_dat_adj <- mutate(g_dat_adj, id = as.character(rep(category, each = length(dates))))
+
+
+
+
+
+    g_dat <- left_join(g_dat, g_dat_adj, by = c("time", "id")) %>%
+      unique()
+
+
+    index <- g_dat %>%
+      select(id, time, s_adj) %>%
+      group_by(id) %>%
+      #mutate(s_adj = c(0, diff(s_adj, 1))) %>%
+      group_by(id)
+      mutate(lag_1 = lag(s_adj),
+             #lag_2 = lag(s_adj,2),
+             #lag_3 = lag(s_adj,3),
+             #lag_4 = lag(s_adj,4)
+             ) %>%
+      ungroup() %>%
+      rename(lag_0 = s_adj) %>%
+      filter(across(everything(), ~!is.na(.))) %>%
+      pivot_longer(cols = -c(id, time), names_to = "lag", values_to = "value") %>%
+      pivot_wider(names_from = c(id, lag), values_from = value)
+
+      return(index)
+}
 #
 #
 # start = "2006-01-01"
