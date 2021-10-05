@@ -9,8 +9,7 @@ pca(
   categories = 0,
   geo = "DE",
   start = "2006-01-01 CET",
-  end = Sys.Date(),
-  components = max(length(keywords), length(categories))
+  end = Sys.Date()
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ pca(
 \item{start}{Das Startdatum der Zeitreihen.}
 
 \item{end}{Das Enddatum der Zeitreihen.}
-
-\item{components}{Die gewuenschte Anzahl an Hauptkomponenten.}
 }
 \value{
 Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
@@ -34,6 +31,6 @@ Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 }
 \examples{
 \dontrun{
-pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1)
+pca(keywords = c("ikea", "saturn"), end = "2020-01-01")
 }
 }
