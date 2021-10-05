@@ -11,10 +11,12 @@
 #'If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
 #'If \code{"comtrend"}, there is a polynom of degree 5 with id-Fixed Effects estimated, which captures the common trend. The residuals where then used as the adjusted series. For further Detial see Woloszko et.al. (2020)
 #'
-#'@example
+#'@examples
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
 #'trend_adj(series, log.trafo = T, method = "firstdiff")
-#'@import tidyverse gtrendsR tsbox RJDemetra zoo
+#'@import dplyr tsbox zoo
+#' @importFrom RJDemetra x13
+#' @importFrom gtrendsR gtrends
 #'@export
 trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
@@ -48,15 +50,18 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
 #'If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
 #'
-#'@example
+#' @examples
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
-#'seas_adj(series, freq = "month, log.traf = T, method = "firstdiff")
-#'@import tidyverse gtrendsR tsbox RJDemetra zoo
+#'seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
+#'@import dplyr tsbox zoo
+#' @importFrom RJDemetra x13
+#' @importFrom gtrendsR gtrends
 #'@export
 seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
   if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
 
-  if(method == "arima"){                      #Saisonbereinigung mit X-13 ARIMA
+  if(method == "arima"){
+    #Saisonbereinigung mit X-13 ARIMA
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
     series <- ts_ts(series)
     h <- function(ts){
