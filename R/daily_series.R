@@ -33,13 +33,13 @@ daily_series <- function(keyword = c("arbeitslos"),
     geo = geo,
     from = from,
     stepsize = "15 days", windowsize = "6 months",
-    n_windows = 400, wait = 20, retry = 10,
+    n_windows = as.numeric((Sys.Date() - from-180)/15) + 50, wait = 20, retry = 10, #n_windows calculated such that it reaches up to current date
     prevent_window_shrinkage = TRUE
   )
   d2 <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
-    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2],
+    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2], #Heute -90 Tage
     stepsize = "1 day", windowsize = "3 months",
     n_windows = 12, wait = 20, retry = 10,
     prevent_window_shrinkage = FALSE
@@ -52,7 +52,7 @@ daily_series <- function(keyword = c("arbeitslos"),
     geo = geo,
     from = from,
     stepsize = "11 weeks", windowsize = "5 years",
-    n_windows = 88, wait = 20, retry = 10,
+    n_windows = as.numeric((Sys.Date() - from - 5*365)/(11*7)) + 10, wait = 20, retry = 10,
     prevent_window_shrinkage = TRUE
   )
   w2 <- trendecon:::ts_gtrends_windows(
@@ -70,8 +70,8 @@ daily_series <- function(keyword = c("arbeitslos"),
     keyword = keyword,
     geo = geo,
     from = from,
-    stepsize = "1 month", windowsize = "17 years",
-    n_windows = 1, wait = 20, retry = 10,
+    stepsize = "1 month", windowsize = "15 years",
+    n_windows = (Sys.Date() - from - 15*365)/(30) + 12, wait = 20, retry = 10,
     prevent_window_shrinkage = FALSE
   )
   m2 <- trendecon:::ts_gtrends_windows(
@@ -126,12 +126,35 @@ daily_series <- function(keyword = c("arbeitslos"),
   as_tibble(mwd)
 }
 
+keyword = "arbeitslos"
+geo = "DE"
+from = as.Date("2006-01-01")
+trendecon:::ts_gtrends_windows(
+  keyword = keyword,
+  geo = geo,
+  from = from,
+  stepsize = "11 weeks", windowsize = "5 years",
+  n_windows = as.numeric((Sys.Date() - from-180)/15), wait = 20, retry = 10,
+  prevent_window_shrinkage = TRUE)
+
+
+Sys.Date() - from
+
+
+
+
+
+
+
+
+
+
+
+
 ###############Tests
 
 
-# keyword = "arbeitslos"
-# geo = "DE"
-# from = "2006-01-01"
+
 #
 # series <- daily_series(keyword = "arbeitslos",
 #                        geo = "DE",

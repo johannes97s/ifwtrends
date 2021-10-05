@@ -16,18 +16,20 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ifwtrends)
+library(knitr)
 library(dplyr)
 library(tibble)
 library(ggplot2)
 ```
-#Google-Trends Daten
+# Google-Trends Daten
+## Suchanfragen
 Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes zur Verfügung.
 Hier folgt zunächst ein grundlegende Beschreibung der Daten um dann deren statistische Besonderheiten näher zu beleuchten. 
 <!-- ## Die Daten -->
 Die Zeitreihen reichen bis 2004-01-01 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
 Hier sollte beachtet werden, dass Google in einigen Ländern, insbesondere autoritär regierten wie China, nicht verfügbar ist und für diese Länder deshalb keine Daten vorhanden sind.
 Bei den möglichen Suchanfragen unterschiedet man zwischen _terms_, _topics_ und _categories_.
-Google definiert einen _term_ wie folgt (Google 2021):
+Google definiert einen _term_ wie folgt (Google1 2021):
 
 
 "Search terms show matches for all terms in your query, in the language given.
@@ -48,7 +50,28 @@ Die Eingabe eines Suchbegriffs als Topic führt also vor allem zu einer Invarian
 Die Differenzierung zwischen Topic und Term ist aber lediglich in der Google Suchmaske möglich.
 Bei der Nutzung der R-Funktionen zum herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_ sondern bezeichnen beides als _Suchbegriff_.
 
-Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann für einen Suchbegriff eine _category_ gewählt werden. 
+Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann bei einer Abfrage zusätzlich eine _category_ angegeben werden. Bei Google heißt es hierzu (Google2 2021:
+
+"If you're using Trends to search for a word that has multiple meanings, you can filter your results to a certain category to get data for the right version of the word. For example, if you search for “jaguar,” you can add a category to indicate if you mean the animal or the car manufacturer."
+
+Des Weiteren kann der Index auch nur für eine Kategorie ohne Angabe eines speziellen Suchbegriffs berechnet werden, dann gehen alle Suchanfragen welche Google dieser zuordnet in den Index mit ein. Dieses Vorgehen wird im Folgenden häufiger verwendet.
+
+## Statistische Besonderheiten
+### Berechnung des Index
+Der Google Index ist ein relativer Index. Er gibt den Anteil der Suchanfragen eines Suchbegriffs/Kategorie zum Zeitpunkt $t$ an der Gesamtzahl der Suchanfragen zu diesem Zeitpunkt $t$ an, normiert mit einer multiplikativen Konstanten, sodass das Maximum des Index im betrachteten Zeitraum bei 100 liegt. 
+$$ SVI_{ct} = \frac{SV_{ct}}{SVT_t}\cdot C_c$$
+(Woloszko 2020). Hierbei hängt $C_c$ vom Zeitfenster ab für welches die Daten heruntergeladen werden.
+Der Wert des Indexes zum Zeitpunk $t$ kann also unterschiedlich sein, je nachdem welches Zeitfenster man herunterlädt. Dies sollte bei der Arbeit mit den Daten immer beachtet werden. Insbesondere kann für frühere Zeiträume nicht der Index bis zu diesem Zeitpunkt abgeschnitten werden, sondern muss immer neu heruntergeladen werden.
+
+### Allgemeiner Trend
+Da die Nutzung von Google und damit auch die Anzahl verschiedener Suchbegriffe stark zugenommen hat, sinkt für jeden einzelnen Suchbegriff der relative Anteil im Zeitverlauf \@ref(comtrend).
+
+![comtrend]("common_trend.png")
+Im Abschnitt ?? beschreiben wir, wie um diesen Trend bereinigt werden kann und wie dies in unserem Paket implementiert ist.
+
+### Frequenz
+
+
 
 
 
@@ -57,21 +80,18 @@ Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann für
 ## pca
 Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeireihen). Für die Zeitreihen wird hier momentan monatliche Frequenz angenommen.
 
-
 ```{r message=FALSE}
 pca(keywords = c("ikea", "saturn"),
     categories = 0,
     geo = "DE",
     start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    end = Sys.Date())
 
 pca(keywords = NA,
     categories = c(651),
     geo = "DE",
     start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    end = Sys.Date())
   
   
 ```
@@ -111,8 +131,7 @@ dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
     categories = 0,
     geo = "DE",
     start = "2006-08-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    end = Sys.Date())
 
 series <- dat %>% select(date, 6:9)
 factors <- dat %>% select(date, 2:5)
@@ -121,8 +140,8 @@ factorR2(series, factors, plot = T)
 ```
 
 
-#Quellen
-Google 2021:    https://support.google.com/trends/answer/4359550?hl=en
-
-
+## Quellen
+Google1 2021:   https://support.google.com/trends/answer/4359550?hl=en
+Google2 2021:   https://support.google.com/trends/answer/4359597?hl=en
+Woloszko 2020:  Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634.
 

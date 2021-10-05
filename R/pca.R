@@ -30,8 +30,7 @@ pca <- function(keywords = NA,
                 categories = 0,
                 geo = "DE",
                 start = "2006-01-01 CET",
-                end = Sys.Date(),
-                components = max(length(keywords), length(categories))){
+                end = Sys.Date()){
   stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
 
   # Check if function is used on the first day of the month
