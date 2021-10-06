@@ -16,6 +16,14 @@
 #' @importFrom tsbox ts_ts
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
+#' @import tsbox
+#' @import gtrendsR
+#' @import trendecon
+#' @import zoo
+#' @example \dontrun{
+#' g_index(keyword = c("ikea","saturn"), time = "2018-01-01 2021-01-01")
+#' }
+#' @importFrom gtrendsR gtrends
 #' @importFrom gtrendsR gtrends
 #' @export
 g_index <- function(

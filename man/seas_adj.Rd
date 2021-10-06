@@ -23,6 +23,12 @@ If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.}
 \code{seas_adj} Takes a tibble of timeseries and returns tibble with seasonal adjusted values.
 }
 \examples{
+\dontrun{
+series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
+series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+}
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 }

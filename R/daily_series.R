@@ -22,9 +22,9 @@
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
                          from = "2006-01-01"){
-
+  from = as.Date(from)
   n1 <- as.numeric((Sys.Date() - from-180)/15) + 50
-
+  ifelse(n1 > 0, n1 <- n1, n1 <- 4) #set n1 if negativ
   str(n1)
 
   d <- trendecon:::ts_gtrends_windows(
@@ -47,6 +47,7 @@ daily_series <- function(keyword = c("arbeitslos"),
 
   # download weekly series
   n2 <- as.numeric((Sys.Date() - from - 5*365)/(11*7)) + 10
+  ifelse(n2 > 0, n2<-n2, n2<-4)
   str(n2)
   w <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
@@ -68,6 +69,7 @@ daily_series <- function(keyword = c("arbeitslos"),
 
   # download monthly series
   n3 <- as.numeric(Sys.Date() - from - 15*365)/(30) + 12
+  ifelse(n3 > 0, n3<-n3, n3 <- 4)
   str(n3)
   m <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
@@ -171,8 +173,8 @@ daily_series <- function(keyword = c("arbeitslos"),
 #
 # series <- daily_series(keyword = "arbeitslos",
 #                        geo = "DE",
-#                        from = "2006-01-01")
-#
+#                        from = "2021-06-01")
+# #
 # series %>%
 #   mutate(month = floor_date(time, "month")) %>%
 #   group_by(month) %>%
