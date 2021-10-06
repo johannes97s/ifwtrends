@@ -1,12 +1,3 @@
-# library(tidyverse)
-# library(gtrendsR)
-# library(trendecon)
-# library(tsbox)
-# library(zoo)
-# library(lubridate)
-# library(glmnet)
-# library(lattice)
-
 #'Aufbereitung der Google Daten.
 #'@description \code{g_index} lädt für mehrere Suchbegriffe/Kategorien Daten herunter, führt log Trafo und Saisonbereinigung durch und gibt (gelagte) erste Differenzen aus
 #'
@@ -17,12 +8,7 @@
 #'@return Für jede Reihe wird zunächst eine log-Trafo durchgeführt.
 #' Dann wird mit JDemetra eine Saisonbereinigung mit X-13 Arima durchgeführt.
 #' Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
-#'@import magrittr tibble gtrendsR
-#' @importFrom dplyr mutate
-#' @importFrom dplyr select
-#' @importFrom dplyr filter
-#' @importFrom dplyr bind_cols
-#' @importFrom dplyr bind_rows
+#'@import magrittr tibble zoo trendecon dplyr
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
 #' @importFrom stats prcomp
@@ -30,12 +16,8 @@
 #' @importFrom tsbox ts_ts
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
-#' @import tsbox
-#' @import gtrendsR
-#' @import trendecon
-#' @import zoo
+#' @importFrom gtrendsR gtrends
 #' @export
-
 g_index <- function(
   keyword = NA,
   category = 0,
