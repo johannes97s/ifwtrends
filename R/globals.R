@@ -7,5 +7,9 @@ utils::globalVariables(c(
   "category",
   "hits",
   "dates",
-  "key"
+  "key",
+  "str",
+  "str_sub",
+  "adj",
+  "s_adj"
 ))
