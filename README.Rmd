@@ -41,7 +41,7 @@ library(ifwtrends)
 pca(keywords = c("Pluto", "Saturn"),
     categories = 0,
     geo = "DE",
-    start = "2006-01-01",
+    start = "2020-01-01",
     end = Sys.Date())
 
 # Search for a GTrends category and do a subsequent PC
@@ -49,7 +49,7 @@ pca(keywords = c("Pluto", "Saturn"),
 pca(keywords = NA,
     categories = c(651),
     geo = "DE",
-    start = "2006-01-01",
+    start = "2020-01-01",
     end = Sys.Date())
 
 ```
