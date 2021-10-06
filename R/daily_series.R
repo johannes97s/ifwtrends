@@ -125,41 +125,42 @@ daily_series <- function(keyword = c("arbeitslos"),
   as_tibble(mwd)
 }
 
-keyword = "arbeitslos"
-geo = "DE"
-from = as.Date("2006-01-01")
-
-daily_series(keyword = keyword,
-             geo = geo,
-             from = from)
-
-
-trendecon:::ts_gtrends_windows(
-  keyword = keyword,
-  geo = geo,
-  from = from,
-  stepsize = "11 weeks", windowsize = "5 years",
-  n_windows = as.numeric((Sys.Date() - from-180)/15), wait = 20, retry = 10,
-  prevent_window_shrinkage = TRUE)
-
-
-Sys.Date() - from
-
-t<-.Last.value
-
-t2 <- t %>% mutate(time = floor_date(time, "month")) %>%
-  group_by(time) %>%
-  mutate(m = mean(value))
-
-plot(select(t2, time, m), t ="l")
-lines(s, col = "red")
-
-
-
-
-
 
 ###############Tests
+
+# keyword = "arbeitslos"
+# geo = "DE"
+# from = as.Date("2006-01-01")
+#
+# daily_series(keyword = keyword,
+#              geo = geo,
+#              from = from)
+#
+#
+# trendecon:::ts_gtrends_windows(
+#   keyword = keyword,
+#   geo = geo,
+#   from = from,
+#   stepsize = "11 weeks", windowsize = "5 years",
+#   n_windows = as.numeric((Sys.Date() - from-180)/15), wait = 20, retry = 10,
+#   prevent_window_shrinkage = TRUE)
+#
+#
+# Sys.Date() - from
+#
+# t<-.Last.value
+#
+# t2 <- t %>% mutate(time = floor_date(time, "month")) %>%
+#   group_by(time) %>%
+#   mutate(m = mean(value))
+#
+# plot(select(t2, time, m), t ="l")
+# lines(s, col = "red")
+
+
+
+
+
 
 
 
