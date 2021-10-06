@@ -12,17 +12,21 @@
 #'@examples \dontrun{
 #' daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
 #' }
-#'@import gtrendsR trendecon tsbox lubridate zoo tibble tempdisagg magrittr
+#'@import trendecon tsbox lubridate zoo tibble tempdisagg magrittr
 #'@importFrom dplyr select
 #'@importFrom dplyr mutate
 #'@importFrom dplyr filter
+#'@importFrom gtrendsR gtrends
 #'@importFrom stats time
 #'@export
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
                          from = "2006-01-01"){
+
   n1 <- as.numeric((Sys.Date() - from-180)/15) + 50
+
   str(n1)
+
   d <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
