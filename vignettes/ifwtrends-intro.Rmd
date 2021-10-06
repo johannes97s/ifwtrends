@@ -2,7 +2,7 @@
 title: "Vignette ifwtrends"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Demo_functions}
+  %\VignetteIndexEntry{ifwtrends_intro}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,7 @@ library(ggplot2)
 ```
 
 # Einordnung
-Es gibt eine große Literatur welche Google Trends Daten in unterschiedlichen Modellen benutzt um verschiedene Ökonomische variablen zu prognostizieren. Einen ausführlichen Überblick gibt hierzu der Bericht _Big Data in der makroökonomischen Analyse_ (Kieler Beiträge zur Wirtschaftspolitik Nr. 32), Abschnitt 2.3.4. Zusammenfassend lässt sich sagen, dass die zusätzliche Verwendung von Google Daten dort, wo schon andere Indikatoren vorliegen, zu keiner relevanten Verbesserung der Prognosen führt. Prognosen welche nur auf Google Daten beruhen schneiden aber meist ähnlich gut ab wie solche nur mit klassischen Indikatoren. Die Stärke der Google Daten liegt vor allem in ihrer hohen regionalen und zeitlichen Verfügbarkeit. Dies führt unserer Ansicht nach zu drei zentralen Anwendungsfeldern für Google Daten in der Prognose.
+Es gibt eine große Literatur, welche Google Trends Daten in unterschiedlichen Modellen benutzt, um verschiedene ökonomische Variablen zu prognostizieren. Einen ausführlichen Überblick gibt hierzu der Bericht _Big Data in der makroökonomischen Analyse_ (Kieler Beiträge zur Wirtschaftspolitik Nr. 32), Abschnitt 2.3.4. Zusammenfassend lässt sich sagen, dass die zusätzliche Verwendung von Google Daten dort, wo schon andere Indikatoren vorliegen, zu keiner relevanten Verbesserung der Prognosen führt. Prognosen welche nur auf Google Daten beruhen schneiden aber meist ähnlich gut ab wie solche nur mit klassischen Indikatoren. Die Stärke der Google Daten liegt vor allem in ihrer hohen regionalen und zeitlichen Verfügbarkeit. Dies führt unserer Ansicht nach zu drei zentralen Anwendungsfeldern für Google Daten in der Prognose.
 
 1. Als Prognosevariablen, wenn klassische, quartalsweise erscheinende, Variablen noch nicht vorliegen.
 2. Als Prognosevariablen für Länder für die sonst wenige Indikatoren vorliegen.
@@ -111,14 +111,13 @@ Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entge
 pca(keywords = c("ikea", "saturn"),
     categories = 0,
     geo = "DE",
-    start = "2006-01-01",
+    start = "2018-01-01",
     end = Sys.Date())
 
 pca(keywords = NA,
     categories = c(651),
     geo = "DE",
-    start = "2006-01-01",
-
+    start = "2018-01-01",
     end = Sys.Date())
 ```
 
@@ -131,9 +130,9 @@ Sowohl `pca` als auch `roll` könnten bei Bedarf umgeschrieben werden, sodass st
 ```{r message=FALSE}
 roll(keywords = "ikea",
      geo = "DE",
-     start_series = "2006-01-01",
-     start_period = "2006-05-01",
-     end = "2006-12-01")
+     start_series = "2018-01-01",
+     start_period = "2018-05-01",
+     end = "2018-12-01")
 ```
 
 ## daily_series
@@ -155,7 +154,7 @@ Für schon berechnete Faktoren `factors` aus Zeitreihen `series` ist dies eine M
 dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
     categories = 0,
     geo = "DE",
-    start = "2006-08-01",
+    start = "2018-08-01",
     end = Sys.Date())
 
 series <- dat %>% select(date, 6:9)
@@ -178,7 +177,7 @@ auftreten, so bedeutet dies, dass das Paket nicht mehr auf Google Trends Daten z
 * Warten, bis die IP-Sperre aufgehoben wurden ist. I.d.R. hält der Bann etwa einen Tag bzw. bis zum Ende des Tages an.
 
 
-## Quellen
+# Quellen
 Google1 2021:   https://support.google.com/trends/answer/4359550?hl=en\
 Google2 2021:   https://support.google.com/trends/answer/4359597?hl=en\
 Woloszko 2020:  Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634.\
