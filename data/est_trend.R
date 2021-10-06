@@ -1,12 +1,12 @@
 #' Schätzt den Trend einer GTrends-Kategorie
-#' @description \code{est_trends}. Schätzt den Trend einer GTrends-Kategorie
+#' @description \code{est_trend}. Schätzt den Trend einer GTrends-Kategorie
 #'
 #' Schätzt den gemeinsamen Trend aller Google Reihen.
 #'
 #' @return Gibt eine Zeitreihe zurück, die den polynomialen Trend
 #' fünften Grades einer Kategorie enthält.
 #' @examples \dontrun{
-#' est_trends()
+#' est_trend()
 #' }
 #' @import tibble magrittr
 #' @importFrom gtrendsR gtrends
@@ -73,6 +73,6 @@ est_trend <- function(){
 }
 
 
-
+print("blubb")
 
 
