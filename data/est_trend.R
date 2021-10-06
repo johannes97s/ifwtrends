@@ -35,7 +35,7 @@ est_trend <- function(){
 
   series <- tibble(date = dates)
   missing = NULL
-  cat_samp <- unique(c(sample(gtrendsR::categories$id, 280), "67")) #67 is arbitrary chosen
+  cat_samp <- unique(c(sample(gtrendsR::categories$id, 20), "67")) #67 is arbitrary chosen
 
   k = 0
   for (i in cat_samp){
@@ -61,18 +61,23 @@ est_trend <- function(){
 
   series <- series %>%
     pivot_longer( cols = -date, names_to = "id", values_to = "value") %>%
-    mutate(value = log(value))
+    mutate(value = log(value)) %>%
+    arrange(id)
 
-  write.xlsx(series, "data/cat_sample_Q32021.xlsx")
-  series <- read_excel("data/cat_sample_Q42019.xlsx")
+  saveRDS(series, "data/cat_sample.rds")
 
-  series<-arrange(series, id)
-  fit <- lm(value ~ id -1 +poly(as.numeric(date), 5, raw = T), data = series)
-  series <- mutate(series, date = as.Date(date), fit = fit)
+  fit <- unname(lm(value ~ id -1 +poly(as.numeric(date), 5, raw = T), data = series)$fitted.values)
+  comtrend <- series %>%
+    mutate(trend = fit) %>%
+    filter(id == 67) %>%
+    select(date, trend)
+  saveRDS(comtrend, "data/comtrend.rds")
   series
 }
 
-
 print("blubb")
+
+
+
 
 

@@ -37,7 +37,7 @@ g_index <- function(
     dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
 
-    fit <- as_tibble(openxlsx::read.xlsx("data/trend_67_0921.xlsx", detectDates = T)) %>%
+    fit <- readRDS("data/comtrend.rds") %>%
       select(time = date, fit) %>%
       filter(time >= as.Date(start))
 
