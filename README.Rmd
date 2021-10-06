@@ -32,7 +32,9 @@ devtools::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+If you want to do a principal component analysis
+(PCA) on a Google Trends (GTrends or GT) time series, 
+you can do:
 
 ```{r example}
 library(ifwtrends)

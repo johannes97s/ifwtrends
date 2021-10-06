@@ -11,7 +11,7 @@ trend_adj(series, log.trafo = F, method = "firstdiff")
 
 \item{log.trafo}{Logical, indicates if value should be transformed to log(value).}
 
-\item{method.}{Character which method for trend adjustment should be choosen. See Details.
+\item{method}{Character which method for trend adjustment should be choosen. See Details.
 
 For trend_method there can be choosen \code{"firstdiff"} and \code{"comtrend"}.
 If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
@@ -21,6 +21,6 @@ If \code{"comtrend"}, there is a polynom of degree 5 with id-Fixed Effects estim
 \code{trend_adj} Takes a tibble of timeseries and returns tibble with trend adjusted values.
 }
 \examples{
-series <- ts_gtrends(c("ikea", "saturn"), time = "all")
-trend_adj(series, log.trafo = T, method = "firstdiff")
+series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+trend_adj(series, log.trafo = TRUE, method = "firstdiff")
 }

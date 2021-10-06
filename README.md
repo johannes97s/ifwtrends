@@ -6,7 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-ifwtrends is used to evaluate Google Trends data for economic forecasts.
+ifwtrends is used to evaluate Google Trends data to support economic
+forecasts.
 
 ## Installation
 
@@ -20,7 +21,8 @@ devtools::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+If you want to do a principal component analysis (PCA) on a Google
+Trends (GTrends or GT) time series, you can do:
 
 ``` r
 library(ifwtrends)
@@ -29,51 +31,49 @@ library(ifwtrends)
 pca(keywords = c("Pluto", "Saturn"),
     categories = 0,
     geo = "DE",
-    start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    start = "2020-01-01",
+    end = Sys.Date())
 #> [time]: 'date'
-#> # A tibble: 190 × 5
+#> # A tibble: 22 x 5
 #>    date          PC1    PC2 Pluto Saturn
 #>    <date>      <dbl>  <dbl> <int>  <int>
-#>  1 2006-01-01  -8.90  2.91     11     44
-#>  2 2006-02-01 -23.0   0.493     8     30
-#>  3 2006-03-01 -20.0   0.368     8     33
-#>  4 2006-04-01 -16.0   1.20      9     37
-#>  5 2006-05-01 -21.1  -2.59      5     32
-#>  6 2006-06-01 -16.0   0.201     8     37
-#>  7 2006-07-01 -18.1  -2.71      5     35
-#>  8 2006-08-01 -15.6  10.2      18     37
-#>  9 2006-09-01 -13.9   4.11     12     39
-#> 10 2006-10-01  -3.91  2.70     11     49
-#> # … with 180 more rows
+#>  1 2020-01-01  1.90   0.544    10     56
+#>  2 2020-02-01 -4.10   0.406    10     50
+#>  3 2020-03-01 -6.12   1.36      9     48
+#>  4 2020-04-01  1.92  -0.456    11     56
+#>  5 2020-05-01  6.96  -2.34     13     61
+#>  6 2020-06-01  8.94  -1.29     12     63
+#>  7 2020-07-01 -1.06  -1.52     12     53
+#>  8 2020-08-01  0.897  0.521    10     55
+#>  9 2020-09-01 -1.10   0.475    10     53
+#> 10 2020-10-01  1.90   0.544    10     56
+#> # ... with 12 more rows
 
 # Search for a GTrends category and do a subsequent PC
 # analysis
 pca(keywords = NA,
     categories = c(651),
     geo = "DE",
-    start = "2006-01-01",
-    end = Sys.Date(),
-    components = max(length(keywords), length(categories)))
+    start = "2020-01-01",
+    end = Sys.Date())
 #> [time]: 'date'
-#> # A tibble: 190 × 3
-#>    date         PC1 `651`
-#>    <date>     <dbl> <int>
-#>  1 2006-01-01  33.6    79
-#>  2 2006-02-01  25.6    71
-#>  3 2006-03-01  22.6    68
-#>  4 2006-04-01  28.6    74
-#>  5 2006-05-01  33.6    79
-#>  6 2006-06-01  25.6    71
-#>  7 2006-07-01  31.6    77
-#>  8 2006-08-01  21.6    67
-#>  9 2006-09-01  22.6    68
-#> 10 2006-10-01  25.6    71
-#> # … with 180 more rows
+#> # A tibble: 22 x 3
+#>    date          PC1 `651`
+#>    <date>      <dbl> <int>
+#>  1 2020-01-01 -4.18     38
+#>  2 2020-02-01 -3.18     39
+#>  3 2020-03-01 -1.18     41
+#>  4 2020-04-01 -4.18     38
+#>  5 2020-05-01 -1.18     41
+#>  6 2020-06-01  1.82     44
+#>  7 2020-07-01  0.818    43
+#>  8 2020-08-01 -1.18     41
+#>  9 2020-09-01 -2.18     40
+#> 10 2020-10-01  3.82     46
+#> # ... with 12 more rows
 ```
 
-## Roadmap
+## Functions and Roadmap
 
 | Function         | Description                                                                      | Status        |
 |------------------|----------------------------------------------------------------------------------|---------------|
