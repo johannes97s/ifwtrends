@@ -16,7 +16,6 @@
 #' @importFrom tsbox ts_ts
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
-<<<<<<< HEAD:R/SI_Forecast.R
 #' @import tsbox
 #' @import gtrendsR
 #' @import trendecon
@@ -24,9 +23,8 @@
 #' @example \dontrun{
 #' g_index(keyword = c("ikea","saturn"), time = "2018-01-01 2021-01-01")
 #' }
-=======
 #' @importFrom gtrendsR gtrends
->>>>>>> f1ef3af61e4149fe01aa1bb96d9de64d16a372f5:R/g_index.R
+#' @importFrom gtrendsR gtrends
 #' @export
 g_index <- function(
   keyword = NA,

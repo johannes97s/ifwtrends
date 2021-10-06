@@ -50,16 +50,16 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
 #'If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
 #'
-<<<<<<< HEAD
 #' @examples \dontrun{
 #'series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 #'seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
 #'}
-=======
 #' @examples
 #'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 #'seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
->>>>>>> f1ef3af61e4149fe01aa1bb96d9de64d16a372f5
+#' @examples
+#'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+#'seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 #'@import dplyr tsbox zoo
 #'@import rJava
 #' @importFrom RJDemetra x13
