@@ -14,10 +14,9 @@
 #'@param category Ein Numeric Vektor mit den Kategorien
 #'@param geo Die Region
 #'@param time Der Zeitraum in der Angabe wie in ts_gtrends
-#'@return Für jede Reihe wird zunächst eine log-Trafo durchgeführt. Dann wird mit JDemetra eine Saisonbereinigung mit X-13 Arima durchgeführt. Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
-#'@examples \dontrun{
-#'pca(keywords = c("ikea", "saturn"), end = "2020-01-01", components = 1)
-#'}
+#'@return Für jede Reihe wird zunächst eine log-Trafo durchgeführt.
+#' Dann wird mit JDemetra eine Saisonbereinigung mit X-13 Arima durchgeführt.
+#' Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
 #'@import magrittr tibble gtrendsR
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
