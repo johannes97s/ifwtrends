@@ -51,7 +51,7 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
 #'
 #' @examples
-#'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
+#'series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 #'seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
 #'@import dplyr tsbox zoo
 #' @importFrom RJDemetra x13
