@@ -34,6 +34,9 @@
 #' @import gtrendsR
 #' @import trendecon
 #' @import zoo
+#' @example \dontrun{
+#' g_index(keyword = c("ikea","saturn"), time = "2018-01-01 2021-01-01")
+#' }
 #' @export
 
 g_index <- function(

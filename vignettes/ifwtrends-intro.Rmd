@@ -142,7 +142,7 @@ Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche
 ```{r message=FALSE}
 daily_series(keyword = c("arbeitslos"),
              geo = "DE",
-             from = "2021-08-01")
+             from = "2021-06-01")
 ```
 
 ## factorR2

@@ -8,8 +8,9 @@
 #'@param end Das Enddatum der Zeitreihen.
 #'
 #'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
-#'@examples
+#'@examples \dontrun{
 #'pca(keywords = c("ikea", "saturn"),start = "2018-01-01", end = "2020-01-01")
+#'}
 #'@import magrittr tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select

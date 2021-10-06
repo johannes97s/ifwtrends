@@ -30,5 +30,7 @@ Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
 \code{pca} Berechnet fuer mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
 }
 \examples{
+\dontrun{
 pca(keywords = c("ikea", "saturn"),start = "2018-01-01", end = "2020-01-01")
+}
 }
