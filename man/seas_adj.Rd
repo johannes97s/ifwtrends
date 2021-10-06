@@ -26,9 +26,9 @@ If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.}
 \dontrun{
 series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
+}
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
-}
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 }
