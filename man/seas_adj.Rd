@@ -13,7 +13,7 @@ seas_adj(series, freq = "month", log.trafo = F, method = "arima")
 
 \item{log.trafo}{Logical, indicates if value should be transformed to log(value).}
 
-\item{method.}{Character which method for adjustment should be choosen. See Details.
+\item{method}{Character which method for adjustment should be choosen. See Details.
 
 For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
 If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
@@ -23,6 +23,6 @@ If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.}
 \code{seas_adj} Takes a tibble of timeseries and returns tibble with seasonal adjusted values.
 }
 \examples{
-series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
+series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 }

@@ -5,15 +5,15 @@
 #'
 #'@param series The input tibble in tidy form with columns \code{time}, \code{value} and optional column \code{id}.
 #'@param log.trafo Logical, indicates if value should be transformed to log(value).
-#'@param method. Character which method for trend adjustment should be choosen. See Details.
+#'@param method Character which method for trend adjustment should be choosen. See Details.
 #'
 #'For trend_method there can be choosen \code{"firstdiff"} and \code{"comtrend"}.
 #'If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
 #'If \code{"comtrend"}, there is a polynom of degree 5 with id-Fixed Effects estimated, which captures the common trend. The residuals where then used as the adjusted series. For further Detial see Woloszko et.al. (2020)
 #'
 #'@examples
-#'series <- ts_gtrends(c("ikea", "saturn"), time = "all")
-#'trend_adj(series, log.trafo = T, method = "firstdiff")
+#'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+#'trend_adj(series, log.trafo = TRUE, method = "firstdiff")
 #'@import dplyr tsbox zoo
 #' @importFrom RJDemetra x13
 #' @importFrom gtrendsR gtrends
@@ -44,15 +44,15 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'@param series The input tibble in tidy form with columns \code{time}, \code{value} and optional column \code{id}. Monthly or quarterly frequency.
 #'@param freq Character "month" or "quarter" for the frequency.
 #'@param log.trafo Logical, indicates if value should be transformed to log(value).
-#'@param method. Character which method for adjustment should be choosen. See Details.
+#'@param method Character which method for adjustment should be choosen. See Details.
 #'
 #'For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
 #'If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
 #'If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
 #'
 #' @examples
-#'series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-#'seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
+#'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+#'seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 #'@import dplyr tsbox zoo
 #' @importFrom RJDemetra x13
 #' @importFrom gtrendsR gtrends
