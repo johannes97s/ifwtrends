@@ -1,6 +1,6 @@
 Package: ifwtrends
 Title: Evaluating Google Trends data for economic forecasts
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(
     person("Johannes", "Schnebel", email = "johannes.schnebel@ifw-kiel.de", role = c("cre", "aut")),
     person("Mathis", "Clausen", email = "mathis.clausen@ifw-kiel.de", role = "ctb"))
