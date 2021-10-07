@@ -8,7 +8,8 @@ g_index(
   keyword = NA,
   category = 0,
   geo = "DE",
-  time = str_c("2006-01-01 ", Sys.Date())
+  time = str_c("2006-01-01 ", Sys.Date()),
+  lags = 0
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ g_index(
 \item{geo}{Die Region}
 
 \item{time}{Der Zeitraum in der Angabe wie in ts_gtrends}
+
+\item{lags}{Wie viele lags sollen als zusätzliche Spalte ausgegeben werden. Bis zu 4.}
 }
 \value{
 Für jede Reihe wird zunächst eine log-Trafo durchgeführt.

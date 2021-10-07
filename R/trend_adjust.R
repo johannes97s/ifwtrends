@@ -43,7 +43,6 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'
 #'@param series The input tibble in tidy form with columns \code{time}, \code{value} and optional column \code{id}. Monthly or quarterly frequency.
 #'@param freq Character "month" or "quarter" for the frequency.
-#'@param log.trafo Logical, indicates if value should be transformed to log(value).
 #'@param method Character which method for adjustment should be choosen. See Details.
 #'
 #'For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
@@ -65,9 +64,7 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #' @importFrom RJDemetra x13
 #' @importFrom gtrendsR gtrends
 #'@export
-seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
-  if (log.trafo) series <- mutate(series, value = log(value)) #Log-Trafo
-
+seas_adj <-function(series, freq = "month", method = "arima"){
   if(method == "arima"){
     #Saisonbereinigung mit X-13 ARIMA
     if (!("id" %in% names(series))) series <- mutate(series, id = "id")
@@ -77,9 +74,10 @@ seas_adj <-function(series, freq = "month", log.trafo = F, method = "arima"){
       return(m$final$series[,"sa"])
     }
 
-    if (dim(series)[2] == 1) series <- ts_tbl(h(series))
+    if (identical(dim(series), NULL)){
+      series <- ts_tbl(h(series))
+      }
     if (dim(series)[2] > 1){
-      print("blub")
       series <- as.list(series)
       series <- lapply(series, h)
       n <- names(series)

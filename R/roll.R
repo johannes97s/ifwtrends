@@ -1,8 +1,8 @@
 #' Gibt pca fuer Backtesting zurueck
 #'@description \code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
 #'
-#'@param keywords Eine character-Vektor mit dem Suchbegriffen
-#'@param categories Ein Numeric Vektor mit den Kategorien
+#'@param keyword Eine character-Vektor mit dem Suchbegriffen
+#'@param category Ein Numeric Vektor mit den Kategorien
 #'@param geo Die Region
 #'@param start_series Das Startdatum der Zeitreihen.
 #'@param start_period Das Startdatum des Ausgabefensters.
@@ -12,13 +12,13 @@
 #'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
 #'
 #'@examples \dontrun{
-#'roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
+#'roll(keyword = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
 #'}
 #'@importFrom stringr str_c
 #'@importFrom trendecon ts_gtrends
 #'@export
-roll <- function(keywords = NA,
-                 categories = 0,
+roll <- function(keyword = NA,
+                 category = 0,
                  geo = "DE",
                  start_series = "2006-01-01",
                  start_period = "2014-01-01",
@@ -28,8 +28,8 @@ roll <- function(keywords = NA,
   period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
   dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
   n <- length(dates)
-  f <- function(d) fun(keyword = keywords,
-                       category = categories,
+  f <- function(d) fun(keyword = keyword,
+                       category = category,
                        geo = geo,
                        time = stringr::str_c(start_series," ", d),
                        ...)
