@@ -5,8 +5,8 @@ library(lubridate)
 library(zoo)
 library(trendecon)
 library(gtrendsR)
+library(tsbox)
 
-"blubb"
 
 start = "2006-01-01"
 end = "2021-07-01"
@@ -38,7 +38,7 @@ category_ret = c(560, 121,
                  7, 143, 146, 508, 38)
 category_test = c(560,121,277)
 
-category = category_test
+
 
 res_raw <- g_index(keyword = NA, category = category_test,
                    time = str_c(start, " ", end),
@@ -59,8 +59,8 @@ r <-  roll(keyword = NA,
             end = end,
             fun = g_index,
             lags = 0)
-saveRDS(r, "data/roll_gindex_0721")
-r <- readRDS("data/roll_gindex_0721")
+saveRDS(r, "data/retail_gindex_roll_0721")
+r <- readRDS("data/retail_gindex_roll_0721")
 
 
 r <- lapply(r, function(x) mutate(x, across(.cols = -1, function(x) c(0, diff(x, 1))), .keep = "used"))
