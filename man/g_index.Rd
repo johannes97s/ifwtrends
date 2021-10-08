@@ -31,3 +31,8 @@ Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
 \description{
 \code{g_index} lädt für mehrere Suchbegriffe/Kategorien Daten herunter, führt log Trafo und Saisonbereinigung durch und gibt (gelagte) erste Differenzen aus
 }
+\examples{
+\dontrun{
+g_index(keyword = c("ikea","saturn"), time = "2018-01-01 2021-01-01")
+}
+}

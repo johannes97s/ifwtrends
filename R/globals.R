@@ -11,5 +11,6 @@ utils::globalVariables(c(
   "str",
   "str_sub",
   "adj",
-  "s_adj"
+  "s_adj",
+  "trend"
 ))

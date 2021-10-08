@@ -5,8 +5,8 @@
 \title{Gibt pca fuer Backtesting zurueck}
 \usage{
 roll(
-  keywords = NA,
-  categories = 0,
+  keyword = NA,
+  category = 0,
   geo = "DE",
   start_series = "2006-01-01",
   start_period = "2014-01-01",
@@ -16,9 +16,9 @@ roll(
 )
 }
 \arguments{
-\item{keywords}{Eine character-Vektor mit dem Suchbegriffen}
+\item{keyword}{Eine character-Vektor mit dem Suchbegriffen}
 
-\item{categories}{Ein Numeric Vektor mit den Kategorien}
+\item{category}{Ein Numeric Vektor mit den Kategorien}
 
 \item{geo}{Die Region}
 
@@ -40,6 +40,6 @@ Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzu
 }
 \examples{
 \dontrun{
-roll(keywords = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
+roll(keyword = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
 }
 }

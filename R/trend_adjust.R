@@ -55,10 +55,10 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
 #'}
 #' @examples
 #'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-#'seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+#'seas_adj(series, freq = "month", method = "firstdiff")
 #' @examples
 #'series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-#'seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+#'seas_adj(series, freq = "month",  method = "firstdiff")
 #'@import dplyr tsbox zoo
 #'@import rJava
 #' @importFrom RJDemetra x13
