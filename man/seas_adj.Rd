@@ -4,14 +4,12 @@
 \alias{seas_adj}
 \title{Seasonal adjustment}
 \usage{
-seas_adj(series, freq = "month", log.trafo = F, method = "arima")
+seas_adj(series, freq = "month", method = "arima")
 }
 \arguments{
 \item{series}{The input tibble in tidy form with columns \code{time}, \code{value} and optional column \code{id}. Monthly or quarterly frequency.}
 
 \item{freq}{Character "month" or "quarter" for the frequency.}
-
-\item{log.trafo}{Logical, indicates if value should be transformed to log(value).}
 
 \item{method}{Character which method for adjustment should be choosen. See Details.
 
@@ -28,7 +26,7 @@ series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
 }
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+seas_adj(series, freq = "month", method = "firstdiff")
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+seas_adj(series, freq = "month",  method = "firstdiff")
 }
