@@ -6,8 +6,6 @@ library(zoo)
 library(trendecon)
 library(gtrendsR)
 
-"blubb"
-
 start = "2006-01-01"
 end = "2021-07-01"
 
@@ -115,9 +113,6 @@ forc <- mapply(h, models, r1[-1], SIMPLIFY = F)
 
 m1 <- build_model(r1[[1]])
 h(m1, r1[[2]])
-
-
-"blubb"
 
 
 
