@@ -114,10 +114,7 @@ forc <- mapply(h, models, r1[-1], SIMPLIFY = F)
 
 
 m1 <- build_model(r1[[1]])
-h(m1, r1[[2]])
-
-
-"blubb"
+h(m1, r1[[2]])‚
 
 
 
