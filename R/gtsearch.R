@@ -34,11 +34,11 @@ gtsearch <- function(keywords = NA,
                      geo = "DE",
                      start = "2006-01-01 CET",
                      end = Sys.Date()) {
-  stopifnot("Es darf lediglich entweder was bei keywords oder bei categories eingegeben werden" = is.na(keywords) | categories == 0)
+  stopifnot("You can only enter something either in keywords or in categories!" = is.na(keywords) | categories == 0)
 
   max_items <- max(length(keywords), length(categories))
   result_list <- vector("list", length = max_items)
-  time_frame <- paste(start,end, sep =" ")
+  time_frame <- paste(start, end, sep = " ")
 
   if (length(categories) == 1) {
     for (i in seq_along(keywords)) {
@@ -52,7 +52,9 @@ gtsearch <- function(keywords = NA,
 
       result_list[[i]] <- temp_result
     }
+
     result <- bind_cols(result_list)
+
   } else if (length(keywords) == 1) {
     for (i in seq_along(categories)) {
       temp_result <-
@@ -65,7 +67,9 @@ gtsearch <- function(keywords = NA,
 
       result_list[[i]] <- temp_result
     }
+
     result <- bind_cols(result_list)
+
   } else {
     dat <- tibble::tibble()
 
@@ -96,7 +100,8 @@ gtsearch <- function(keywords = NA,
       }
     }
   }
+
   result$date <- as_date(result$date)
-  result <- result[,1:2]
+  result <- result[, 1:2]
   return(result)
 }

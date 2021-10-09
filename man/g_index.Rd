@@ -2,7 +2,7 @@
 % Please edit documentation in R/g_index.R
 \name{g_index}
 \alias{g_index}
-\title{Aufbereitung der Google Daten.}
+\title{Preparation of Google Trends data}
 \usage{
 g_index(
   keyword = NA,
@@ -13,26 +13,34 @@ g_index(
 )
 }
 \arguments{
-\item{keyword}{Eine character-Vektor mit dem Suchbegriffen}
+\item{keyword}{A vector (chr) with search requests.}
 
-\item{category}{Ein Numeric Vektor mit den Kategorien}
+\item{category}{A vector (num) with category numbers from Google Trends.}
 
-\item{geo}{Die Region}
+\item{geo}{A geographical region to restrict the search queries to.}
 
-\item{time}{Der Zeitraum in der Angabe wie in ts_gtrends}
+\item{time}{Time period from where the relative values should be taken
+(for more information, visit the
+documentation of \code{\link[trendecon]{ts_gtrends}}).}
 
-\item{lags}{Wie viele lags sollen als zusätzliche Spalte ausgegeben werden. Bis zu 4.}
+\item{lags}{Number of delays in additional columns (max. value: 4).}
 }
 \value{
-Für jede Reihe wird zunächst eine log-Trafo durchgeführt.
-Dann wird mit JDemetra eine Saisonbereinigung mit X-13 Arima durchgeführt.
-Dann werden erste Differenzen zurückgegeben. Standardmäßig mit lag
+Firstly, each row will be log transformed and
+seasonal adjusted (via RJDemetra's X-13 ARIMA methods).
+Furthermore, the first derivatives of these adjusted time
+series will be returned (optionally with additional columns containing
+lags).
 }
 \description{
-\code{g_index} lädt für mehrere Suchbegriffe/Kategorien Daten herunter, führt log Trafo und Saisonbereinigung durch und gibt (gelagte) erste Differenzen aus
+\code{g_index} downloads for
+various search requests respective trends categories
+data andapplies a logarithmic transformation aswell as a
+seasonal adjustment.
+The function returns first derivatives (lagged if desired).
 }
 \examples{
 \dontrun{
-g_index(keyword = c("ikea","saturn"), time = "2018-01-01 2021-01-01")
+g_index(keyword = c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 }
 }

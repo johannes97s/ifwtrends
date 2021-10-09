@@ -1,17 +1,19 @@
-#' Hauptkomponentenanalyse
-#'@description \code{pca} Berechnet fuer mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
+#' Principal component analysis on Google Trends time series
+#' @description \code{pca} computes for several search queries
+#' or several categories the principal
+#' components of the monthly time series.
 #'
-#'@param keywords Eine character-Vektor mit dem Suchbegriffen
-#'@param categories Ein Numeric Vektor mit den Kategorien
-#'@param geo Die Region
-#'@param start Das Startdatum der Zeitreihen.
-#'@param end Das Enddatum der Zeitreihen.
+#' @param keywords A vector (chr) with search queries (or a single search query).
+#' @param categories A vector (num) with Google Trends category numbers.
+#' @param geo  A geographical region to restrict the search queries to.
+#' @param start Time series start date.
+#' @param end Time series end date.
 #'
-#'@return Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
-#'@examples \dontrun{
-#'pca(keywords = c("ikea", "saturn"),start = "2018-01-01", end = "2020-01-01")
-#'}
-#'@import magrittr tibble
+#' @return Tibble with monthly principal components next to the actual time series.
+#' @examples \dontrun{
+#' pca(keywords = c("ikea", "saturn"), start = "2018-01-01", end = "2020-01-01")
+#' }
+#' @import magrittr tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
@@ -30,7 +32,7 @@ pca <- function(keywords = NA,
                 categories = 0,
                 geo = "DE",
                 start = "2006-01-01 CET",
-                end = Sys.Date()){
+                end = Sys.Date()) {
   stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
 
   # Check if function is used on the first day of the month
@@ -42,19 +44,18 @@ pca <- function(keywords = NA,
     end <- seq(end, length = 2, by = "-1 months")[2]
   }
 
-  dates <-  seq.Date(as.Date(start), as.Date(end), by = "month")
-  dat <-  tibble::tibble()
+  dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
+  dat <- tibble::tibble()
 
-  for (kw in keywords){
-    for (cat in categories){
-
+  for (kw in keywords) {
+    for (cat in categories) {
       temp <-
         tibble::as_tibble(gtrends(
           keyword = kw,
           category = cat,
           geo = geo,
-          time = "all")$interest_over_time
-        )
+          time = "all"
+        )$interest_over_time)
 
       if (nrow(temp) == 0) {
         stop(str_c("Keine Daten fuer Kategorie ", cat))
@@ -70,7 +71,6 @@ pca <- function(keywords = NA,
         filter(date %in% dates)
 
       dat <- bind_rows(dat, temp)
-
     }
   }
 

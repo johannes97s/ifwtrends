@@ -2,7 +2,7 @@
 % Please edit documentation in R/pca.R
 \name{pca}
 \alias{pca}
-\title{Hauptkomponentenanalyse}
+\title{Principal component analysis on Google Trends time series}
 \usage{
 pca(
   keywords = NA,
@@ -13,24 +13,26 @@ pca(
 )
 }
 \arguments{
-\item{keywords}{Eine character-Vektor mit dem Suchbegriffen}
+\item{keywords}{A vector (chr) with search queries (or a single search query).}
 
-\item{categories}{Ein Numeric Vektor mit den Kategorien}
+\item{categories}{A vector (num) with Google Trends category numbers.}
 
-\item{geo}{Die Region}
+\item{geo}{A geographical region to restrict the search queries to.}
 
-\item{start}{Das Startdatum der Zeitreihen.}
+\item{start}{Time series start date.}
 
-\item{end}{Das Enddatum der Zeitreihen.}
+\item{end}{Time series end date.}
 }
 \value{
-Monatliche Tabelle der Hauptkomponenten und der Zeitreihen.
+Tibble with monthly principal components next to the actual time series.
 }
 \description{
-\code{pca} Berechnet fuer mehrere Suchbegriffe oder mehrere Kategorien die Hauptkomponenten der monatlichen Zeitreihen
+\code{pca} computes for several search queries
+or several categories the principal
+components of the monthly time series.
 }
 \examples{
 \dontrun{
-pca(keywords = c("ikea", "saturn"),start = "2018-01-01", end = "2020-01-01")
+pca(keywords = c("ikea", "saturn"), start = "2018-01-01", end = "2020-01-01")
 }
 }
