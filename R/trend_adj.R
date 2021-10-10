@@ -1,5 +1,4 @@
 #' Basic adjustment via helper function
-#'
 #' This function is a helper function to reduce duplicate code in the
 #' exported function and \code{\link{seas_adj}()} below.
 #' For further info, see their docstrings.
@@ -30,7 +29,6 @@ helper_adj <- function(series, log.trafo = F){
 
 
 #' Trend adjustment
-#'
 #' @description \code{trend_adj} takes a tibble
 #'  of time series and returns a tibble with trend adjusted values.
 #'
