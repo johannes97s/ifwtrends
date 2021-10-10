@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 JAVA_HOME = "C:\Program Files\OpenJDK\jre-8.0.292.10-hotspot"
+=======
+JAVA_HOME = "C:\\Program Files\\OpenJDK\\jdk-8.0.292.10-hotspot"
+>>>>>>> Stashed changes
