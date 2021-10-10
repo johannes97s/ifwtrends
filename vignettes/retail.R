@@ -1,13 +1,13 @@
 library(glmnet)
 library(tidyverse)
-library(ifwtrends)
 library(lubridate)
 library(zoo)
 library(trendecon)
 library(gtrendsR)
 library(tsbox)
+library(RJDemetra)
 
-
+setwd("~/IFW/ifwtrends")
 start = "2006-01-01"
 end = "2021-07-01"
 
@@ -42,24 +42,40 @@ category_test = c(560,121,277)
 
 res_raw <- g_index(keyword = NA, category = category_test,
                    time = str_c(start, " ", end),
-                   lags = 0)
+                   lags = 2)
 
 res <- res_raw
 
 
 
 start_series = "2006-01-01"
-start_period = "2018-01-01"
-end = "2021-07-31"
+start_period_1 = "2018-01-01"
+end_1 = "2019-12-31"
 
-r <-  roll(keyword = NA,
+r1 <-  roll(keyword = NA,
             category = category_ret,
             start_series = start_series,
-            start_period = start_period,
-            end = end,
+            start_period = start_period_1,
+            end = end_1,
             fun = g_index,
-            lags = 0)
-saveRDS(r, "data/retail_gindex_roll_0721")
+            lags = 2)
+saveRDS(r1, "data/retail_gindex_roll_1219")
+
+start_period_2 = "2019-01-01"
+end_2 = "2021-07-31"
+
+r2 <-  roll(keyword = NA,
+           category = category_ret,
+           start_series = start_series,
+           start_period = start_period_2,
+           end = end_2,
+           fun = g_index,
+           lags = 2)
+
+saveRDS(r2, "data/retail_gindex_roll_0721")
+
+
+
 r <- readRDS("data/retail_gindex_roll_0721")
 
 
