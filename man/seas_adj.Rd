@@ -4,29 +4,36 @@
 \alias{seas_adj}
 \title{Seasonal adjustment}
 \usage{
-seas_adj(series, freq = "month", method = "arima")
+seas_adj(series, freq = "month", log.trafo = F, method = "arima")
 }
 \arguments{
-\item{series}{The input tibble in tidy form with columns \code{time}, \code{value} and optional column \code{id}. Monthly or quarterly frequency.}
+\item{series}{The input tibble in tidy
+form with columns \code{time},
+\code{value} and optional column \code{id}.
+Monthly or quarterly frequency.}
 
 \item{freq}{Character "month" or "quarter" for the frequency.}
 
-\item{method}{Character which method for adjustment should be choosen. See Details.
+\item{log.trafo}{Logical,
+indicates if value should be transformed to log(value).}
 
-For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
-If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
-If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.}
+\item{method}{Character, which method for
+adjustment should be choosen. See Details.}
+}
+\value{
+Returns a tibble with trend adjusted values and a
+date column.
+
+For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
+If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
+If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
+(performed by the \code{\link[seasonal:seas]{seasonal::seas()}} function from the seasonal package).
 }
 \description{
-\code{seas_adj} Takes a tibble of timeseries and returns tibble with seasonal adjusted values.
+\code{seas_adj} takes a tibble of
+time series and returns a tibble with seasonal adjusted values.
 }
 \examples{
-\dontrun{
-series <- ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month", log.traf = T, method = "firstdiff")
-}
-series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month", method = "firstdiff")
-series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-seas_adj(series, freq = "month",  method = "firstdiff")
+series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 }
