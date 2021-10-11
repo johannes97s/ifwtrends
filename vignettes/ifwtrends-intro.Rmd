@@ -1,6 +1,6 @@
 ---
 title: "Vignette ifwtrends"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{ifwtrends_intro}
   %\VignetteEngine{knitr::rmarkdown}
