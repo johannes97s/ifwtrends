@@ -163,6 +163,18 @@ factors <- dat %>% select(date, 2:5)
 factorR2(series, factors, plot = T)
 ```
 
+
+# Prognose von Einzelhandelsumsätzen
+
+Hier wollen wir die monatliche Veränderung der Einzelhandelsumsätze (Saisonbereinigt) für Deutschland mithilfe von Goole Daten Vorhersagen.
+Als Ausgangspunkt benutzen wir die Zeitreihen welches das RWI für eine ähnliche Prognose anhand der VGR ausgewählt hat. (https://www.rwi-essen.de/konsumindikator).
+Diese Reihen werden saisonbereinigt und log-transformiert. Davon betrachten wir dann die erste Differenz.
+Es gehen jeweils der kontemporäre sowie der um eins und der um zwei gelaggte Datenpunkt der Google-Reihen in das Modell ein.
+
+
+
+
+
 # Fehlermeldungen
 
 Sollte beim Benutzen der Fehler 

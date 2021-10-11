@@ -11,14 +11,14 @@ setwd("~/ifwtrends")
 start = "2006-01-01"
 end = "2021-07-01"
 
-retail <- readxl::read_xlsx("data/retail_GER.xlsx") %>%
-  transmute(time = floor_date(as.Date(Name), "month"), value = `BD RETAIL SALES EXCL CARS (CAL ADJ) X-12-ARIMA VOLA`)
+consexp <- readxl::read_xlsx("data/consumer_exp_GER.xlsx") %>%
+  transmute(time = floor_date(as.Date(Name), "quarter"), value = as.numeric(`BD CONSUMER EXPENDITURE CONA`))
 
 
-dat <- retail %>%
-  mutate(value = log(as.numeric(value))) %>%
-  mutate(value = c(0, diff(value, 1))) %>%
-  filter(time >= as_date(start), time <= as_date(end))
+dat <- consexp %>%
+  mutate(value = value/lag(value) -1 ) %>%
+  filter(time >= as_date(start), time <= as_date(end)) %>%
+  drop_na()
 
 
 
@@ -30,7 +30,7 @@ category_ret = c(560, 121,
                  660, 658, 466, 465, 659, 948,
                  270, 271, 137, 158,
                  646, 249, 256,
-                 898, 289, #Hier 3 Kategorien für Autokauf von RWI ausgelassen
+                 468, 898, 473, 815, 289,
                  382, 383,
                  355, 41, 439, 3, 1010, 432, 882, 614, 78, 408,
                  74,
@@ -44,9 +44,21 @@ res_raw <- g_index(keyword = NA, category = category_test,
                    time = str_c(start, " ", end),
                    lags = 2)
 
-res <- res_raw
 
 
+################################################
+start_series = "2006-01-01"
+start_period_0 = "2016-01-01"
+end_0 = "2017-12-31"
+
+r0 <-  roll(keyword = NA,
+            category = category_ret,
+            start_series = start_series,
+            start_period = start_period_0,
+            end = end_0,
+            fun = g_index,
+            lags = 2)
+saveRDS(r0, "data/retail_gindex_roll_1217")
 
 start_series = "2006-01-01"
 start_period_1 = "2018-01-01"
@@ -78,10 +90,16 @@ saveRDS(r2, "data/retail_gindex_roll_0721")
 r1 <- readRDS("data/retail_gindex_roll_1219")
 r2 <- readRDS("data/retail_gindex_roll_0721")
 
+r_raw <- c(r1, r2[-c(1:12,31)])
+r_raw <- lapply(r_raw, function(x){
+  mutate(x, time = floor_date(time, "quarter")) %>%
+    group_by(time) %>%
+    transmute_at(.vars = vars(-time), .funs =  mean) %>%
+    ungroup() %>%
+    unique
+})
 
-r_raw <- c(r1, r2[-c(1:12)])
-#r_raw <- lapply(r_raw, function(x) select(x,time, contains("lag_0")))
-
+r_raw <- lapply(r_raw, function(x) select(x,time, contains("lag_0")))
 r_raw <- lapply(r_raw, function(x) mutate(x, across(.cols = -1, function(x) c(0, diff(x, 1))), .keep = "used"))
 r_raw <- lapply(r_raw, function(x) relocate(bind_cols(x, dat[1:nrow(x),]), time, dat = value))
 
@@ -100,8 +118,8 @@ build_model <- function(series){
   x <- as.matrix(series[-c(1,2)])
 
 
-  cv <- cv.glmnet(x, y, alpha = 1)
-  model <- glmnet(x, y, alpha = 1, lambda = 0)#cv$lambda.min)
+  cv <- cv.glmnet(x, y, alpha = 0)
+  model <- glmnet(x, y, alpha = 0, lambda = 0)#cv$lambda.min)
   model
   # model <- lm(dat ~ ., data = series[-1])
   # model
@@ -116,12 +134,13 @@ pred_values <- mapply(predict, lag(models)[-1], covariats[-1])
 
 last_values <- sapply(pred_values, last)
 
-forec <- tibble(time = seq.Date(as.Date(start_period_1)+months(1), as.Date(end_2), by ="month"),
+forec <- tibble(time = seq.Date(as.Date(start_period_1), as.Date(end_2)-months(2), by ="month"),
                 value = last_values) %>%
   left_join(dat, by = "time") %>%
-  rename(index = value.x, retail =value.y)
+  rename(index = value.x, consump =value.y) %>%
+  drop_na()
 
-sqrt(sum((forec$index - forec$retail)^2))
+sqrt(sum((forec$index - forec$consump)^2))
 
 
 forec %>%
@@ -131,7 +150,7 @@ forec %>%
 
 
 coef <- as_tibble(t(as.data.frame(models))) %>%
-  bind_cols(time = seq.Date(as_date(start_period_1), as_date(end_2), by = "month"))
+  bind_cols(time = seq.Date(as_date(start_period_0), as_date(end_2), by = "month"))
 
 coef %>%
   pivot_longer(cols = -time, names_to = "coef", values_to = "value") %>%
