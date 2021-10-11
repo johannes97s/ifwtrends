@@ -7,7 +7,7 @@ library(gtrendsR)
 library(tsbox)
 library(RJDemetra)
 
-setwd("~/ifwtrends")
+setwd("~/IFW/ifwtrends")
 start = "2006-01-01"
 end = "2021-07-01"
 
@@ -36,7 +36,7 @@ category_ret = c(560, 121,
                  74,
                  179, 276,
                  7, 143, 146, 508, 38)
-category_test = c(560,121,277)
+category_test = c(560,277)
 
 
 
@@ -47,18 +47,18 @@ res_raw <- g_index(keyword = NA, category = category_test,
 
 
 ################################################
-start_series = "2006-01-01"
-start_period_0 = "2016-01-01"
-end_0 = "2017-12-31"
-
-r0 <-  roll(keyword = NA,
-            category = category_ret,
-            start_series = start_series,
-            start_period = start_period_0,
-            end = end_0,
-            fun = g_index,
-            lags = 2)
-saveRDS(r0, "data/retail_gindex_roll_1217")
+# start_series = "2006-01-01"
+# start_period_0 = "2016-01-01"
+# end_0 = "2017-12-31"
+#
+# r0 <-  roll(keyword = NA,
+#             category = category_ret,
+#             start_series = start_series,
+#             start_period = start_period_0,
+#             end = end_0,
+#             fun = g_index,
+#             lags = 2)
+# saveRDS(r0, "data/retail_gindex_roll_1217")
 
 start_series = "2006-01-01"
 start_period_1 = "2018-01-01"
