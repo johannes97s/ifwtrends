@@ -75,9 +75,6 @@ est_trend <- function(){
   series
 }
 
-print("blubb")
-
-
 
 
 

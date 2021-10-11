@@ -2,29 +2,35 @@
 % Please edit documentation in R/factorR2.R
 \name{factorR2}
 \alias{factorR2}
-\title{\eqn{R^2} der Regression der Serien auf die Faktoren}
+\title{\eqn{R^2} of the series' regression on factors}
 \usage{
 factorR2(series, factors, plot = F)
 }
 \arguments{
-\item{series}{tibble mit den Zeitreihen als Spalten.}
+\item{series}{tibble with multiple time series as columns.}
 
-\item{factors}{tibble mit den Faktoren als Spalten.}
+\item{factors}{tibble with factors as columns.}
 
-\item{plot}{plot=TRUE gibt zusaetzlich einen Barplot der \eqn{R^2} aus.}
+\item{plot}{plot=TRUE returns additionally to the tibble with
+\eqn{R^2} a bar plot of these.}
 }
 \value{
-Tabelle der \eqn{R^2} jeder Zeitreihe auf jeden Faktor. Wenn plot=T, dann wird
-zusaetzlich ein Plot zurueckgegeben.
+Tibble of \eqn{R^2} from each time series for each factor.
+If \code{plot = TRUE}, a plot containing the \eqn{R^2} is returned
+and displayed.
 }
 \description{
-\code{factorR2} gibt \eqn{R^2} der Regression der Serien auf die Faktoren als Tabelle aus.
+\code{factorR2} returns the \eqn{R^2}
+of the series' regression on the factors
+in form of a tibble.
 }
 \examples{
 \dontrun{
-dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
-categories = 0, geo = "DE", start = "2006-01-01", end = Sys.Date(),
-components = max(length(keywords), length(categories)))
+dat <- pca(
+  keywords = c("ikea", "saturn", "amazon", "ebay"),
+  categories = 0, geo = "DE", start = "2006-01-01", end = Sys.Date(),
+  components = max(length(keywords), length(categories))
+)
 
 series <- dat \%>\% select(date, 6:9)
 factors <- dat \%>\% select(date, 2:5)

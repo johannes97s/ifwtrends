@@ -1,13 +1,13 @@
 library(glmnet)
 library(tidyverse)
-library(ifwtrends)
 library(lubridate)
 library(zoo)
 library(trendecon)
 library(gtrendsR)
+library(tsbox)
+library(RJDemetra)
 
-"blubb"
-
+setwd("~/IFW/ifwtrends")
 start = "2006-01-01"
 end = "2021-07-01"
 
@@ -38,29 +38,45 @@ category_ret = c(560, 121,
                  7, 143, 146, 508, 38)
 category_test = c(560,121,277)
 
-category = category_test
+
 
 res_raw <- g_index(keyword = NA, category = category_test,
                    time = str_c(start, " ", end),
-                   lags = 0)
+                   lags = 2)
 
 res <- res_raw
 
 
 
 start_series = "2006-01-01"
-start_period = "2018-01-01"
-end = "2021-07-31"
+start_period_1 = "2018-01-01"
+end_1 = "2019-12-31"
 
-r <-  roll(keyword = NA,
+r1 <-  roll(keyword = NA,
             category = category_ret,
             start_series = start_series,
-            start_period = start_period,
-            end = end,
+            start_period = start_period_1,
+            end = end_1,
             fun = g_index,
-            lags = 0)
-saveRDS(r, "data/roll_gindex_0721")
-r <- readRDS("data/roll_gindex_0721")
+            lags = 2)
+saveRDS(r1, "data/retail_gindex_roll_1219")
+
+start_period_2 = "2019-01-01"
+end_2 = "2021-07-31"
+
+r2 <-  roll(keyword = NA,
+           category = category_ret,
+           start_series = start_series,
+           start_period = start_period_2,
+           end = end_2,
+           fun = g_index,
+           lags = 2)
+
+saveRDS(r2, "data/retail_gindex_roll_0721")
+
+
+
+r <- readRDS("data/retail_gindex_roll_0721")
 
 
 r <- lapply(r, function(x) mutate(x, across(.cols = -1, function(x) c(0, diff(x, 1))), .keep = "used"))
@@ -114,10 +130,7 @@ forc <- mapply(h, models, r1[-1], SIMPLIFY = F)
 
 
 m1 <- build_model(r1[[1]])
-h(m1, r1[[2]])
-
-
-"blubb"
+h(m1, r1[[2]])‚
 
 
 
