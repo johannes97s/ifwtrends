@@ -39,6 +39,7 @@ g_index <- function(keyword = NA,
   dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
   # data containing a trend calculated on 200 GTrends time series'.
+  getwd()
   fit <- readRDS("data/comtrend.rds") %>%
     select(time = date, trend) %>%
     filter(time >= as.Date(start))

@@ -1,6 +1,6 @@
 ---
 title: "Vignette ifwtrends"
-output: rmarkdown::pdf_document
+output: bookdown::pdf_document2
 vignette: >
   %\VignetteIndexEntry{ifwtrends_intro}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,14 +15,10 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(ifwtrends)
 library(knitr)
 library(dplyr)
 library(tibble)
 library(ggplot2)
-
-
-
 ```
 
 # Einordnung
@@ -35,11 +31,6 @@ Es gibt eine große Literatur, welche Google Trends Daten in unterschiedlichen M
 
 # Google-Trends Daten
 ## Suchanfragen
-Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes zur Verfügung.
-Hier folgt zunächst ein grundlegende Beschreibung der Daten um dann deren statistische Besonderheiten näher zu beleuchten. 
-
-
-# Google-Trends Daten
 Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes 
 in Form von [Google Trends](https://trends.google.de/trends/?geo=DE) zur Verfügung.
 Hier folgt zunächst eine grundlegende Beschreibung der Daten, um dann deren statistische Besonderheiten näher zu beleuchten. 
@@ -47,7 +38,7 @@ Hier folgt zunächst eine grundlegende Beschreibung der Daten, um dann deren sta
 Die Zeitreihen reichen bis 2004-01-01 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
 Hier sollte beachtet werden, dass Google in einigen Ländern, insbesondere autoritär regierten wie China, nicht verfügbar ist und für diese Länder deshalb keine Daten vorhanden sind.
 Bei den möglichen Suchanfragen unterschiedet man zwischen _terms_, _topics_ und _categories_.
-Google definiert einen _term_ wie folgt (Google1 2021):
+Google definiert einen _term_ wie folgt (Google 2021a):
 
 
 "Search terms show matches for all terms in your query, in the language given.
@@ -67,7 +58,7 @@ Die Eingabe eines Suchbegriffs als Topic führt also vor allem zu einer Invarian
 Die Differenzierung zwischen Topic und Term ist aber lediglich online in der Google Suchmaske möglich.
 Bei der Nutzung der R-Funktionen zum Herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_ sondern bezeichnen beides als _Suchbegriff_.
 
-Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann bei einer Abfrage zusätzlich eine _category_ angegeben werden. Bei Google heißt es hierzu (Google2 2021:
+Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann bei einer Abfrage zusätzlich eine _category_ angegeben werden. Bei Google heißt es hierzu (Google 2021b):
 
 "If you're using Trends to search for a word that has multiple meanings, you can filter your results to a certain category to get data for the right version of the word. For example, if you search for “jaguar,” you can add a category to indicate if you mean the animal or the car manufacturer."
 
@@ -81,12 +72,13 @@ $$ SVI_{ct} = \frac{SV_{ct}}{SVT_t}\cdot C_c$$
 Der Wert des Indexes zum Zeitpunk $t$ kann also unterschiedlich sein, je nachdem welches Zeitfenster man herunterlädt. Dies sollte bei der Arbeit mit den Daten immer beachtet werden. Insbesondere kann für frühere Zeiträume nicht der Index bis zu diesem Zeitpunkt abgeschnitten werden, sondern muss immer neu heruntergeladen werden.
 
 ### Allgemeiner Trend
-Da die Nutzung von Google und damit auch die Anzahl verschiedener Suchbegriffe stark zugenommen hat, sinkt für jeden einzelnen Suchbegriff der relative Anteil im Zeitverlauf \@ref(comtrend).
+Da die Nutzung von Google und damit auch die Anzahl verschiedener Suchbegriffe stark zugenommen hat, sinkt für jeden einzelnen Suchbegriff der relative Anteil im Zeitverlauf \ref(fig:comtrend).
 
 ![comtrend](common_trend.png)
 Im Abschnitt ?? beschreiben wir, wie um diesen Trend bereinigt werden kann und wie dies in unserem Paket implementiert ist. 
 
-\@ref(trendadj) zeigt die um diesen gemeinsamen Trend bereinigten Reihen.
+\@ref(fig:trendadj) zeigt die um diesen gemeinsamen Trend bereinigten Reihen.
+
 ![trendadj](common_trend_adj.png)
 
 
@@ -95,7 +87,7 @@ Im Abschnitt ?? beschreiben wir, wie um diesen Trend bereinigt werden kann und w
 Die Google Daten können für Zeitfenster von 12 Monaten auf Tagesbasis abgefragt werden. Für Zeiträume bis 5 Jahre können wöchentliche Daten heruntergeladen werden. Für alle längeren Zeiträume liegen die Daten nur monatlich vor. Da wir die 12-Monatsfenster der täglichen Reihen und die 5-Jahres-Fenster der wöchentlichen Reihen beliebig wählen können, kann mit der Chow-Lin Methode für lange Zeiträume eine Reihe auf Tagesbasis erstellt werden, welche konsistent mit den wöchentlichen und monatlichen Reihen ist. Wir folgen dabei Eichenauer et. al 2020.
 
 ### Strukturbruch
-Im Januar 2011 wurde die regionale Erfassung der Suchanfragen geändert. Dadurch wird in regional eingeschränkten Reihen in 2011 ein Bruch sichtbar (\@ref(comtrend). Auch in 2016 wurde die Methode zur Datenerhebung nochmals verändert, was auch einen Strukturbruch in den Reihen zur Folge hat. Wir sind hier der Literatur gefolgt, welche diese Strukturbrüche meistens nicht weiter beachtet. Eine einfache Methode das Problem zu umgehen ist bei der Betrachtung von Änderungsraten die betreffenden Zeiträume auszulassen.
+Im Januar 2011 wurde die regionale Erfassung der Suchanfragen geändert. Dadurch wird in regional eingeschränkten Reihen in 2011 ein Bruch sichtbar (\@ref(fig:comtrend). Auch in 2016 wurde die Methode zur Datenerhebung nochmals verändert, was auch einen Strukturbruch in den Reihen zur Folge hat. Wir sind hier der Literatur gefolgt, welche diese Strukturbrüche meistens nicht weiter beachtet. Eine einfache Methode das Problem zu umgehen ist bei der Betrachtung von Änderungsraten die betreffenden Zeiträume auszulassen.
 Woloszko (2020) ist nach unserem Kenntnisstand das einzige Paper welches diese Strukturbrüche genauer adressiert.
 
 
@@ -103,59 +95,24 @@ Woloszko (2020) ist nach unserem Kenntnisstand das einzige Paper welches diese S
 # Funktionen
 ## pca
 
-Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeireihen). Für die Zeitreihen wird hier momentan monatliche Frequenz angenommen.
-=======
 Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeitreihen). Für die Zeitreihen wird hier momentan eine monatliche Frequenz angenommen.
 
 ```{r message=FALSE}
-pca(keywords = c("ikea", "saturn"),
-    categories = 0,
+pca(keyword = c("ikea", "saturn"),
+    category = 0,
     geo = "DE",
-    start = "2018-01-01",
-    end = Sys.Date())
-
-pca(keywords = NA,
-    categories = c(651),
-    geo = "DE",
-    start = "2018-01-01",
-    end = Sys.Date())
+    time = str_c("2018-01-01 ",Sys.Date()))
 ```
-
-## roll
-Die Funktion `roll` gibt `pca` für jeden Zeitpunkt in einem gegebenen Zeitfenster neu an.
-Dies gibt eine Tabelle mit den Zeitpunkten im Zeitfenster `start_period` bis `end` zurück.
-In jeder Spalte ist dann die Ausgabe von pca, wobei `end` der jeweilige Zeitpunkt im Zeitfenster ist. Die restlichen Zeilen zum Tabellenende sind `NA`s. Dies kann insbesondere zur Prognoseevaluation genutzt werden.
-Sowohl `pca` als auch `roll` könnten bei Bedarf umgeschrieben werden, sodass statt den Hauptkomponenten andere Faktoren berechnet werden
-
-```{r message=FALSE}
-roll(keywords = "ikea",
-     geo = "DE",
-     start_series = "2018-01-01",
-     start_period = "2018-05-01",
-     end = "2018-12-01")
-```
-
-## daily_series
-
-Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation konnte jedoch wegen dem noch nicht gelösten IP-Problem noch nicht durchgeführt werden, steht also noch aus. 
-
-```{r message=FALSE}
-daily_series(keyword = c("arbeitslos"),
-             geo = "DE",
-             from = "2021-06-01")
-```
-
 ## factorR2
 
 Für schon berechnete Faktoren `factors` aus Zeitreihen `series` ist dies eine Methode, die Erklärungskraft der Faktoren zu bestimmen. Dabei wird für jeden Faktor eine Regression auf jede Zeitreihe vorgenommen und das jeweilige $R^2$ in einer Tabelle abgetragen. Mit Wahl des Parameters `plot=TRUE` wird zusätzlich ein Barplot ausgegeben.
 
-```{r, fig.width = 7, fig.asp = 1}
+```{r, fig.width = 7, fig.asp = 0.8}
 
-dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
-    categories = 0,
+dat <- pca(keyword = c("ikea", "saturn", "amazon", "ebay"),
+    category = 0,
     geo = "DE",
-    start = "2018-08-01",
-    end = Sys.Date())
+    time = str_c("2018-08-01 ", Sys.Date()))
 
 series <- dat %>% select(date, 6:9)
 factors <- dat %>% select(date, 2:5)
@@ -164,14 +121,43 @@ factorR2(series, factors, plot = T)
 ```
 
 
-# Prognose von Einzelhandelsumsätzen
 
-Hier wollen wir die monatliche Veränderung der Einzelhandelsumsätze (Saisonbereinigt) für Deutschland mithilfe von Goole Daten Vorhersagen.
-Als Ausgangspunkt benutzen wir die Zeitreihen welches das RWI für eine ähnliche Prognose anhand der VGR ausgewählt hat. (https://www.rwi-essen.de/konsumindikator).
-Diese Reihen werden saisonbereinigt und log-transformiert. Davon betrachten wir dann die erste Differenz.
-Es gehen jeweils der kontemporäre sowie der um eins und der um zwei gelaggte Datenpunkt der Google-Reihen in das Modell ein.
+## roll
+Die Funktion `roll` dient der Erstellung von Vintages für Prognoseevaluationen. Dabei wird für jedes Datum in _start_period_ bis _end_ die Reihe von _start_series_ als Anfang bis zu diesem Datum als Endpunkt neu heruntergeladen. Dies ist notwendig, da zu zwei Download-Zeitpunkten die ganze Google Trends Reihe verschieden sein kann. Als Funktion können Download-Funktion mit den Argumenten _keyword_, _category_, _geo_, _time_, und weiteren Argumenten und einem Tibble mit den Spalten _time_, _id_ und _value_ (Namen können auch variieren) benutzt werden.
+Die Rückgabe ist eine Liste mit einer jeweils um eins längeren Zeitreihe.
+Diese kann dann z.B. mit lapply(roll(...), f) zur Prognoseevaluation benutzt werden, wobei f eine Prognose-Funktion ist.
+
+```{r message=FALSE}
+# roll(keyword = c("ikea", "saturn"),
+#      geo = "DE",
+#      start_series = "2011-01-01",
+#      start_period = "2018-05-01",
+#      end = "2018-12-01",
+#      fun = ts_gtrends)
+```
+
+## daily_series
+
+Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der aus dem Originalcode um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation konnte jedoch wegen dem noch nicht gelösten IP-Problem noch nicht durchgeführt werden, steht also noch aus. 
+
+```{r message=FALSE}
+#daily_series(keyword = c("arbeitslos"),
+ #            geo = "DE",
+  #           from = "2021-06-01")
+```
+
+## forecast_q
+Mit der Funktion forecast_q kann eine Prognoseevaluation mit einer quartalsweise vorhandenen Zielvariable durchgeführt werden. `r` ist eine Liste mit vintages, welche mit `roll` erstellt wurde und die Google Daten enthälten, `dat` ist die Zielvariable.
 
 
+# Studie: Prognose der privaten Konsumausgaben mit Google Trends
+
+Hier wollen wir die monatliche Veränderung der privaten Konsumausgaben (saisonbereinigt) für Deutschland mithilfe von Goole Trends Daten Vorhersagen.
+Als Ausgangspunkt benutzen wir die Google Kategorien welches das RWI für eine ähnliche Prognose anhand der VGR ausgewählt hat. (https://www.rwi-essen.de/konsumindikator).
+Diese Reihen werden saisonbereinigt, log-transformiert und auf Quartale aggregiert. Davon betrachten wir dann die erste Differenz.
+Es wird dann eine RIDGE-Regression der Google Reihen auf die Zielvariable geschätzt. Dabei gehen jeweils der kontemporäre sowie der um eins und der um zwei gelaggte Datenpunkt der Google-Reihen in das Modell ein. Mit dem so geschätzten Modell wird dann mit den Google Daten des nächsten Quartals eine Prognose für die Zielvariable berechnet. \@ref(fig:forecast) zeigt für jedes Quartal die Konsumausgaben und die Prognose.
+
+![forecast](forecast.png)
 
 
 
@@ -190,8 +176,8 @@ auftreten, so bedeutet dies, dass das Paket nicht mehr auf Google Trends Daten z
 
 
 # Quellen
-Google1 2021:   https://support.google.com/trends/answer/4359550?hl=en\
-Google2 2021:   https://support.google.com/trends/answer/4359597?hl=en\
+Google 2021a:   https://support.google.com/trends/answer/4359550?hl=en\
+Google 2021b:   https://support.google.com/trends/answer/4359597?hl=en\
 Woloszko 2020:  Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634.\
 Eichenauer et. al 2020 _Constructing daily economic sentiment indices based on Google trends_. KOF Working Papers No. 484, 2020.\
 

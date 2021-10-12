@@ -28,12 +28,13 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @export
-pca <- function(keywords = NA,
-                categories = 0,
+pca <- function(keyword = NA,
+                category = 0,
                 geo = "DE",
-                start = "2006-01-01 CET",
-                end = Sys.Date()) {
-  stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keywords) | categories == 0)
+                time = str_c("2006-01-01 ", Sys.Date())) {
+  start <- str_sub(time, 1, 10)
+  end <- str_sub(time, 12, 21)
+  stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keyword) | category == 0)
 
   # Check if function is used on the first day of the month
   day <- format(end, format = "%d")
@@ -47,8 +48,8 @@ pca <- function(keywords = NA,
   dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
   dat <- tibble::tibble()
 
-  for (kw in keywords) {
-    for (cat in categories) {
+  for (kw in keyword) {
+    for (cat in category) {
       temp <-
         tibble::as_tibble(gtrends(
           keyword = kw,
