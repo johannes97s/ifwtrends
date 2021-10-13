@@ -6,22 +6,11 @@
 #PCA are available (change the relevant lines of code)
 
 
-
-forecast_q <- function(r_list, dat, fd = T){
-  r_raw <- r_list[1:length(r_list) %% 3 == 0]
-  r_raw <- lapply(r_raw, function(x){
-    mutate(x, time = floor_date(time, "quarter")) %>% #aggregate GT Data to quarter
-      group_by(time) %>%                              #
-      transmute_at(.vars = vars(-time), .funs =  mean) %>%  #
-      ungroup() %>%
-      unique()
-    })
-
-  if (fd) r_raw <- lapply(r_raw, function(x) mutate(x, time = time, #first differences if fd=T set
+forecast_m <- function(r_list, dat, fd = T){
+  if (fd) r_list <- lapply(r_list, function(x) mutate(x, time = time,
                                                      across(.cols = -1, function(y) c(0, diff(y,1))),
-                                                    .keep = "used"))
-
-  r_raw <- lapply(r_raw, function(x){
+                                                     .keep = "used")) #first differences
+  r_raw <- lapply(r_list, function(x){
       left_join(x, dat[1:nrow(x), ], by = "time") %>%
       select(time, dat = value, everything()) %>%
       filter(time != as.Date("2011-01-01")) %>% #omit structural breaks
@@ -29,7 +18,6 @@ forecast_q <- function(r_list, dat, fd = T){
       mutate(across(everything(), function(y) replace(y, y == -Inf, NA_real_))) %>%
       mutate(across(everything(), function(y) replace(y, y == Inf, NA_real_)))
   })
-
 
   # use PCA
   # r_factors <- lapply(r_raw, function(x){
@@ -40,7 +28,7 @@ forecast_q <- function(r_list, dat, fd = T){
 
   r <- r_raw #set r <- r_factors to use PCA-Model
 
-
+  view(r[[1]])
   build_model <- function(series){ #Function to estimate the model
     y <- as.matrix(series[2])
     x <- as.matrix(series[-c(1,2)])
@@ -52,20 +40,26 @@ forecast_q <- function(r_list, dat, fd = T){
   }
 
   covariats <- lapply(r, function(x) as.matrix(x[-c(1,2)])) #Trends Data to forecast with
-                                                            #previous estimated model
+  #previous estimated model
   models <- lapply(lag(r)[-1], function(x) build_model(x))           #estimate model
 
   pred_values <- mapply(predict, models, covariats[-c(1)]) #forecast
 
   last_values <- sapply(pred_values, last) #select last value in each vintage as forecast
-                                           #for relevant quarter
+  #for relevant month
 
-  forec <- tibble(time = seq.Date(max(first(r)$time)+months(3), max(last(r)$time), by ="quarter"),
+
+  forec <- tibble(time = seq.Date(max(first(r)$time)+months(1), max(last(r)$time), by ="month"),
                   value = last_values) %>%
-    mutate(time = floor_date(time, "quarter")) %>%
+    mutate(time = floor_date(time, "month")) %>%
     rename(index = value)
 
   last_model = last(models)
   return(list(forec = forec,             #returns forcasted values and
-              last_model = act_model))     #model estimated with contemporary data
+              last_model = act_model))
 }
+
+
+
+
+

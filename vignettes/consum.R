@@ -121,39 +121,3 @@ series %>%
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################
-coef <- as_tibble(t(as.data.frame(models))) %>%
-  bind_cols(time = seq.Date(as_date(start_period_0), as_date(end_2), by = "month"))
-
-coef %>%
-  pivot_longer(cols = -time, names_to = "coef", values_to = "value") %>%
-  group_by(coef) %>%
-  mutate(var = var(value)) %>%
-  ungroup() %>%
-  filter(var <= 0.5*mean(var)) %>%
-  ggplot(aes(x = time, y = value, color = coef)) +
-  geom_line() +
-  theme(legend.position = "none")+
-  facet_grid(coef ~ .)
-
-
-
-
-
-
-
-
-
