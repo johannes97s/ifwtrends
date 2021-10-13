@@ -1,9 +1,9 @@
 ^ifwtrends\.Rproj$
 ^\.Rproj\.user$
-^Trends\.R$
-^Google_Kategorien$
 ^data$
 ^LICENSE$
 ^README\.Rmd$
 ^doc$
 ^Meta$
+^data-raw$
+^\.github$

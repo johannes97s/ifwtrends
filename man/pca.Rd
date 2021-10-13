@@ -8,8 +8,7 @@ pca(
   keywords = NA,
   categories = 0,
   geo = "DE",
-  start = "2006-01-01 CET",
-  end = Sys.Date()
+  time = str_c("2006-01-01 ", Sys.Date())
 )
 }
 \arguments{
@@ -19,12 +18,13 @@ pca(
 
 \item{geo}{A geographical region to restrict the search queries to.}
 
-\item{start}{Time series start date.}
-
-\item{end}{Time series end date.}
+\item{time}{A string consisting of a start date
+and an end date (separated with a space).
+Check the example for an example.}
 }
 \value{
-Tibble with monthly principal components next to the actual time series.
+Tibble with monthly principal components
+next to the actual time series.
 }
 \description{
 \code{pca} computes for several search queries
@@ -33,6 +33,6 @@ components of the monthly time series.
 }
 \examples{
 \dontrun{
-pca(keywords = c("ikea", "saturn"), start = "2018-01-01", end = "2020-01-01")
+pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 }
 }

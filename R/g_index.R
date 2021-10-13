@@ -1,7 +1,8 @@
 #' Preparation of Google Trends data
+#'
 #' @description \code{g_index} downloads for
 #' various search requests respective trends categories
-#' data andapplies a logarithmic transformation aswell as a
+#' data and applies a logarithmic transformation aswell as a
 #' seasonal adjustment.
 #' The function returns first derivatives (lagged if desired).
 #'
@@ -34,13 +35,17 @@ g_index <- function(keyword = NA,
                     geo = "DE",
                     time = str_c("2006-01-01 ", Sys.Date()),
                     lags = 0) {
+
+  # Load internal data
+  load("R/sys.data.rda")
+
   start <- str_sub(time, 1, 10)
   end <- str_sub(time, 12, 21)
   dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
-  # data containing a trend calculated on 200 GTrends time series'.
-  getwd()
-  fit <- readRDS("data/comtrend.rds") %>%
+  # data containing a trend calculated on 250 GTrends time series'.
+
+  fit <- comtrend %>%
     select(time = date, trend) %>%
     filter(time >= as.Date(start))
 

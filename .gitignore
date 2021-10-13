@@ -1,14 +1,51 @@
-.Rproj.user
-.Rhistory
-R/.Rhistory
+# MacOS specific temporary files
 .DS_Store
 inst/.DS_Store
 tests/.DS_Store
 vignettes/.DS_Store
 /doc/
 /Meta/
-<<<<<<< HEAD
+
+# History files
 .Rhistory
-=======
+.Rapp.history
+
+# Session Data files
 .RData
->>>>>>> 80b71b883330d424ff03033f56c029f05945b7d3
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+#vignettes/*.html
+#vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+#.Renviron
+
+### R.Bookdown Stack ###
+# R package: bookdown caching files
+/*_files/

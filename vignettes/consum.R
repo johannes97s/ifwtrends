@@ -90,7 +90,7 @@ saveRDS(r2, "data/retail_gindex_roll_0721")
 r1 <- readRDS("data/retail_gindex_roll_1219")
 r2 <- readRDS("data/retail_gindex_roll_0721")
 
-r <- c(r1, r2)[-43] #Auf Gleiche Länge wie dat Kürzen
+r <- c(r1, r2)[-43] #Auf Gleiche L?nge wie dat K?rzen
 
 
 forecast_q(r, dat) %>%
@@ -98,9 +98,6 @@ forecast_q(r, dat) %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
-
-
-
 
 series <- last(r)
 
@@ -113,6 +110,7 @@ series %>%
   ggplot(aes(x = time, y = value, color = cat)) +
     geom_line() +
     theme(legend.position = "none")
+<<<<<<< HEAD
 
 
 
@@ -121,3 +119,5 @@ series %>%
 
 
 
+=======
+>>>>>>> cd2b3a7a6398ce30b61440e3ef66c94003622d75

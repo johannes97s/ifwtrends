@@ -35,7 +35,7 @@ lags).
 \description{
 \code{g_index} downloads for
 various search requests respective trends categories
-data andapplies a logarithmic transformation aswell as a
+data and applies a logarithmic transformation aswell as a
 seasonal adjustment.
 The function returns first derivatives (lagged if desired).
 }

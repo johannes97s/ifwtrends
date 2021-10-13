@@ -27,8 +27,13 @@ You can install the current development version of
 ifwtrends from [GitHub](https://github.com/johannes97s/ifwtrends) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
+# install.packages("remotes")
+
+# If you want the package vignettes to be loaded during installation, use:
+remotes::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
+
+# If not, then use instead:
+remotes::install_github("johannes97s/ifwtrends", build_vignettes = FALSE)
 ```
 ## Example
 
@@ -43,18 +48,19 @@ library(ifwtrends)
 pca(keywords = c("Pluto", "Saturn"),
     categories = 0,
     geo = "DE",
-    start = "2020-01-01",
-    end = Sys.Date())
+    time = paste("2020-01-01", Sys.Date()))
 
 # Search for a GTrends category and do a subsequent PC
 # analysis
 pca(keywords = NA,
     categories = c(651),
     geo = "DE",
-    start = "2020-01-01",
-    end = Sys.Date())
+    time = paste("2020-01-01", Sys.Date()))
 
 ```
+
+Further examples and a detailed 
+introduction can be found in the (German) vignette.
 
 ## Functions and Roadmap
 

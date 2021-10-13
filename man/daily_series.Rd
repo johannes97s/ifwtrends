@@ -2,25 +2,32 @@
 % Please edit documentation in R/daily_series.R
 \name{daily_series}
 \alias{daily_series}
-\title{Konsistente taegliche Zeitreihe}
+\title{Generate a consistent daily time series}
 \usage{
 daily_series(keyword = c("arbeitslos"), geo = "DE", from = "2006-01-01")
 }
 \arguments{
-\item{keyword}{Der Suchbegriff. Bis jetzt nur einer möglich}
+\item{keyword}{Search query. As of now, you can only enter one single
+keyword.}
 
-\item{geo}{Region}
+\item{geo}{A geographical region to restrict the search query to.}
 
-\item{from}{Startdatum
-
-Vorsicht, braucht sehr lange und verursacht viele Google-Suchanfragen.}
+\item{from}{Start date of the search query.}
 }
 \value{
-Tabelle der taeglichen Werten
+Tibble with daily relative search volumes.
 }
 \description{
-\code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
+\code{daily_series} estimates
+via the Chow-Lin method a consistent long daily time series based
+on monthly data.
 }
+\section{Warning}{
+
+This function takes a long time and generates a lot of
+queries at Google. An IP ban is therefore quite likely.
+}
+
 \examples{
 \dontrun{
 daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
