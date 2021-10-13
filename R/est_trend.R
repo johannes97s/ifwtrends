@@ -31,16 +31,21 @@ est_trend <- function() {
     by = "month"
   )
 
+  result <- vector("list", length = 2)
+
   series <- tibble(date = dates)
   missing <- NULL
+
   # Creates a sample of 250 Google Trends categories and
   # a fixed category (67 is arbitrary chosen).
+
   cat_samp <- unique(c(
     sample(gtrendsR::categories$id, 250, replace = FALSE),
     "67"
   ))
 
   k <- 0
+
   for (i in cat_samp) {
     Sys.sleep(0.1)
 
@@ -57,7 +62,7 @@ est_trend <- function() {
     }
 
     k <- k + 1
-    print(k)
+
   }
 
   series <- series %>%
@@ -65,7 +70,7 @@ est_trend <- function() {
     mutate(value = log(value)) %>%
     arrange(id)
 
-  saveRDS(series, "data/cat_sample.rds")
+  result[[1]] <- series
 
   fit <- unname(
     lm(
@@ -73,10 +78,13 @@ est_trend <- function() {
       data = series
     )$fitted.values
   )
+
   comtrend <- series %>%
     mutate(trend = fit) %>%
     filter(id == 67) %>%
     select(date, trend)
-  saveRDS(comtrend, "data/comtrend.rds")
-  series
+
+  result[[2]] <- comtrend
+
+  return(result)
 }
