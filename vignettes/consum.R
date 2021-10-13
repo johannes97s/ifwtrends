@@ -90,7 +90,7 @@ saveRDS(r2, "data/retail_gindex_roll_0721")
 r1 <- readRDS("data/retail_gindex_roll_1219")
 r2 <- readRDS("data/retail_gindex_roll_0721")
 
-r <- c(r1, r2)[-43] #Auf Gleiche Länge wie dat Kürzen
+r <- c(r1, r2)[-43] #Auf Gleiche L?nge wie dat K?rzen
 
 
 forecast_q(r, dat) %>%
@@ -98,9 +98,6 @@ forecast_q(r, dat) %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
-
-
-
 
 series <- last(r)
 
@@ -113,47 +110,3 @@ series %>%
   ggplot(aes(x = time, y = value, color = cat)) +
     geom_line() +
     theme(legend.position = "none")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################
-coef <- as_tibble(t(as.data.frame(models))) %>%
-  bind_cols(time = seq.Date(as_date(start_period_0), as_date(end_2), by = "month"))
-
-coef %>%
-  pivot_longer(cols = -time, names_to = "coef", values_to = "value") %>%
-  group_by(coef) %>%
-  mutate(var = var(value)) %>%
-  ungroup() %>%
-  filter(var <= 0.5*mean(var)) %>%
-  ggplot(aes(x = time, y = value, color = coef)) +
-  geom_line() +
-  theme(legend.position = "none")+
-  facet_grid(coef ~ .)
-
-
-
-
-
-
-
-
-
