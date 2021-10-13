@@ -7,3 +7,6 @@
 ^README\.Rmd$
 ^doc$
 ^Meta$
+^R\trends_update_job\.R$
+^R\\trends_update_job\.R$
+^data-raw$
