@@ -12,18 +12,19 @@ pca(
 )
 }
 \arguments{
+\item{keyword}{A vector (chr) with search queries (or a single search query).}
+
+\item{category}{A vector (num) with Google Trends category numbers.}
+
 \item{geo}{A geographical region to restrict the search queries to.}
 
-\item{keywords}{A vector (chr) with search queries (or a single search query).}
-
-\item{categories}{A vector (num) with Google Trends category numbers.}
-
-\item{start}{Time series start date.}
-
-\item{end}{Time series end date.}
+\item{time}{A string consisting of a start date
+and an end date (separated with a space).
+Check the example for an example.}
 }
 \value{
-Tibble with monthly principal components next to the actual time series.
+Tibble with monthly principal components
+next to the actual time series.
 }
 \description{
 \code{pca} computes for several search queries
@@ -32,6 +33,6 @@ components of the monthly time series.
 }
 \examples{
 \dontrun{
-pca(keywords = c("ikea", "saturn"), start = "2018-01-01", end = "2020-01-01")
+pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 }
 }

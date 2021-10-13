@@ -3,15 +3,17 @@
 #' or several categories the principal
 #' components of the monthly time series.
 #'
-#' @param keywords A vector (chr) with search queries (or a single search query).
-#' @param categories A vector (num) with Google Trends category numbers.
+#' @param keyword A vector (chr) with search queries (or a single search query).
+#' @param category A vector (num) with Google Trends category numbers.
 #' @param geo  A geographical region to restrict the search queries to.
-#' @param start Time series start date.
-#' @param end Time series end date.
+#' @param time A string consisting of a start date
+#' and an end date (separated with a space).
+#' Check the example for an example.
 #'
-#' @return Tibble with monthly principal components next to the actual time series.
+#' @return Tibble with monthly principal components
+#'  next to the actual time series.
 #' @examples \dontrun{
-#' pca(keywords = c("ikea", "saturn"), start = "2018-01-01", end = "2020-01-01")
+#' pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 #' }
 #' @import magrittr tibble
 #' @importFrom dplyr mutate
