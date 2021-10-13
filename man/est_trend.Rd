@@ -2,18 +2,18 @@
 % Please edit documentation in R/est_trend.R
 \name{est_trend}
 \alias{est_trend}
-\title{Schätzt den Trend einer GTrends-Kategorie}
+\title{Estimates the trend of Google search queries}
 \usage{
 est_trend()
 }
 \value{
-Gibt eine Zeitreihe zurück, die den polynomialen Trend
-fünften Grades einer Kategorie enthält.
+Returns a time series which consists of a polynomial trend
+of degree five of a category.
 }
 \description{
-\code{est_trend}. Schätzt den Trend einer GTrends-Kategorie
-
-Schätzt den gemeinsamen Trend aller Google Reihen.
+\code{est_trend} downloads for a sample
+of 250 random Google Trends categories the relative search volume.
+Based on this, a common trend is calculated.
 }
 \examples{
 \dontrun{

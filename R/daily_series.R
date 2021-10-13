@@ -1,44 +1,49 @@
-#'Konsistente taegliche Zeitreihe
-#'@description \code{daily_series}. Schaetzt mit Chow-Lin eine konsistente lange Zeitreihe mit taeglicher Frequenz zurueck.
+#' Generate a consistent daily time series
+#' @description \code{daily_series} estimates
+#' via the Chow-Lin method a consistent long daily time series based
+#' on monthly data.
 #'
+#' @param keyword Search query. As of now, you can only enter one single
+#' keyword.
+#' @param geo A geographical region to restrict the search query to.
+#' @param from Start date of the search query.
 #'
-#'@param keyword Der Suchbegriff. Bis jetzt nur einer möglich
-#'@param geo Region
-#'@param from Startdatum
+#' @return Tibble with daily relative search volumes.
 #'
-#'Vorsicht, braucht sehr lange und verursacht viele Google-Suchanfragen.
+#' @section Warning:
+#' This function takes a long time and generates a lot of
+#' queries at Google. An IP ban is therefore quite likely.
 #'
-#'@return Tabelle der taeglichen Werten
-#'@examples \dontrun{
+#' @examples \dontrun{
 #' daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
 #' }
-#'@import trendecon tsbox lubridate zoo tibble tempdisagg magrittr
-#'@importFrom dplyr select
-#'@importFrom dplyr mutate
-#'@importFrom dplyr filter
-#'@importFrom gtrendsR gtrends
-#'@importFrom stats time
-#'@export
+#' @import trendecon tsbox lubridate zoo tibble tempdisagg magrittr
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom gtrendsR gtrends
+#' @importFrom stats time
+#' @export
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
-                         from = "2006-01-01"){
-  from = as.Date(from)
-  n1 <- as.numeric((Sys.Date() - from-180)/15) + 50
-  ifelse(n1 > 0, n1 <- n1, n1 <- 4) #set n1 if negativ
-  str(n1)
+                         from = "2006-01-01") {
+  from <- as.Date(from)
+  n1 <- as.numeric((Sys.Date() - from - 180) / 15) + 50
+  ifelse(n1 > 0, n1 <- n1, n1 <- 4) # set n1 if negativ
+
 
   d <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
     from = from,
     stepsize = "15 days", windowsize = "6 months",
-    n_windows = n1, wait = 20, retry = 10, #n_windows calculated such that it reaches up to current date
+    n_windows = n1, wait = 20, retry = 10, # n_windows calculated such that it reaches up to current date
     prevent_window_shrinkage = TRUE
   )
   d2 <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
-    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2], #Heute -90 Tage
+    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2], # Heute -90 Tage
     stepsize = "1 day", windowsize = "3 months",
     n_windows = 12, wait = 20, retry = 10,
     prevent_window_shrinkage = FALSE
@@ -46,9 +51,9 @@ daily_series <- function(keyword = c("arbeitslos"),
   dd <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(d), trendecon:::aggregate_windows(d2))
 
   # download weekly series
-  n2 <- as.numeric((Sys.Date() - from - 5*365)/(11*7)) + 10
-  ifelse(n2 > 0, n2<-n2, n2<-4)
-  str(n2)
+  n2 <- as.numeric((Sys.Date() - from - 5 * 365) / (11 * 7)) + 10
+  ifelse(n2 > 0, n2 <- n2, n2 <- 4)
+
   w <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
@@ -68,9 +73,9 @@ daily_series <- function(keyword = c("arbeitslos"),
   ww <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(w), trendecon:::aggregate_windows(w2))
 
   # download monthly series
-  n3 <- as.numeric(Sys.Date() - from - 15*365)/(30) + 12
-  ifelse(n3 > 0, n3<-n3, n3 <- 4)
-  str(n3)
+  n3 <- as.numeric(Sys.Date() - from - 15 * 365) / (30) + 12
+  ifelse(n3 > 0, n3 <- n3, n3 <- 4)
+
   m <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
@@ -83,7 +88,7 @@ daily_series <- function(keyword = c("arbeitslos"),
     keyword = keyword,
     geo = geo,
     from = from,
-    stepsize = "1 month", windowsize = "20 years", ###Hier evtl aufpassen, geht nur bis 2026!
+    stepsize = "1 month", windowsize = "20 years", ### Hier evtl aufpassen, geht nur bis 2026!
     n_windows = 1, wait = 20, retry = 10,
     prevent_window_shrinkage = FALSE
   )
@@ -101,27 +106,14 @@ daily_series <- function(keyword = c("arbeitslos"),
     select(time, value) -> ww
 
   dd <- ts_regular(ts_dts(dd))
-  dd$value <- 0.5*(na.locf(dd$value,fromLast =TRUE) + na.locf(dd$value))
+  dd$value <- 0.5 * (na.locf(dd$value, fromLast = TRUE) + na.locf(dd$value))
 
 
-  ww <-  ts_regular(ts_dts(ww))
-  ww$value <- 0.5*(na.locf(ww$value,fromLast =TRUE) + na.locf(ww$value))
+  ww <- ts_regular(ts_dts(ww))
+  ww$value <- 0.5 * (na.locf(ww$value, fromLast = TRUE) + na.locf(ww$value))
 
-  mm <-  ts_regular(ts_dts(mm))
-  mm$value <- 0.5*(na.locf(mm$value,fromLast =TRUE) + na.locf(mm$value))
-
-  # mm %>%
-  #   mutate(week = week(time), year = year(time)) %>%
-  #   group_by(week, year) %>%
-  #   mutate(value = mean(value)) %>%
-  #   ungroup() %>%
-  #   select( - time) %>%
-  #   filter(week <= 52) %>%
-  #   unique() %>%
-  #   bind_cols(time = ww$time) %>%
-  #   select(time, value)-> mm
-
-
+  mm <- ts_regular(ts_dts(mm))
+  mm$value <- 0.5 * (na.locf(mm$value, fromLast = TRUE) + na.locf(mm$value))
 
   wd <- tempdisagg::td(ww ~ dd, method = "fast", conversion = "mean")
   wd <- stats::predict(wd)
@@ -130,102 +122,3 @@ daily_series <- function(keyword = c("arbeitslos"),
   mwd <- stats::predict(mwd)
   as_tibble(mwd)
 }
-
-
-###############Tests
-
-# keyword = "arbeitslos"
-# geo = "DE"
-# from = as.Date("2006-01-01")
-#
-# daily_series(keyword = keyword,
-#              geo = geo,
-#              from = from)
-#
-#
-# trendecon:::ts_gtrends_windows(
-#   keyword = keyword,
-#   geo = geo,
-#   from = from,
-#   stepsize = "11 weeks", windowsize = "5 years",
-#   n_windows = as.numeric((Sys.Date() - from-180)/15), wait = 20, retry = 10,
-#   prevent_window_shrinkage = TRUE)
-#
-#
-# Sys.Date() - from
-#
-# t<-.Last.value
-#
-# t2 <- t %>% mutate(time = floor_date(time, "month")) %>%
-#   group_by(time) %>%
-#   mutate(m = mean(value))
-#
-# plot(select(t2, time, m), t ="l")
-# lines(s, col = "red")
-
-
-
-
-
-
-
-
-#
-# series <- daily_series(keyword = "arbeitslos",
-#                        geo = "DE",
-#                        from = "2021-06-01")
-# #
-# series %>%
-#   mutate(month = floor_date(time, "month")) %>%
-#   group_by(month) %>%
-#   mutate(monthl_aggr = mean(value)) %>%
-#   ungroup() %>%
-#   select(-month) %>%
-#   left_join(ts_gtrends(keyword = keyword, geo = geo, time = "2006-01-01 2021-08-30", retry = 10), by = "time") -> mwd_mon
-#
-#
-#
-# names(mwd_mon) <- c("time", "daily", "monthl_aggr", "orig")
-# mwd_mon <- fill(mwd_mon, orig, .direction = "down")
-#
-# write.xlsx(mwd_mon, "data_Wirtschaftskrise_2010.xlsx")
-#
-#
-#
-# ggplot(fill(pivot_longer(mwd_mon, cols = -time, names_to = "id", values_to = "value")), aes(x = time, y = value, color = id)) +
-#   geom_line()
-#
-# corrr::correlate(mwd_mon$monthl_aggr, mwd_mon$orig)
-#
-# max(abs(mwd_mon$monthl_aggr - mwd_mon$orig))
-#
-#
-#
-#
-#
-#
-#
-# time <- str_c("2006-01-01 ", as.character(Sys.Date()))
-# orig <- select(gtrends(keyword = "arbeitslos",
-#                        geo = "DE",
-#                        time = time)$interest_over_time, date, value = hits)
-# orig %>%
-#   mutate(date = floor_date(as.Date(date), "month")) %>%
-#   group_by(date) %>%
-#   mutate(mnl = mean(value)) %>%
-#   ungroup() %>%
-#   select(date, mnl) %>%
-#   unique() -> orig_avg
-#
-# as_tibble(series) %>% mutate(date = floor_date(as.Date(time), "month")) %>%
-#   group_by(date) %>%
-#   mutate(dail_avg = mean(value)) %>%
-#   ungroup() %>%
-#   select(date, dail_avg) %>%
-#   unique() %>%
-#   left_join(orig_avg, by = "date") %>%
-#   pivot_longer(cols = -date, names_to = "id", values_to = "value") %>%
-#   ggplot(aes(x = date, y = value, color = id)) + geom_line()
-
-
-
