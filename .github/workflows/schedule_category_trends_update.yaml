@@ -1,7 +1,7 @@
 on:
   schedule:
-    - cron: 00 04 1 * *
-    
+    - cron: "00 04 1 * *"
+
 jobs:
   generate-data:
     runs-on: ${{ matrix.config.os }}
@@ -48,7 +48,7 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
-    
+          
       - name: Generate data
         run: |
           source("data-raw/cat_trend_job.R")
@@ -59,9 +59,9 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add --all
-          git commit -am "Update categories trend"
+          git commit -am "Update common categories trend"
           git push 
-          
+
       - name: Session info
         run: |
           options(width = 100)
