@@ -19,6 +19,7 @@ library(knitr)
 library(dplyr)
 library(tibble)
 library(ggplot2)
+library(stringr)
 ```
 
 # Einordnung
@@ -104,8 +105,8 @@ Woloszko (2020) ist nach unserem Kenntnisstand das einzige Papier, welches diese
 Die Funktion `pca` nimmt als Argumente mehrere Suchwörter oder Kategorien entgegen. Des Weiteren eine Region, das Start- und Enddatum (Default: 2006-01-01 und heute) sowie die Anzahl der zu berechnenden Hauptkomponenten (Default: Anzahl der Zeitreihen). Für die Zeitreihen wird hier momentan eine monatliche Frequenz angenommen.
 
 ```{r message=FALSE}
-pca(keyword = c("ikea", "saturn"),
-    category = 0,
+pca(keywords = c("ikea", "saturn"),
+    categories = 0,
     geo = "DE",
     time = str_c("2018-01-01 ",Sys.Date()))
 ```
@@ -116,8 +117,8 @@ Für schon berechnete Faktoren `factors` aus Zeitreihen `series` ist dies eine M
 
 ```{r, fig.width = 7, fig.asp = 0.8}
 
-dat <- pca(keyword = c("ikea", "saturn", "amazon", "ebay"),
-    category = 0,
+dat <- pca(keywords = c("ikea", "saturn", "amazon", "ebay"),
+    categories = 0,
     geo = "DE",
     time = str_c("2018-08-01 ", Sys.Date()))
 

@@ -3,8 +3,8 @@
 #' or several categories the principal
 #' components of the monthly time series.
 #'
-#' @param keyword A vector (chr) with search queries (or a single search query).
-#' @param category A vector (num) with Google Trends category numbers.
+#' @param keywords A vector (chr) with search queries (or a single search query).
+#' @param categories A vector (num) with Google Trends category numbers.
 #' @param geo  A geographical region to restrict the search queries to.
 #' @param time A string consisting of a start date
 #' and an end date (separated with a space).
@@ -29,14 +29,17 @@
 #' @importFrom tsbox ts_ts
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
+#' @importFrom stringr str_sub
 #' @export
-pca <- function(keyword = NA,
-                category = 0,
+pca <- function(keywords = NA,
+                categories = 0,
                 geo = "DE",
                 time = str_c("2006-01-01 ", Sys.Date())) {
+
   start <- str_sub(time, 1, 10)
   end <- str_sub(time, 12, 21)
-  stopifnot("Nur keywords oder categories darf angegeben werden" = is.na(keyword) | category == 0)
+
+  stopifnot("Either choose keywords or categories! Leave the other argument empty" = is.na(keywords) | categories == 0)
 
   # Check if function is used on the first day of the month
   day <- format(end, format = "%d")
@@ -50,8 +53,8 @@ pca <- function(keyword = NA,
   dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
   dat <- tibble::tibble()
 
-  for (kw in keyword) {
-    for (cat in category) {
+  for (kw in keywords) {
+    for (cat in categories) {
       temp <-
         tibble::as_tibble(gtrends(
           keyword = kw,

@@ -5,16 +5,16 @@
 \title{Principal component analysis on Google Trends time series}
 \usage{
 pca(
-  keyword = NA,
-  category = 0,
+  keywords = NA,
+  categories = 0,
   geo = "DE",
   time = str_c("2006-01-01 ", Sys.Date())
 )
 }
 \arguments{
-\item{keyword}{A vector (chr) with search queries (or a single search query).}
+\item{keywords}{A vector (chr) with search queries (or a single search query).}
 
-\item{category}{A vector (num) with Google Trends category numbers.}
+\item{categories}{A vector (num) with Google Trends category numbers.}
 
 \item{geo}{A geographical region to restrict the search queries to.}
 
