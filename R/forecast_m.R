@@ -19,7 +19,7 @@ forecast_m <- function(r_list, dat, fd = T){
       mutate(across(everything(), function(y) replace(y, y == Inf, NA_real_)))
   })
 
-  # use PCA
+  #use PCA
   # r_factors <- lapply(r_raw, function(x){
   #   pc <- as_tibble(prcomp(x[-c(1,2)])$x)
   #   bind_cols(x[c(1,2)], pc[,1:min(20, length(r_raw[[1]])-2)]) %>% #number of PCs
@@ -34,12 +34,13 @@ forecast_m <- function(r_list, dat, fd = T){
     x <- as.matrix(series[-c(1,2)])
 
 
-    cv <- cv.glmnet(x, y, alpha = 0)
-    model <- glmnet(x, y, alpha = 0, lambda = 0)#cv$lambda.min) #alpha = 1 LASSO
-    model                                                    #lambda= 0 OLS
+    # cv <- cv.glmnet(x, y, alpha = 1)
+    # model <- glmnet(x, y, alpha = 1, lambda =0)# cv$lambda.min) #alpha = 1 LASSO
+    # model                                                    #lambda= 0 OLS
+    lm(dat ~ ., data = series[-1])
   }
 
-  covariats <- lapply(r, function(x) as.matrix(x[-c(1,2)])) #Trends Data to forecast with
+  covariats <- lapply(r, function(x) x[-c(1,2)]) #Trends Data to forecast with
   #previous estimated model
   models <- lapply(lag(r)[-1], function(x) build_model(x))           #estimate model
 
@@ -55,8 +56,10 @@ forecast_m <- function(r_list, dat, fd = T){
     rename(index = value)
 
   last_model = last(models)
+  s_niv = lapply(models, function(x) summary(x)$coef[,4])
   return(list(forec = forec,             #returns forcasted values and
-              last_model = last_model))
+              last_model = last_model,
+              s_niv = s_niv))
 }
 
 

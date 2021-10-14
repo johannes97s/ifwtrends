@@ -266,8 +266,8 @@ filter(gtrendsR::categories, id %in% c(560, 121,
                  7, 143, 146, 508, 38))
 
 
-r1 <- readRDS("retail_gindex_roll_1219")
-r2 <- readRDS("retail_gindex_roll_0721")
+r1 <- readRDS("consum_gindex_roll_1219")
+r2 <- readRDS("consum_gindex_roll_0721")
 
 r <- c(r1, r2) #Auf Gleiche Laenge wie dat Kuerzen
 
@@ -294,6 +294,104 @@ forec %>%
   geom_line()
 
 ```
+# Studie: Prognose der Einzelhandelsumsätze
+
+Hier soll mit dem gleichen Verfahren die monatliche Veränderung der Einzelhandelsumsätze für Deutschland prognostiziert werden.
+Wir verwenden dafür wieder eine Vorauswahl an Kategorien inklusive zweier lags.
+
+```{r message=FALSE}
+filter(gtrendsR::categories, id %in% c(18,78,68,531,355,121,841))
+
+r1 <- readRDS("retail_gindex_roll_1219.rds")
+r2 <- readRDS("retail_gindex_roll_0921.rds")
+
+
+r_list <- c(r1,r2)
+
+retail <- readxl::read_xlsx("retail.xlsx") %>%
+  transmute(time = floor_date(as.Date(Name), "month"), value = as.numeric(`BD RETAIL SALES EXCL CARS (CAL ADJ) X-12-ARIMA VOLA`))
+
+
+dat <- retail %>%
+  mutate(value = c(0, diff(log(value),1)) ) %>%
+  filter(time > as.Date("2006-02-01"))
+  
+
+
+
+forec <- forecast_m(r_list, dat, fd = T)
+
+
+
+rmse(forec$forec %>% 
+       left_join(dat, by = "time") %>% 
+       drop_na())
+
+forec$forec %>%
+  left_join(dat, by = "time") %>%
+  pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
+  ggplot(aes(x=  time, y = value, color = id)) +
+  geom_line()
+
+```
+
+Hier sehen wir die p-Werte der Hälfte der Koeffizienten mit dem niedrigsten mittleren p-Wert. Die horizontale Linie ist das 10% Signifikanzniveau.
+```{r message=FALSE}
+pvalue <- as_tibble(t(as.data.frame(forec$s_niv))) %>% 
+  bind_cols(time = forec$forec$time)
+
+pvalue %>% 
+  pivot_longer(cols = -time, names_to = "coef", values_to = "pValue") %>% 
+  group_by(coef) %>% 
+  mutate(mean = mean(pValue)) %>% 
+  ungroup() %>% 
+  filter(mean <= quantile(mean, .5)) %>% 
+  ggplot(aes(x = time, y = pValue, color = coef)) +
+  geom_line() + 
+  geom_hline(yintercept = 0.1) + 
+  theme(legend.position = "none") + 
+  facet_grid(coef~.)
+```
+
+Man sieht deutlich, dass die Koeffizienten der Reihen `121_lag_0`, `355_lag_0` und `68_lag_0` die einzigen sind, welche über längere Zeit eine hohe Signifikanz aufweisen.
+Betrachten wir also nun nochmals eine SChätzung in welche nur diese drei Reihen eingehen.
+
+```{r message=FALSE}
+r_list2 <- lapply(r_list, function(x) x %>% 
+                    select(time, `121_lag_0`, `355_lag_0`, `68_lag_0`))
+
+forec2 <- forecast_m(r_list, dat, fd = T)
+
+rmse(forec$forec %>% 
+       left_join(dat, by = "time") %>% 
+       drop_na())
+
+
+forec2$forec %>%
+  left_join(dat, by = "time") %>%
+  pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
+  ggplot(aes(x=  time, y = value, color = id)) +
+  geom_line()
+
+pvalue <- as_tibble(t(as.data.frame(forec$s_niv))) %>% 
+  bind_cols(time = forec$forec$time)
+
+pvalue %>% 
+  pivot_longer(cols = -time, names_to = "coef", values_to = "pValue") %>% 
+  group_by(coef) %>% 
+  mutate(mean = mean(pValue)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = time, y = pValue, color = coef)) +
+  geom_line() + 
+  geom_hline(yintercept = 0.1) + 
+  theme(legend.position = "none") + 
+  facet_grid(coef~.)
+```
+Ein Vergleich des jeweiligen RMSE zeigt leider keine deutliche Verbesserung.
+
+
+# Ausblick
+Bisher wurden die Zeitreihen welche in das Modell eingehen immer "von Hand" nach ökonomischer Plausibilität ausgewählt. Dort wo noch keine guten Prognosen erzielt werden konnten, wäre ein nächster Schritt eine rein datengetriebene Auswahl. So könnte das volle Potenzial der Google Daten im Sinne einer Big-Data Analyse ausgenutzt werden. Götz und Knetsch (2019) evaluieren einige dafür geeignete Methoden. In unseren Analysen hat sich gezeigt, dass PCA, RIDGE und LASSO bei einer Vorauswahl "von Hand" immer schlechtere Ergebnisse liefern als eine OLS Schätzung.
 
 
 

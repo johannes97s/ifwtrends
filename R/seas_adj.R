@@ -31,58 +31,6 @@
 #' @importFrom seasonal seas
 #' @importFrom tsbox ts_ts
 #' @export
-seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
-
-  series <- helper_adj(series, log.trafo)
-
-  # Seasonal adjustment with X-13 ARIMA
-  if (method == "arima") {
-    #Saisonbereinigung mit X-13 ARIMA
-
-    series <- ts_ts(series)
-
-    h <- function(ts){
-      m <- x13(ts)
-      return(m$final$series[,"sa"])
-    }
-
-    if (identical(dim(series), NULL)){
-      series <- ts_tbl(h(series))
-    } else {
-      series <- as.list(series)
-      series <- lapply(series, h)
-      n <- names(series)
-      t1 <- series[[1]]
-      for (i in 2:length(series)) t1 <- ts_c(t1, series[[i]])
-      dimnames(t1)[[2]] <- n
-      series <- ts_tbl(t1)
-    }
-  }
-  if (method == "firstdiff"){
-    # Seasonal adjustment with first derivates and lag = 4
-    # as we use quarterly data. If one does monthly data, set
-    # lag = 12.
-    if (freq == "month"){
-      k = 12
-    }
-    if (freq == "quarter"){
-      k = 4
-    }
-    series <- series %>%
-      group_by(id) %>%
-      mutate(value = c(rep(0,k), diff(value, k))) %>%
-      ungroup() %>%
-      ts_tbl()
-  }
-
-  return(series)
-
-}
-
-
-
-
-
 seas_adj <-function(series, freq = "month", method = "arima"){
   if(method == "arima"){
     #Saisonbereinigung mit X-13 ARIMA
@@ -119,6 +67,7 @@ seas_adj <-function(series, freq = "month", method = "arima"){
   }
   series
 }
+
 
 
 

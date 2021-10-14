@@ -38,37 +38,3 @@ forecast_q(r_list2, dat, fd = T)$forec %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
 
-
-mod <- forecast_q(r_list2, dat, fd = T)$last_model
-
-r <- r_list2[[43]]
-
-
-  r_raw <- mutate(r, time = floor_date(time, "quarter")) %>% #aggregate GT Data to quarter
-    group_by(time) %>%                              #
-    transmute_at(.vars = vars(-time), .funs =  mean) %>%  #
-    ungroup() %>%
-    unique()
-
-
-if (fd) r_raw <- mutate(r_raw, time = time, #first differences if fd=T set
-                                    across(.cols = -1, function(y) c(0, diff(y,1))),
-                                     .keep = "used")
-
-r_raw <-  select(r_raw, time, everything()) %>%
-    filter(time != as.Date("2011-01-01")) %>% #omit structural breaks
-    filter(time != as.Date("2016-01-01")) %>%
-    mutate(across(everything(), function(y) replace(y, y == -Inf, NA_real_))) %>%
-    mutate(across(everything(), function(y) replace(y, y == Inf, NA_real_)))
-
-
-
-
-
-plot(predict(mod, as.matrix(r_raw[-1])), type = "l")
-
-
-
-
-
-
