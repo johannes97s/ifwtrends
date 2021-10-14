@@ -2,10 +2,7 @@
 % Please edit documentation in R/trend_adj.R
 \name{helper_adj}
 \alias{helper_adj}
-\title{Basic adjustment via helper function
-This function is a helper function to reduce duplicate code in the
-exported function and \code{\link{seas_adj}()} below.
-For further info, see their docstrings.}
+\title{Basic adjustment via helper function}
 \usage{
 helper_adj(series, log.trafo = F)
 }
@@ -17,8 +14,9 @@ with columns \code{time}, \code{value} and optional column \code{id}.}
 should be transformed to log(value).}
 }
 \description{
-Basic adjustment via helper function
-This function is a helper function to reduce duplicate code in the
-exported function and \code{\link{seas_adj}()} below.
+This function is a helper function to reduce
+duplicate code in\code{\link{trend_adj}()}
+and \code{\link{seas_adj}()}.
 For further info, see their docstrings.
 }
+\keyword{internal}

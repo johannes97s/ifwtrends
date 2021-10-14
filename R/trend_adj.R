@@ -1,13 +1,17 @@
 #' Basic adjustment via helper function
-#' This function is a helper function to reduce duplicate code in the
-#' exported function and \code{\link{seas_adj}()} below.
+#'
+#' This function is a helper function to reduce
+#' duplicate code in\code{\link{trend_adj}()}
+#' and \code{\link{seas_adj}()}.
 #' For further info, see their docstrings.
+#'
 #' @param series The input tibble in tidy form
 #' with columns \code{time}, \code{value} and optional column \code{id}.
 #' @param log.trafo Logical, indicates if value
 #' should be transformed to log(value).
 #' @importFrom dplyr mutate
 #' @importFrom tsbox ts_tbl
+#' @keywords internal
 helper_adj <- function(series, log.trafo = F){
 
   if ("ts" %in% class(series)){

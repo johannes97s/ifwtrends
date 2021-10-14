@@ -6,7 +6,24 @@
 #PCA are available (change the relevant lines of code)
 
 
-
+#' Quarterly forecast evaluation of vintages
+#'
+#' @description Todo
+#'
+#' @param r_list todo
+#' @param dat todo
+#' @param fd todo
+#'
+#' @return Todo
+#'
+#' @examples
+#' 1+1
+#' 1 + 2
+#'
+#' @importFrom glmnet cv.glmnet
+#' @importFrom glmnet glmnet
+#' @importFrom stats predict
+#' @export
 forecast_q <- function(r_list, dat, fd = T){
   r_raw <- r_list[1:length(r_list) %% 3 == 0]
   r_raw <- lapply(r_raw, function(x){

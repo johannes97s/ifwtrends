@@ -15,27 +15,28 @@
 #' @return Returns a tibble with trend adjusted values and a
 #' date column.
 #'
-#' For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
-#' If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
-#' If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
-#' (performed by the [seasonal::seas()] function from the seasonal package).
+#' For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
+#' If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
+#' If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
 #'
 #' @examples
-#' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+#' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
 #' seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
-#' @importFrom dplyr mutate
-#' @importFrom dplyr group_by
-#' @importFrom dplyr ungroup
-#' @importFrom magrittr %>%
-#' @importFrom seasonal final
-#' @importFrom seasonal seas
-#' @importFrom tsbox ts_ts
+#' @import dplyr tsbox zoo
+#' @import rJava
+#' @importFrom RJDemetra x13
+#' @importFrom gtrendsR gtrends
 #' @export
-seas_adj <-function(series, freq = "month", method = "arima"){
-  if(method == "arima"){
+seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
+
+  series <- helper_adj(series, log.trafo)
+
+  # Seasonal adjustment with X-13 ARIMA
+  if (method == "arima") {
     #Saisonbereinigung mit X-13 ARIMA
-    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
+
     series <- ts_ts(series)
+
     h <- function(ts){
       m <- x13(ts)
       return(m$final$series[,"sa"])
@@ -43,8 +44,7 @@ seas_adj <-function(series, freq = "month", method = "arima"){
 
     if (identical(dim(series), NULL)){
       series <- ts_tbl(h(series))
-    }
-    if (dim(series)[2] > 1){
+    } else {
       series <- as.list(series)
       series <- lapply(series, h)
       n <- names(series)
@@ -53,21 +53,27 @@ seas_adj <-function(series, freq = "month", method = "arima"){
       dimnames(t1)[[2]] <- n
       series <- ts_tbl(t1)
     }
-  }
 
-  if(method == "firstdiff"){     #Saisonbereinigung mit ersten Differenzen mit lag = 4
-    #da gerade Quartalsdaten. Fuer monatsdaten lag = 12
-    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
-    if (freq == "month") k = 12
-    if (freq == "quarter") k = 4
+  } else if (method == "firstdiff"){
+    # Seasonal adjustment with first derivates and lag = 4
+    # as we use quarterly data. If one does monthly data, set
+    # lag = 12.
+    if (freq == "month"){
+      k = 12
+    } else if (freq == "quarter"){
+      k = 4
+    } else {
+      stop("seas_adj(): Please enter 'month' respective 'quarter' for freq.")
+    }
+
     series <- series %>%
       group_by(id) %>%
-      mutate(value = c(rep(0,k), diff(value, k))) %>% #Wenn Monatsdaten hier 12 statt 4
-      ungroup()
+      mutate(value = c(rep(0,k), diff(value, k))) %>%
+      ungroup() %>%
+      ts_tbl()
   }
-  series
+
+  return(series)
+
 }
-
-
-
 

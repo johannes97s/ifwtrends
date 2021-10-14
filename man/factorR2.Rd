@@ -2,7 +2,7 @@
 % Please edit documentation in R/factorR2.R
 \name{factorR2}
 \alias{factorR2}
-\title{\eqn{R^2} of the series' regression on factors}
+\title{R squared of the series' regression on factors}
 \usage{
 factorR2(series, factors, plot = F)
 }
@@ -26,12 +26,10 @@ in form of a tibble.
 }
 \examples{
 \dontrun{
-dat <- pca(
-  keywords = c("ikea", "saturn", "amazon", "ebay"),
-  categories = 0, geo = "DE", start = "2006-01-01", end = Sys.Date(),
-  components = max(length(keywords), length(categories))
-)
-
+dat <- pca(keywords = c("Pluto", "Saturn"),
+categories = 0,
+geo = "DE",
+time = paste("2020-01-01", "2020-06-01"))
 series <- dat \%>\% select(date, 6:9)
 factors <- dat \%>\% select(date, 2:5)
 

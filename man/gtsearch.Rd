@@ -39,6 +39,6 @@ interest data in a keyword or category from Google Trends.
 }
 \examples{
 \dontrun{
-gtsearch(keywords = c("pluto", "saturn"), end = "2020-01-01")
+gtsearch(keywords = c("pluto", "saturn"), start = "2020-01-01", end = "2020-06-01")
 }
 }

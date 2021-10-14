@@ -1,5 +1,6 @@
 # This is just a script to catch the note while check()-ing.
 utils::globalVariables(c(
+  "act_model",
   "n",
   "value",
   "categories",
@@ -8,9 +9,8 @@ utils::globalVariables(c(
   "hits",
   "dates",
   "key",
-  "str",
-  "str_sub",
   "adj",
   "s_adj",
   "trend"
 ))
+

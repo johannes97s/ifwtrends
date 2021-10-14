@@ -1,6 +1,6 @@
 #' Preparation of Google Trends data
 #'
-#' @description \code{g_index} downloads for
+#' @description \code{gtpreparation} downloads for
 #' various search requests respective trends categories
 #' data and applies a logarithmic transformation aswell as a
 #' seasonal adjustment.
@@ -27,10 +27,10 @@
 #' @importFrom stringr str_c
 #' @importFrom gtrendsR gtrends
 #' @examples \dontrun{
-#' g_index(keyword = c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
+#' gtpreparation(keyword = c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
 #' }
 #' @export
-g_index <- function(keyword = NA,
+gtpreparation <- function(keyword = NA,
                     category = 0,
                     geo = "DE",
                     time = str_c("2006-01-01 ", Sys.Date()),
