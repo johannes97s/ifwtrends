@@ -1,8 +1,8 @@
+name: Automated update of the common category trend
+
 on:
   schedule:
-    - cron: "0 4 1 * *"
-
-name: Automated update of the common category trend
+    - cron: '0 4 15 * *'
 
 jobs:
   generate-data:
@@ -14,6 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
 
     env:
@@ -56,7 +58,7 @@ jobs:
           source("data-raw/cat_trend_job.R")
         shell: Rscript {0}
 
-      - name: Commit files
+      - name: Commit and push files
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
