@@ -94,8 +94,6 @@ daily_series <- function(keyword = c("arbeitslos"),
   )
   mm <- trendecon:::aggregate_averages(trendecon:::aggregate_windows(m), trendecon:::aggregate_windows(m2))
 
-
-
   dd <- select(dd, -n)
   ww <- select(ww, -n)
   mm <- select(mm, -n)
@@ -120,5 +118,6 @@ daily_series <- function(keyword = c("arbeitslos"),
 
   mwd <- tempdisagg::td(mm ~ wd, method = "fast", conversion = "mean")
   mwd <- stats::predict(mwd)
-  as_tibble(mwd)
+
+  return(as_tibble(mwd))
 }
