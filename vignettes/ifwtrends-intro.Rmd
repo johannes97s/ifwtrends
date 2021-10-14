@@ -16,9 +16,13 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(knitr)
-library(dplyr)
-library(tibble)
-library(ggplot2)
+library(tidyverse)
+library(tsbox)
+library(gtrendsR)
+library(trendecon)
+library(glmnet)
+library(lubridate)
+library(zoo)
 library(stringr)
 ```
 
@@ -133,7 +137,9 @@ factorR2(series, factors, plot = T)
 
 ## roll
 
-Die Funktion `roll` dient der Erstellung von Vintages für Prognoseevaluationen. Dabei wird für jedes Datum in `start_period` bis `end` die Reihe von `start_series` als Anfang bis zu diesem Datum als Endpunkt neu heruntergeladen. Dies ist notwendig, da zu zwei Download-Zeitpunkten die ganze Google Trends Reihe verschieden sein kann. Als Funktion können Download-Funktion mit den Argumenten `keyword`, `category`, `geo`, `time` und weiteren Argumenten `...` und einem Tibble mit den Spalten `time`, `id` und `value` (Spaltennamen können auch abweichen) benutzt werden.
+Die Funktion `roll` dient der Erstellung von Vintages für Prognoseevaluationen. Dabei wird für jedes Datum in `start_period` bis `end` die Reihe von
+`start_series` als Anfang bis zu diesem Datum als Endpunkt neu heruntergeladen.
+Dies ist notwendig, da zu zwei Download-Zeitpunkten die ganze Google Trends Reihe verschieden sein kann. Als Funktion können Download-Funktion mit den Argumenten `keyword`, `category`, `geo`, `time` und weiteren Argumenten `...` und einem Tibble mit den Spalten `time`, `id` und `value` (Spaltennamen können auch abweichen) benutzt werden.
 Zurückgegeben wird eine Liste mit einer jeweils um eine Zeiteinheit längeren Zeitreihe.
 Diese kann dann z.B. mit `lapply(roll(...), f)` zur Prognoseevaluation benutzt werden, wobei `f` eine Prognose-Funktion ist.
 
@@ -177,13 +183,15 @@ heruntergeladen. Bei vielen Suchanfragen empfiehlt es sich aufgrund der IP-Besch
 
 Hier muss darauf geachtet werden, dass das Anfangsdatum der Zeilvariable und der Vintages jeweils übereinstimmt. Auch darf die Zeitreihe keine führenden `NA`s enhalten und am Ende darf höchstens ein `NA` sein. Dies ist häufig der Grund für Fehlermeldungen.
 ```{r message = FALSE}
-filter(gtrendsR::categories, id %in% c(203, 206, 179, 1003, 1004, 208, 1010, 1011))
+filter(gtrendsR::categories, id %in% c(203, 206, 179, 1003, 1004, 208, 1010,
+                                       1011))
 
 r_list <- readRDS("travel.rds")
 r_list <- r_list[1:45]
 
 imports <- readxl::read_xlsx("service_imports.xlsx") %>%
-  transmute(time = floor_date(as.Date(Name), "quarter"), value = as.numeric(`BD IMPORTS - SERVICES CONA`))
+  transmute(time = floor_date(as.Date(Name), "quarter"),
+            value = as.numeric(`BD IMPORTS - SERVICES CONA`))
 
 
 dat <- imports %>%
@@ -195,18 +203,18 @@ forec <- forecast_q(r_list, dat, fd = T)$forec%>%
   left_join(dat, by = "time")
 
 print(forec, n = 13)
-rmse(drop_na(forec))
+print(rmse(drop_na(forec)))
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
 
 ```
-Die blaue Linie ist die Zielvariable. Die rote Linie ist jeweils die Ein-Schritt-Prognose, gegeben das Modell aus dem vorherigen Zeitraum und den Google Daten des aktuellen Zeitraums.
+Die blaue Linie ist die Zielvariable. Die rote Linie ist jeweils die Ein-Schritt-Prognose, gegeben das Modell aus dem vorherigen Zeitraum und die Google Daten des aktuellen Zeitraums.
 
 Hier wird nun eine monatliche Prognose des VDAX erstellt.
 Als Kovariaten dienen Google Reihen für die Suchbegriffe `"arbeitslos","angst","crash","hartz 4","krise","grundsicherung","kündigung","entlassung"`.
-Da der VDAX monatlich vorliegt, verwenden wir hier `forecast_m`.
+Da der VDAX monatlich vorliegt, verwenden wir `forecast_m`.
 Auch hier werden wieder zwei lags betrachtet.
 
 ```{r message = FALSE}
@@ -221,11 +229,11 @@ dat <- vdax %>%
 
 
 
-forec <- forecast_m(r_list, dat, fd = T)$forec %>% 
+forec <- forecast_m(r_list, dat, fd = F)$forec %>% 
   left_join(dat, by = "time")
 
 print(forec, n = 13)
-rmse(drop_na(forec))
+print(rmse(drop_na(forec)))
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
@@ -279,6 +287,7 @@ forec <- forecast_q(r, dat, fd = T)$forec %>%
   left_join(dat, by = "time")
 
 print(forec, n = 13)
+print(rmse(drop_na(forec)))
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
@@ -308,7 +317,7 @@ auftreten, so bedeutet dies, dass das Paket nicht mehr auf Google Trends Daten z
 # Quellen
 
 Google 2021a:   https://support.google.com/trends/answer/4359550?hl=en \
-Google 2021b:   https://support.google.com/trends/answer/4359597?hl=en \ 
+Google 2021b:   https://support.google.com/trends/answer/4359597?hl=en \
 Woloszko 2020:  Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634. \
 Eichenauer et. al 2020 _Constructing daily economic sentiment indices based on Google trends_. KOF Working Papers No. 484, 2020. \
 
