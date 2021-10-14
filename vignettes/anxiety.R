@@ -18,19 +18,23 @@ r_list = roll(keyword = c("arbeitslos","angst","crash","hartz 4","krise","grunds
 
 saveRDS(r_list, "data/anxiety.rds")
 
-r_list2 <- r_list[1:44]
+r_list <- readRDS("data/anxiety.rds")
 
-vdax <- readxl::read_xlsx("data/service_imports.xlsx") %>%
-  transmute(time = floor_date(as.Date(Name), "quarter"), value = as.numeric(`BD IMPORTS - SERVICES CONA`))
+vdax<- readxl::read_xlsx("data/vdax.xlsx") %>%
+  transmute(time = floor_date(as.Date(Name), "month"), value = as.numeric(`VDAX-NEW VOLATILITY INDEX - PRICE INDEX`))
 
 
 dat <- vdax %>%
-  mutate(value = c(0, diff(log(value),1)) ) %>% 
-  drop_na()
+  #mutate(value = value/lag(value) - 1) %>%
+  filter(time >= min(first(r_list)$time))
 
 
-forecast_q(r_list2, dat, fd = T) %>% 
+
+forecast_m(r_list, dat, fd = F)$forec %>%
   left_join(dat, by = "time") %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
+
+
+

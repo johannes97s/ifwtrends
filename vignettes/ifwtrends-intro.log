@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.11)  12 OCT 2021 17:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.11)  14 OCT 2021 14:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -658,40 +658,36 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 {c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/
 updmap/pdftex.map}]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-71.
+73.
 
 (c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1
 lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [2]
 
-LaTeX Warning: Reference `(' on page 3 undefined on input line 208.
+LaTeX Warning: Reference `fig:comtrend' on page 3 undefined on input line 211.
 
-<common_trend.png, id=97, 1350.04375pt x 533.995pt>
+<common_trend.png, id=94, 1350.04375pt x 533.995pt>
 File: common_trend.png Graphic file (type png)
 <use common_trend.png>
-Package pdftex.def Info: common_trend.png  used on input line 210.
+Package pdftex.def Info: common_trend.png  used on input line 213.
 (pdftex.def)             Requested size: 469.7414pt x 185.80106pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 210--212
+Underfull \hbox (badness 10000) in paragraph at lines 213--216
 [][]
  []
 
-
-LaTeX Warning: Reference `fig:trendadj' on page 3 undefined on input line 213.
-
-<common_trend_adj.png, id=99, 1350.04375pt x 533.995pt>
+<common_trend_adj.png, id=97, 1350.04375pt x 533.995pt>
 File: common_trend_adj.png Graphic file (type png)
 <use common_trend_adj.png>
-Package pdftex.def Info: common_trend_adj.png  used on input line 217.
+Package pdftex.def Info: common_trend_adj.png  used on input line 219.
 (pdftex.def)             Requested size: 469.7414pt x 185.80106pt.
-[3 <./common_trend.png> <./common_trend_adj.png>]
 
-LaTeX Warning: Reference `fig:comtrend' on page 4 undefined on input line 229.
+LaTeX Warning: Reference `fig:comtrend' on page 3 undefined on input line 231.
 
-[4]
+[3 <./common_trend.png>] [4 <./common_trend_adj.png>]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-275.
+277.
 
 (c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1
 lmtt.fd
@@ -703,43 +699,102 @@ File: ifwtrends-intro_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (ty
 pe pdf)
 <use ifwtrends-intro_files/figure-latex/unnamed-chunk-3-1.pdf>
 Package pdftex.def Info: ifwtrends-intro_files/figure-latex/unnamed-chunk-3-1.p
-df  used on input line 294.
+df  used on input line 296.
 (pdftex.def)             Requested size: 469.76265pt x 375.62372pt.
 [5] [6 <./ifwtrends-intro_files/figure-latex/unnamed-chunk-3-1.pdf>]
+Underfull \vbox (badness 10000) detected at line 441
+ []
 
-LaTeX Warning: Reference `fig:forecast' on page 7 undefined on input line 338.
 
-<forecast.png, id=143, 813.0375pt x 350.81062pt>
-File: forecast.png Graphic file (type png)
-<use forecast.png>
-Package pdftex.def Info: forecast.png  used on input line 342.
-(pdftex.def)             Requested size: 469.75082pt x 202.68877pt.
+Underfull \vbox (badness 10000) detected at line 441
+ []
 
-Underfull \hbox (badness 6094) in paragraph at lines 368--372
+[7]
+Underfull \vbox (badness 10000) detected at line 441
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 441
+ []
+
+[8] [9] [10]
+<ifwtrends-intro_files/figure-latex/unnamed-chunk-7-1.pdf, id=163, 469.755pt x 
+325.215pt>
+File: ifwtrends-intro_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (ty
+pe pdf)
+<use ifwtrends-intro_files/figure-latex/unnamed-chunk-7-1.pdf>
+Package pdftex.def Info: ifwtrends-intro_files/figure-latex/unnamed-chunk-7-1.p
+df  used on input line 550.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 550--552
+[][]
+ []
+
+
+Overfull \hbox (50.04874pt too wide) in paragraph at lines 553--557
+\T1/lmr/m/n/10 Such-be-griffe \T1/lmtt/m/n/10 "arbeitslos","angst","crash","har
+tz 4","krise","grundsicherung","kündigung","entlassung"\T1/lmr/m/n/10 .
+ []
+
+[11 <./ifwtrends-intro_files/figure-latex/unnamed-chunk-7-1.pdf>]
+<ifwtrends-intro_files/figure-latex/unnamed-chunk-8-1.pdf, id=173, 469.755pt x 
+325.215pt>
+File: ifwtrends-intro_files/figure-latex/unnamed-chunk-8-1.pdf Graphic file (ty
+pe pdf)
+<use ifwtrends-intro_files/figure-latex/unnamed-chunk-8-1.pdf>
+Package pdftex.def Info: ifwtrends-intro_files/figure-latex/unnamed-chunk-8-1.p
+df  used on input line 598.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[12]
+
+LaTeX Warning: Reference `fig:forecast' on page 13 undefined on input line 606.
+
+
+[13 <./ifwtrends-intro_files/figure-latex/unnamed-chunk-8-1.pdf>]
+Underfull \vbox (badness 10000) detected at line 718
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 718
+ []
+
+[14]
+<ifwtrends-intro_files/figure-latex/unnamed-chunk-9-1.pdf, id=195, 469.755pt x 
+325.215pt>
+File: ifwtrends-intro_files/figure-latex/unnamed-chunk-9-1.pdf Graphic file (ty
+pe pdf)
+<use ifwtrends-intro_files/figure-latex/unnamed-chunk-9-1.pdf>
+Package pdftex.def Info: ifwtrends-intro_files/figure-latex/unnamed-chunk-9-1.p
+df  used on input line 720.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[15]
+Underfull \hbox (badness 6094) in paragraph at lines 744--748
 \T1/lmr/m/n/10 Google 2021a: []$https : / / support . google . com / trends / a
 nswer / 4359550 ? hl = en/$[] Google 2021b: []$https :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 368--372
+Underfull \hbox (badness 10000) in paragraph at lines 744--748
 
  []
 
-[7] [8 <./forecast.png>] (./ifwtrends-intro.aux)
+[16 <./ifwtrends-intro_files/figure-latex/unnamed-chunk-9-1.pdf>] (./ifwtrends-
+intro.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `ifwtrends-intro.out' has not changed.
-(rerunfilecheck)             Checksum: 8EF5D9AB222EF22F4704950AAD84224D;1689.
+(rerunfilecheck)             Checksum: EE083D9B621C0DD6F91F010868F7723C;1773.
  ) 
 Here is how much of TeX's memory you used:
- 11349 strings out of 480502
- 169722 string characters out of 5897829
- 478928 words of memory out of 5000000
- 28766 multiletter control sequences out of 15000+600000
- 454288 words of font info for 70 fonts, out of 8000000 for 9000
+ 11371 strings out of 480502
+ 170944 string characters out of 5897829
+ 482233 words of memory out of 5000000
+ 28778 multiletter control sequences out of 15000+600000
+ 454593 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,6n,66p,888b,415s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,6n,66p,923b,415s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvip
 s/lm/lm-ts1.enc}{c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/
 fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/Johannes Schnebel/AppData/Roaming/TinyTe
@@ -760,10 +815,10 @@ pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/Joh
 annes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.
 pfb><c:/Users/Johannes Schnebel/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/
 public/lm/lmtti10.pfb>
-Output written on ifwtrends-intro.pdf (8 pages, 343655 bytes).
+Output written on ifwtrends-intro.pdf (16 pages, 369135 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 191 compressed objects within 2 object streams
- 49 named destinations out of 1000 (max. 500000)
- 125 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 290 PDF objects out of 1000 (max. 8388607)
+ 231 compressed objects within 3 object streams
+ 56 named destinations out of 1000 (max. 500000)
+ 135 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -37,7 +37,7 @@ g_index <- function(keyword = NA,
                     lags = 0) {
 
   # Load internal data
-  load("R/sys.data.rda")
+  load("R/sysdata.rda")
 
   start <- str_sub(time, 1, 10)
   end <- str_sub(time, 12, 21)

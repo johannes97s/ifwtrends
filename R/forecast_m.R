@@ -28,7 +28,7 @@ forecast_m <- function(r_list, dat, fd = T){
 
   r <- r_raw #set r <- r_factors to use PCA-Model
 
-  view(r[[1]])
+
   build_model <- function(series){ #Function to estimate the model
     y <- as.matrix(series[2])
     x <- as.matrix(series[-c(1,2)])
@@ -56,7 +56,7 @@ forecast_m <- function(r_list, dat, fd = T){
 
   last_model = last(models)
   return(list(forec = forec,             #returns forcasted values and
-              last_model = act_model))
+              last_model = last_model))
 }
 
 

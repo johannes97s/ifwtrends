@@ -110,7 +110,7 @@ series %>%
   ggplot(aes(x = time, y = value, color = cat)) +
     geom_line() +
     theme(legend.position = "none")
-<<<<<<< HEAD
+
 
 
 

@@ -67,5 +67,5 @@ forecast_q <- function(r_list, dat, fd = T){
 
   last_model = last(models)
   return(list(forec = forec,             #returns forcasted values and
-              last_model = act_model))     #model estimated with contemporary data
+              last_model = last_model))    #model estimated with contemporary data
 }

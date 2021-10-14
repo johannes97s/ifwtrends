@@ -48,9 +48,7 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
 
     if (identical(dim(series), NULL)){
       series <- ts_tbl(h(series))
-    }
-
-    if (dim(series)[2] > 1){
+    } else {
       series <- as.list(series)
       series <- lapply(series, h)
       n <- names(series)
@@ -59,19 +57,17 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
       dimnames(t1)[[2]] <- n
       series <- ts_tbl(t1)
     }
-
-  } else if (method == "firstdiff"){
+  }
+  if (method == "firstdiff"){
     # Seasonal adjustment with first derivates and lag = 4
     # as we use quarterly data. If one does monthly data, set
     # lag = 12.
     if (freq == "month"){
       k = 12
-    } else if (freq == "quarter"){
-      k = 4
-    } else {
-      stop("seas_adj(): Please enter 'month' respective 'quarter' for freq.")
     }
-
+    if (freq == "quarter"){
+      k = 4
+    }
     series <- series %>%
       group_by(id) %>%
       mutate(value = c(rep(0,k), diff(value, k))) %>%
@@ -82,3 +78,47 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
   return(series)
 
 }
+
+
+
+
+
+seas_adj <-function(series, freq = "month", method = "arima"){
+  if(method == "arima"){
+    #Saisonbereinigung mit X-13 ARIMA
+    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
+    series <- ts_ts(series)
+    h <- function(ts){
+      m <- x13(ts)
+      return(m$final$series[,"sa"])
+    }
+
+    if (identical(dim(series), NULL)){
+      series <- ts_tbl(h(series))
+    }
+    if (dim(series)[2] > 1){
+      series <- as.list(series)
+      series <- lapply(series, h)
+      n <- names(series)
+      t1 <- series[[1]]
+      for (i in 2:length(series)) t1 <- ts_c(t1, series[[i]])
+      dimnames(t1)[[2]] <- n
+      series <- ts_tbl(t1)
+    }
+  }
+
+  if(method == "firstdiff"){     #Saisonbereinigung mit ersten Differenzen mit lag = 4
+    #da gerade Quartalsdaten. Fuer monatsdaten lag = 12
+    if (!("id" %in% names(series))) series <- mutate(series, id = "id")
+    if (freq == "month") k = 12
+    if (freq == "quarter") k = 4
+    series <- series %>%
+      group_by(id) %>%
+      mutate(value = c(rep(0,k), diff(value, k))) %>% #Wenn Monatsdaten hier 12 statt 4
+      ungroup()
+  }
+  series
+}
+
+
+
