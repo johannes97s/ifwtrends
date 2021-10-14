@@ -17,7 +17,7 @@
 #' @return A tibble with a time series of Google Trends search volume from
 #' given inputs.
 #' @examples \dontrun{
-#' gtsearch(keywords = c("pluto", "saturn"), end = "2020-01-01")
+#' gtsearch(keywords = c("pluto", "saturn"), start = "2020-01-01", end = "2020-06-01")
 #' }
 #' @import tibble magrittr
 #' @importFrom dplyr bind_cols
