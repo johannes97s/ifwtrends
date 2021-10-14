@@ -1,4 +1,4 @@
-#' \eqn{R^2} of the series' regression on factors
+#' R squared of the series' regression on factors
 #' @description \code{factorR2} returns the \eqn{R^2}
 #' of the series' regression on the factors
 #' in form of a tibble.
@@ -11,12 +11,10 @@
 #' If \code{plot = TRUE}, a plot containing the \eqn{R^2} is returned
 #' and displayed.
 #' @examples \dontrun{
-#' dat <- pca(
-#'   keywords = c("ikea", "saturn", "amazon", "ebay"),
-#'   categories = 0, geo = "DE", start = "2006-01-01", end = Sys.Date(),
-#'   components = max(length(keywords), length(categories))
-#' )
-#'
+#' dat <- pca(keywords = c("Pluto", "Saturn"),
+#' categories = 0,
+#' geo = "DE",
+#' time = paste("2020-01-01", "2020-06-01"))
 #' series <- dat %>% select(date, 6:9)
 #' factors <- dat %>% select(date, 2:5)
 #'
