@@ -2,7 +2,7 @@ name: Automated update of the common category trend
 
 on:
   schedule:
-    - cron: '0 4 15 * *'
+    - cron: '0 9 15 * *'
 
 jobs:
   generate-data:
@@ -14,8 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
 
     env:
