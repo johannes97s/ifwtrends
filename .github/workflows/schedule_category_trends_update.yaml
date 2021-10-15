@@ -2,7 +2,7 @@ name: Automated update of the common category trend
 
 on:
   schedule:
-    - cron: '0 16 15 * *'
+    - cron: '37 18 15 * *'
 
 jobs:
   generate-data:
@@ -15,6 +15,7 @@ jobs:
       matrix:
         config:
           - {os: ubuntu-latest,   r: 'release'}
+          - {os: windows-latest,   r: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -40,7 +41,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages(c("tibble", "magrittr", "stringr", "dplyr", "tidyr", "gtrendsR"))
+          install.packages(c("tibble", "magrittr", "stringr", "dplyr", "tidyr")
+          install.packages("drat")
+          drat:::add("ghrr")
+          install.packages("gtrendsR")
         shell: Rscript {0}
 
       - name: Generate data
