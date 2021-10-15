@@ -11,14 +11,13 @@
 #' @param keywords A vector (chr) of keywords to search for.
 #' @param categories A vector (numeric) of category numbers to search for.
 #' @param geo The region to search in.
-#' @param start Start date of time series.
-#' @param end End date of time series.
+#' @param time_frame A time frame to search the queries in.
 #'
 #' @return A tibble with a time series of Google Trends search volume from
 #' given inputs.
-#' @examples \dontrun{
-#' gtsearch(keywords = c("pluto", "saturn"), start = "2020-01-01", end = "2020-06-01")
-#' }
+#' @examples
+#' gtsearch(keywords = c("pluto", "saturn"), time_frame = "2020-01-01 2020-06-01")
+#'
 #' @import tibble magrittr
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr bind_rows
@@ -32,16 +31,22 @@
 gtsearch <- function(keywords = NA,
                      categories = 0,
                      geo = "DE",
-                     start = "2006-01-01 CET",
-                     end = Sys.Date()) {
+                     time_frame = paste("2006-01-01 CET", Sys.Date())) {
+
   stopifnot("You can only enter something either in keywords or in categories!" = is.na(keywords) | categories == 0)
 
-  max_items <- max(length(keywords), length(categories))
-  result_list <- vector("list", length = max_items)
-  time_frame <- paste(start, end, sep = " ")
 
+  # Implies that we have 0 or 1 category,
+  # so that one can loop through all given
+  # (or, in the case that one categories given, not given)
+  # keywords.
   if (length(categories) == 1) {
+
+    result_list <- vector("list", length = length(keywords))
+
     for (i in seq_along(keywords)) {
+
+      # Create a temporary result df from the original gtrendsR function.
       temp_result <-
         tibble::as_tibble(gtrends(
           keyword = keywords[i],
@@ -50,12 +55,23 @@ gtsearch <- function(keywords = NA,
           time = time_frame
         )$interest_over_time)
 
+      # Add the temporary df to a list that will be comprehended in the next steop
       result_list[[i]] <- temp_result
     }
 
-    result <- bind_cols(result_list)
+    # Comprehend the list into a tibble (faster than creating an empty tibble
+    # in the beginning)
+    result <- bind_rows(result_list) %>%
+      select(date, hits, keyword) %>%
+      mutate(date = as.Date(date)) %>%
+      pivot_wider(names_from = keyword, values_from = hits)
 
+
+  # Repeat for the vice versa case.
   } else if (length(keywords) == 1) {
+
+    result_list <- vector("list", length = length(categories))
+
     for (i in seq_along(categories)) {
       temp_result <-
         tibble::as_tibble(gtrends(
@@ -68,40 +84,14 @@ gtsearch <- function(keywords = NA,
       result_list[[i]] <- temp_result
     }
 
-    result <- bind_cols(result_list)
+    result <- bind_rows(result_list) %>%
+      select(date, hits, keyword) %>%
+      mutate(date = as.Date(date)) %>%
+      pivot_wider(names_from = keyword, values_from = hits)
 
-  } else {
-    dat <- tibble::tibble()
 
-    for (kw in keywords) {
-      for (cat in categories) {
-        temp <-
-          tibble::as_tibble(gtrends(
-            keyword = kw,
-            category = cat,
-            geo = geo,
-            time = time_frame
-          )$interest_over_time)
 
-        if (nrow(temp) == 0) {
-          stop(str_c("Keine Daten fuer Kategorie ", cat))
-        }
+}
 
-        if ("keyword" %in% names(temp)) {
-          temp <- select(temp, -category)
-        }
-
-        temp <- temp %>%
-          mutate(date = as_date(date)) %>%
-          select(date, key = any_of(c("keyword", "category")), value = hits) %>%
-          filter(date %in% dates)
-
-        result <- bind_rows(dat, temp)
-      }
-    }
-  }
-
-  result$date <- as_date(result$date)
-  result <- result[, 1:2]
   return(result)
 }

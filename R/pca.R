@@ -12,9 +12,10 @@
 #'
 #' @return Tibble with monthly principal components
 #'  next to the actual time series.
-#' @examples \dontrun{
+#'
+#' @examples
 #' pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
-#' }
+#'
 #' @import magrittr tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
