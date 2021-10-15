@@ -76,5 +76,5 @@ est_trend <- function() {
 comtrend <- est_trend()
 
 
-# usethis::use_data(comtrend,
-#                   overwrite = TRUE, internal = TRUE)
+usethis::use_data(comtrend,
+                  overwrite = TRUE, internal = TRUE)
