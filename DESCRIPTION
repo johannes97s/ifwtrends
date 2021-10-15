@@ -1,6 +1,6 @@
 Package: ifwtrends
 Title: Evaluating Google Trends data for economic forecasts
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Johannes", "Schnebel", email = "johannes.schnebel@ifw-kiel.de", role = c("cre", "aut")),
     person("Mathis", "Clausen", email = "mathis.clausen@ifw-kiel.de", role = "ctb"))
@@ -25,8 +25,6 @@ Imports:
     gtrendsR,
     lubridate,
     magrittr,
-    openxlsx,
-    readxl,
     rJava,
     RJDemetra,
     rlang,
@@ -42,6 +40,6 @@ Imports:
 Remotes: trendecon/trendecon
 VignetteBuilder: knitr
 Depends: 
-    R (>= 3.4.0)
+    R (>= 3.5.0)
 URL: https://github.com/johannes97s/ifwtrends
 BugReports: https://github.com/johannes97s/ifwtrends/issues
