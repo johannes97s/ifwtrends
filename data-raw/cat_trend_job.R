@@ -25,7 +25,7 @@ est_trend <- function() {
   # a fixed category (67 is arbitrary chosen).
 
   cat_samp <- unique(c(
-    sample(gtrendsR::categories$id, 5, replace = FALSE),
+    sample(categories$id, 5, replace = FALSE),
     "67"
   ))
 
