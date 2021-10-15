@@ -1,3 +1,13 @@
+# This file is used by Github Actions to automatically do a monthly update
+# on the common trend of Google Trends category data.
+
+library(tibble)
+library(magrittr)
+library(stringr)
+library(dplyr)
+library(tidyr)
+library(gtrendsR)
+
 est_trend <- function() {
   end <- Sys.Date()
   dates <- seq.Date(
@@ -15,7 +25,7 @@ est_trend <- function() {
   # a fixed category (67 is arbitrary chosen).
 
   cat_samp <- unique(c(
-    sample(gtrendsR::categories$id, 250, replace = FALSE),
+    sample(gtrendsR::categories$id, 5, replace = FALSE),
     "67"
   ))
 
