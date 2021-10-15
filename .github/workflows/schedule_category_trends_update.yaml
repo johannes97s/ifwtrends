@@ -1,8 +1,8 @@
+name: Automated update of the common category trend
+
 on:
   schedule:
-    - cron: "0 4 1 * *"
-
-name: Automated update of the common category trend
+    - cron: '0 10 15 * *'
 
 jobs:
   generate-data:
@@ -31,14 +31,6 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          install.packages('sessioninfo')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-
       - name: Cache R packages
         uses: actions/cache@v1
         with:
@@ -48,7 +40,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          install.packages(c("tibble", "magrittr", "stringr", "dplyr",
+          "tidyr", "gtrendsR"))
         shell: Rscript {0}
 
       - name: Generate data
@@ -56,7 +49,7 @@ jobs:
           source("data-raw/cat_trend_job.R")
         shell: Rscript {0}
 
-      - name: Commit files
+      - name: Commit and push files
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"

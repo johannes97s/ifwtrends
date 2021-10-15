@@ -1,6 +1,9 @@
 ---
 title: "Vignette ifwtrends"
+
 output: bookdown::pdf_document2
+
+
 vignette: >
   %\VignetteIndexEntry{ifwtrends_intro}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,11 +30,11 @@ library(stringr)
 ```
 
 # Einordnung
-Es gibt eine große Literatur, welche Google Trends Daten in unterschiedlichen Modellen benutzt, um ökonomische Variablen zu prognostizieren. Einen ausführlichen Überblick gibt hierzu der Bericht _Big Data in der makroökonomischen Analyse_ (Kieler Beiträge zur Wirtschaftspolitik Nr. 32), Abschnitt 2.3.4. Zusammenfassend lässt sich sagen, dass die zusätzliche Verwendung von Google Trends Daten dort, wo schon andere Indikatoren vorliegen, zu keiner relevanten Verbesserung der Prognosen führt. Prognosen, welche nur auf Google Daten beruhen, schneiden aber meist ähnlich gut ab wie Prognosen, die lediglich klassische Indikatoren benutzen. Die Stärke der Google Trends Daten liegt vor allem in ihrer hohen regionalen und zeitlichen Verfügbarkeit. Dies führt unserer Ansicht nach zu drei zentralen Anwendungsfeldern für Google Daten in der Prognose:
+Es gibt eine umfangreiche Literatur, die Google Trends Daten, um ökonomische Variablen zu prognostizieren. Einen ausführlichen Überblick gibt hierzu der Bericht _Big Data in der makroökonomischen Analyse_ (Kieler Beiträge zur Wirtschaftspolitik Nr. 32), Abschnitt 2.3.4. Zusammenfassend lässt sich sagen, dass Google Trends Daten dort, wo schon andere Frühindikatoren vorliegen, zu keiner systematischen Verbesserung der Prognosen führt. Prognosen, die nur auf Google Daten beruhen, schneiden aber meist ähnlich gut ab wie Prognosen, die lediglich klassische Indikatoren benutzen. Die Stärke der Google Trends Daten liegt vor allem in ihrer hohen regionalen und zeitlichen Verfügbarkeit. Dies führt unserer Ansicht nach zu drei zentralen Anwendungsfeldern für Google Daten in der Prognose:
 
-1. Als Prognosevariablen, wenn klassische Variablen noch nicht vorliegen.
+1. Als Frühindikator, wenn wenig andere Frühindikatoren vorliegen (z.B. Dienstleistungen).
 2. Als Prognosevariablen für Länder, für die sonst wenige Indikatoren vorliegen.
-3. Als Echtzeitindikatoren für die wirtschaftliche Aktivität in Krisenzeiten, wenn schnell politische Entscheidungen gefällt werden müssen.
+3. Als tagesaktuelle Frühindikatoren für die wirtschaftliche Aktivität in Krisenzeiten, wenn schnell politische Entscheidungen gefällt werden müssen.
 
 # Google-Trends Daten
 
@@ -41,8 +44,11 @@ Google stellt Zeitreihen der relativen Häufigkeit eines Suchbegriffes
 in Form von [Google Trends](https://trends.google.de/trends/?geo=DE) zur Verfügung.
 Hier folgt zunächst eine grundlegende Beschreibung der Daten, um dann deren statistische Besonderheiten näher zu beleuchten. 
 
-Die Zeitreihen reichen bis 2004-01-01 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
-Hier sollte beachtet werden, dass (die Suchmaschine) Google in einigen Ländern (insbesondere in autoritär regierten Ländern wie z.B. China) nicht verfügbar ist und für diese Länder deshalb keine Daten vorhanden sind. Da die Nutzung des Internets vor allem seid 2006 stark zunahm folgen wir hier der Literatur und Google Zeitreihen ab 2006.
+Die Zeitreihen reichen bis zum 1. Januar 2004 zurück und können geografisch eingeschränkt werden, z.B. nach Ländern oder subnationalen Entitäten.
+Die Google Suchmaschine ist in einigen Ländern (insbesondere in autoritär regierten Ländern wie z.B. China) nicht verfügbar. Für diese Länder liegen deshalb keine Daten vor. Da die Nutzung des Internets vor allem seit 2006 stark zunahm folgen wir hier der Literatur und verwenden Google Zeitreihen ab 2006.
+
+Es gibt für `R` zwei Pakete mit einer Funktion zum Download von Google-Trends Daten.
+Im Paket `gtrendsR` gibt es die Funktion `gtrends` welche neben der eigentlichen Zeitreihe noch weitere Daten, wie z.B. die im Index enthaltenen Suchanfragen herunterlädt. Die Funktion `ts_gtrends` ist ein Wrapper für die Funktion `gtrends` und es wird nur die Zeitreihe als tibble ausgegeben.
 
 Bei den möglichen Suchanfragen unterschiedet man zwischen _terms_, _topics_ und _categories_.
 Google definiert einen _term_ wie folgt (Google 2021a):
@@ -65,7 +71,7 @@ Die Eingabe eines Suchbegriffs als Topic führt also vor allem zu einer Invarian
 Die Differenzierung zwischen Topic und Term ist aber lediglich online in der Google Suchmaske möglich.
 Bei der Nutzung der R-Funktionen zum Herunterladen von Google-Daten sollte der Suchbegriff also immer in der jeweiligen Landessprache eingegeben werden. Wir unterscheiden deshalb im Folgenden nicht weiter zwischen _term_ und _topic_, sondern bezeichnen beides als _Suchbegriff_.
 
-Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann bei einer Abfrage zusätzlich eine _category_ angegeben werden. Bei Google heißt es hierzu (Google 2021b):
+Um weiter zu spezifizieren, welche Daten in den Index eingehen sollen, kann bei einer Abfrage zusätzlich eine _category_ angegeben werden. Es gibt 1426 Kategorien, die hierarchisch in Ober- und Unterkategorien unterteilt sind. Bei Google heißt es hierzu (Google 2021b):
 
 "If you're using Trends to search for a word that has multiple meanings, you can filter your results to a certain category to get data for the right version of the word. For example, if you search for “jaguar,” you can add a category to indicate if you mean the animal or the car manufacturer."
 
@@ -77,7 +83,10 @@ Des Weiteren kann der Index auch nur für eine Kategorie ohne Angabe eines spezi
 
 Der Google Trends Index ist ein relativer Index. Der Index $SVI_{ct}$ gibt den Anteil der Suchanfragen eines Suchbegriffs/Kategorie $c$ zum Zeitpunkt $t$ an der Gesamtzahl der Suchanfragen zu diesem Zeitpunkt $t$ an, normiert mit einer multiplikativen Konstanten  $C_c$ welche vom betrachteten Zeiraum abhängt, sodass das Maximum des Index im betrachteten Zeitraum bei 100 liegt (Woloszko 2020):
 
-$$ SVI_{ct} = \frac{SV_{ct}}{SVT_t}\cdot C_c$$
+\begin{equation} 
+\tag{1}
+SVI_{ct} = \frac{SV_{ct}}{SVT_t}\cdot C_c
+\end{equation}
 Der Wert des Indexes zum Zeitpunk $t$ kann also unterschiedlich sein, je nachdem welches Zeitfenster man herunterlädt. Dies sollte bei der Arbeit mit den Daten immer beachtet werden. Insbesondere kann für frühere Zeiträume nicht der Index bis zu diesem Zeitpunkt abgeschnitten werden, sondern muss immer neu heruntergeladen werden.
 
 ###Sample
@@ -93,19 +102,34 @@ Abb. \@ref(fig:trendadj) zeigt die um diesen gemeinsamen Trend bereinigten Reihe
 
 ![(#fig:trendadj) Trendbereinigte Google Kategorien](common_trend_adj.png)
 
+Wir benutzen zur Trendbereinigung die von woloszko (2020) vorgeschlagene Methode.
+Zunächst berechnen wir den Logarithmus der Zeitreihe. (1) transformiert sich dann zu 
+\begin{equation}
+\tag{2}
+svi_{ct} = log(SVI_{ct}) = sv_{ct} - svt_t + Cc
+\end{equation}
+Dann schätzen wir eine Panel-Regression mit Category Fixed-Effects.
 
+\begin{equation}
+\tag{3}
+svi_{ct} = \alpha_c + P(t) \beta + \varepsilon_{ct}
+\end{equation}
+
+P(t) ist dabei ein Polynom 5. Grades. Setzen wir dann (2) und (3) gleich, so erhalten wir nach Koeffizientenvergleich $\varepsilon_{ct} = sv_{ct}$. und $P(t) \beta$ ist der allgemeine Zeittrend.
 
 ### Frequenz
 
-Die Google Trends Daten können für ein Zeitfenster von 12 Monaten auf Tagesbasis abgefragt werden. Für Zeiträume bis 5 Jahre können wöchentliche Daten heruntergeladen werden. Für alle längeren Zeiträume liegen die Daten nur monatlich vor. Da wir die 12-Monatsfenster der täglichen Reihen und die 5-Jahres-Fenster der wöchentlichen Reihen beliebig wählen können, kann mit der Chow-Lin-Methode für lange Zeiträume eine Reihe auf Tagesbasis erstellt werden, welche konsistent mit den wöchentlichen und monatlichen Reihen ist. Wir folgen dabei Eichenauer et al. (2020). Dies ist in der Funktion `daily_series` (Abschnitt 3.4) implementiert.
+Die Google Trends Daten können für ein Zeitfenster von 12 Monaten auf Tagesbasis abgefragt werden. Für Zeiträume bis 5 Jahre können wöchentliche Daten heruntergeladen werden. Für alle längeren Zeiträume liegen die Daten nur monatlich vor. Da wir die 12-Monatsfenster der täglichen Reihen und die 5-Jahres-Fenster der wöchentlichen Reihen beliebig wählen können, kann mit der Chow-Lin-Methode für lange Zeiträume eine Reihe auf Tagesbasis erstellt werden, welche konsistent mit den wöchentlichen und monatlichen Reihen ist. Wir folgen dabei Eichenauer et al. (2020). Dies ist in der Funktion `daily_series` (Abschnitt 3.4) implementiert. Dadurch kann das Problem der Skalierung des Maximums in jedem Zeitfenster auf 100 umgangen werden.
 
 ### Strukturbruch
 
-Im Januar 2011 wurde die regionale Erfassung der Suchanfragen geändert. Dadurch wird in regional eingeschränkten Reihen in 2011 ein Bruch sichtbar (vgl. Abb. \@ref(fig:comtrend). Auch in 2016 wurde die Methode zur Datenerhebung nochmals verändert, was auch einen Strukturbruch in den Reihen zur Folge hat. Eine einfache Methode das Problem zu umgehen ist bei der Betrachtung von Änderungsraten die betreffenden Zeiträume auszulassen. Wir wenden im Folgenden dieses Vorgehen an.
-Woloszko (2020) ist nach unserem Kenntnisstand das einzige Papier, welches diese Strukturbrüche genauer adressiert.
+Im Januar 2011 wurde die regionale Erfassung der Suchanfragen geändert. Dadurch wird in regional eingeschränkten Reihen in 2011 ein Bruch sichtbar (vgl. Abb. \@ref(fig:comtrend). Auch in 2016 wurde die Methode zur Datenerhebung nochmals verändert, was auch einen Strukturbruch in den Reihen zur Folge hat. Eine einfache Methode das Problem zu umgehen ist bei der Verwendung von Änderungsraten die betreffenden Zeiträume auszulassen. Wir wenden im Folgenden dieses Vorgehen an.
+Woloszko (2020) adressiert diese Strukturbrüche genauer.
 
 
 # Funktionen
+
+Für unsere Analysen haben wir einige Funktionen in `R` implementiert. Die Downloads der Daten erfolgen immer mit den oben genannten Funktionen. So konnten bestimmte Abläufe automatisiert werden und die In- und Outputs der einzelnen Funktionen aufeinander abgestimmt werden.
 
 ## pca
 
@@ -154,7 +178,7 @@ roll(keyword = c("ikea", "saturn"),
 
 ## daily_series
 
-Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Die Anzahl der gezogenen Fenster ist momentan unter der Anzahl aus dem Originalcode, um Anfragen zu sparen. Die dadurch hervorgerufene Abweichung scheint im Moment sehr gering bis 0 zu sein. Eine genaue Evaluation konnte jedoch wegen dem noch nicht gelösten IP-Problem noch nicht durchgeführt werden; dies steht also noch aus. 
+Für lange Zeitfenster liegen keine täglichen Daten vor, sondern nur monatliche. Die Funktion `daily_series` ist im wesentlichen eine leicht Modifizierte Variante der Funktion `ts_gtrends_mwd` aus dem Paket `trendecon`, die aber (stand Oktober 2021) nicht immer funktioniert. Die Funktion zieht zunächst für rollierende Zeiträume mehrere Stichproben und schätzt daraus dann mit der Chow-Lin-Methode für den ganzen Zeitraum tägliche Daten. Diese sind konsistent mit den Monatsdaten. Da momentan sehr viele Samples gezogen werden, verursacht die Funktion viele Suchanfragen bei Google, was nach einigen Malen zur vorübergehenden Sperrung der IP führt. Genauere Tests konnten jedoch wegen dem noch nicht gelösten IP-Problem noch nicht durchgeführt werden; dies steht also noch aus. 
 
 ```{r message=FALSE}
 daily_series(keyword = c("arbeitslos"),
@@ -164,9 +188,9 @@ daily_series(keyword = c("arbeitslos"),
 
 ## forecast_m und forecast_q
 
-Mit der Funktion `forecast_m(r, dat, fd)` (bzw. `forecast_q(r, dat, fd)`)  kann eine Prognoseevaluation mit einer montlichen (bzw. quartalsweisen) Zielvariable durchgeführt werden. `r` ist eine Liste mit Vintages, welche mit `roll` erstellt wurde und die Google Trends Daten enthält, `dat` ist die Zielvariable. Das logische Argument fd gibt an ob von den Google Daten erste Differenzen betrachtet werden sollen. Werden als `r` Google Daten bis zu einem Zeitpunkt für welchen die Zielvariable `dat` noch nicht vorliegt eingegeben, wird für diesen Zeitpunkt eine Prognose erstellt der Zielvariable erstellt. Das benutzte Modell `last_model` wird auch zurückgegeben.
+Mit der Funktion `forecast_m(r, dat, fd)` (bzw. `forecast_q(r, dat, fd)`)  kann eine Prognoseevaluation mit einer montlichen (bzw. quartalsweisen) Zielvariable durchgeführt werden. `r` ist eine Liste mit Vintages, welche mit `roll` erstellt wurde und die Google Trends Daten enthält, `dat` ist die Zielvariable. In `forecast_q` werden dabei immer die Google Daten des ganzen Quartals am Ende des Quartals aggregiert. Das logische Argument fd gibt an ob von den Google Daten erste Differenzen betrachtet werden sollen. Werden als `r` Google Daten bis zu einem Zeitpunkt für welchen die Zielvariable `dat` noch nicht vorliegt eingegeben, wird für diesen Zeitpunkt eine Prognose erstellt der Zielvariable erstellt. Das benutzte Modell `last_model` wird auch zurückgegeben.
 Im Folgenden wird die quartalsweise prozentuale Veränderung der Dienstleistungsimporte mit Google Trends Daten vorhergesagt.
-Es werden dazu Kategorien welche mit Reisen zu tun haben verwendet.
+Es werden dazu Kategorien welche mit Reisen zu tun haben verwendet. 
 Zusätzlich zu den kontemporären Zeitreihen werden auch die bis zu zwei gelaggten Reihen als Kovariaten verwendet.
 Die Daten wurden schon vorher mit
 
@@ -179,13 +203,16 @@ r_list = roll(keyword = NA,
               fun = g_index,
               lags = 2)`
 ```
-heruntergeladen. Bei vielen Suchanfragen empfiehlt es sich aufgrund der IP-Beschränkung in disem SChritt den Evaluationszeitraum aufzuteilen und an zwei Tagen herunterzuladen und dann zu einer Liste zusammenzufügen.
+heruntergeladen. Bei vielen Suchanfragen empfiehlt es sich aufgrund der IP-Beschränkung in den Evaluationszeitraum start_period bis end_period in diesem Schritt aufzuteilen und an zwei Tagen herunterzuladen und dann zu einer Liste zusammenzufügen.
 
 Hier muss darauf geachtet werden, dass das Anfangsdatum der Zeilvariable und der Vintages jeweils übereinstimmt. Auch darf die Zeitreihe keine führenden `NA`s enhalten und am Ende darf höchstens ein `NA` sein. Dies ist häufig der Grund für Fehlermeldungen.
+Hier sind die benutzten Kategorien aufgeführt.
 ```{r message = FALSE}
 filter(gtrendsR::categories, id %in% c(203, 206, 179, 1003, 1004, 208, 1010,
                                        1011))
-
+```
+Zunächst werden die Daten eingelesen und die Liste so gekürzt, dass die Google Daten für ein Quartal mehr vorliegen als die Zielvariable. Für dieses Quartal muss in der Zielvariable aber auch ein Eintrag mit `NA` enthalten sein.
+```{r message=FALSE}
 r_list <- readRDS("travel.rds")
 r_list <- r_list[1:45]
 
@@ -204,13 +231,17 @@ forec <- forecast_q(r_list, dat, fd = T)$forec%>%
 
 print(forec, n = 13)
 print(rmse(drop_na(forec)))
+```
+
+```{r message=FALSE, fig.cap= "Dienstleistungsimporte und Ein-Schritt Prognose"}
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
 
 ```
-Die blaue Linie ist die Zielvariable. Die rote Linie ist jeweils die Ein-Schritt-Prognose, gegeben das Modell aus dem vorherigen Zeitraum und die Google Daten des aktuellen Zeitraums.
+
+Die blaue Linie ist die Zielvariable. Die rote Linie ist jeweils die Ein-Schritt-Prognose, gegeben das Modell aus dem vorherigen Zeitraum und die Google Daten des aktuellen Zeitraums. Der RMSE beträgt 0.12.
 
 Hier wird nun eine monatliche Prognose des VDAX erstellt.
 Als Kovariaten dienen Google Reihen für die Suchbegriffe `"arbeitslos","angst","crash","hartz 4","krise","grundsicherung","kündigung","entlassung"`.
@@ -234,14 +265,16 @@ forec <- forecast_m(r_list, dat, fd = F)$forec %>%
 
 print(forec, n = 13)
 print(rmse(drop_na(forec)))
+```
+
+```{r message=FALSE, fig.cap= "VDAX und Ein-Schritt Prognose"}
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
 ```
 
-
-
+RMSE = 5.98
 
 # Studie: Prognose der privaten Konsumausgaben mit Google Trends
 
@@ -288,12 +321,18 @@ forec <- forecast_q(r, dat, fd = T)$forec %>%
 
 print(forec, n = 13)
 print(rmse(drop_na(forec)))
+```
+
+```{r message=FALSE, fig.cap= "Konsumausgaben und Ein-Schritt Prognose"}
 forec %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
 
 ```
+
+RMSE = 0.43
+
 # Studie: Prognose der Einzelhandelsumsätze
 
 Hier soll mit dem gleichen Verfahren die monatliche Veränderung der Einzelhandelsumsätze für Deutschland prognostiziert werden.
@@ -327,6 +366,9 @@ rmse(forec$forec %>%
        left_join(dat, by = "time") %>% 
        drop_na())
 
+```
+
+```{r message=FALSE, fig.cap="Einzelhandelsumsätze und Ein-Schritt Progrnose"}
 forec$forec %>%
   left_join(dat, by = "time") %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
@@ -335,8 +377,10 @@ forec$forec %>%
 
 ```
 
+RMSE = 0.38
+
 Hier sehen wir die p-Werte der Hälfte der Koeffizienten mit dem niedrigsten mittleren p-Wert. Die horizontale Linie ist das 10% Signifikanzniveau.
-```{r message=FALSE}
+```{r message=FALSE, fig.cap = "p-Werte der der signifikantesten Kovaraiten im Zeitverlauf"}
 pvalue <- as_tibble(t(as.data.frame(forec$s_niv))) %>% 
   bind_cols(time = forec$forec$time)
 
@@ -362,17 +406,20 @@ r_list2 <- lapply(r_list, function(x) x %>%
 
 forec2 <- forecast_m(r_list, dat, fd = T)
 
-rmse(forec$forec %>% 
+rmse(forec2$forec %>% 
        left_join(dat, by = "time") %>% 
        drop_na())
 
-
+```
+```{r message = FALSE, fig.cap="Geschätztes Modell nur mit den Reihen `121_lag_0`, `355_lag_0` und `68_lag_0`"}
 forec2$forec %>%
   left_join(dat, by = "time") %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x=  time, y = value, color = id)) +
   geom_line()
+```
 
+```{r message=FALSE, fig.cap="p-Werte des neuen Modells"}
 pvalue <- as_tibble(t(as.data.frame(forec$s_niv))) %>% 
   bind_cols(time = forec$forec$time)
 
@@ -387,6 +434,7 @@ pvalue %>%
   theme(legend.position = "none") + 
   facet_grid(coef~.)
 ```
+
 Ein Vergleich des jeweiligen RMSE zeigt leider keine deutliche Verbesserung.
 
 
@@ -416,6 +464,7 @@ auftreten, so bedeutet dies, dass das Paket nicht mehr auf Google Trends Daten z
 
 Google 2021a:   https://support.google.com/trends/answer/4359550?hl=en \
 Google 2021b:   https://support.google.com/trends/answer/4359597?hl=en \
-Woloszko 2020:  Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634. \
-Eichenauer et. al 2020 _Constructing daily economic sentiment indices based on Google trends_. KOF Working Papers No. 484, 2020. \
+Wolozsko, N. (2020): _Tracking activity in real time with Google Trends_. OECD Department working Paper No. 1634. \
+Eichenauer et. al (2020): _Constructing daily economic sentiment indices based on Google trends_. KOF Working Papers No. 484, 2020. \
+Götz und Knetsch (2019): _Google data in bridge equation models for German GDP_. International Journal of Forecasting 35 (2019) 45-66
 
