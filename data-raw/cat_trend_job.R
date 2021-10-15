@@ -16,16 +16,15 @@ est_trend <- function() {
     by = "month"
   )
 
-  result <- vector("list", length = 2)
 
-  series <- tibble(date = dates)
+  series <- tibble::tibble(date = dates)
   missing <- NULL
 
   # Creates a sample of 250 Google Trends categories and
   # a fixed category (67 is arbitrary chosen).
 
   cat_samp <- unique(c(
-    sample(categories$id, 5, replace = FALSE),
+    sample(gtrendsR::categories$id, 5, replace = FALSE),
     "67"
   ))
 
@@ -34,16 +33,16 @@ est_trend <- function() {
   for (i in cat_samp) {
     Sys.sleep(0.1)
 
-    g <- gtrends(
+    g <- gtrendsR::gtrends(
       geo = "DE",
-      time = str_c("2006-01-01 ", end),
+      time = stringr::str_c("2006-01-01 ", end),
       category = i
     )$interest_over_time
 
     if (is.null(g)) {
       missing <- c(missing, i)
     } else {
-      series <- bind_cols(series, !!as.character(eval(i)) := g$hits)
+      series <- dplyr::bind_cols(series, {{ i }} := g$hits)
     }
 
     k <- k + 1
@@ -51,11 +50,9 @@ est_trend <- function() {
   }
 
   series <- series %>%
-    pivot_longer(cols = -date, names_to = "id", values_to = "value") %>%
-    mutate(value = log(value)) %>%
-    arrange(id)
-
-  result[[1]] <- series
+    tidyr::pivot_longer(cols = -date, names_to = "id", values_to = "value") %>%
+    dplyr::mutate(value = log(value)) %>%
+    dplyr::arrange(id)
 
   fit <- unname(
     lm(
@@ -65,23 +62,19 @@ est_trend <- function() {
   )
 
   comtrend <- series %>%
-    mutate(trend = fit) %>%
-    filter(id == 67) %>%
-    select(date, trend)
+    dplyr::mutate(trend = fit) %>%
+    dplyr::filter(id == 67) %>%
+    dplyr::select(date, trend)
 
-  result[[2]] <- comtrend
 
-  return(result)
+
+  return(comtrend)
 }
 
 
 ## code to prepare `cat_trend_job` dataset goes here
-category_trends <- est_trend()
+comtrend <- est_trend()
 
-# Unpacking the list into two dataframes because
-# use_data() won't take a list as argument
-catsample <- category_trends[[1]]
-comtrend <- category_trends[[2]]
 
-usethis::use_data(catsample, comtrend,
-                  overwrite = TRUE, internal = TRUE)
+# usethis::use_data(comtrend,
+#                   overwrite = TRUE, internal = TRUE)
