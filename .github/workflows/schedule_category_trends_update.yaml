@@ -2,7 +2,7 @@ name: Automated update of the common category trend
 
 on:
   schedule:
-    - cron: '40 6 16 * *'
+    - cron: '0 9 16 * *'
 
 jobs:
   generate-data:
@@ -41,7 +41,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages(c("tibble", "magrittr", "stringr", "dplyr", "tidyr", "usethis", "gtrendsR"))
+          install.packages(c("tibble", "magrittr", "stringr", "dplyr", "tidyr", "usethis", "gtrendsR", "sessioninfo", "remotes"))
         shell: Rscript {0}
 
       - name: Generate data
