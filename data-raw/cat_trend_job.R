@@ -51,19 +51,18 @@ est_trend <- function() {
       }
     )
 
-    #
-    if (is.null(g)) {
-      missing <- c(missing, i)
-    } else {
+    # If we get a valid time series, add this to the result tibble
+    if (!is.null(g)) {
       series <- dplyr::bind_cols(series, {{ i }} := g$hits)
     }
   }
-
+  # transform the tibble to a sensible format
   series <- series %>%
     tidyr::pivot_longer(cols = -date, names_to = "id", values_to = "value") %>%
     dplyr::mutate(value = log(value)) %>%
     dplyr::arrange(id)
 
+  # calculate the common trend of the time series
   fit <- unname(
     lm(
       value ~ id - 1 + poly(as.numeric(date), 5, raw = T),
@@ -71,6 +70,12 @@ est_trend <- function() {
     )$fitted.values
   )
 
+  # return the common trend of time series category 67
+  # (67 is arbitrary chosen, but most categories have nevertheless
+  # a very similar trend, so that it doesn't make much of a difference.
+  # More importantly,
+  # category 67 has always values,
+  # so we wont take an empty time series.)
   comtrend <- series %>%
     dplyr::mutate(trend = fit) %>%
     dplyr::filter(id == 67) %>%
