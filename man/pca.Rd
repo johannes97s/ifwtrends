@@ -32,7 +32,6 @@ or several categories the principal
 components of the monthly time series.
 }
 \examples{
-\dontrun{
 pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
-}
+
 }
