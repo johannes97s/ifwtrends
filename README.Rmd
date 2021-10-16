@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # ifwtrends
 
 <!-- badges: start -->
+[![Automated update of the common category trend](https://github.com/johannes97s/ifwtrends/actions/workflows/schedule_category_trends_update.yaml/badge.svg?branch=main)](https://github.com/johannes97s/ifwtrends/actions/workflows/schedule_category_trends_update.yaml)
 <!-- badges: end -->
 
 ifwtrends is used to evaluate Google Trends data to support economic 
@@ -61,13 +62,3 @@ pca(keywords = NA,
 
 Further examples and a detailed 
 introduction can be found in the (German) vignette.
-
-## Functions and Roadmap
-
-| Function | Description | Status |
-|---|---|---|
-| `daily_series()` | Uses a complex econometric method to calculate daily data based on monthly data. | 🟢 Implemented |
-| `est_trends()` | Estimates the trend of a Google Trends category. | 🟢 Implemented |
-| `factorR2()` | Calculates and plots the $R^2$ of the time series. | 🟢 Implemented |
-| `roll()` | A function to use `pca()` on backtesting. | 🟢 Implemented |
-| `pca()` | A function to do a Principal Component Analysis on GTrends data. | 🟢 Implemented |

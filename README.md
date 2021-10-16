@@ -4,6 +4,9 @@
 # ifwtrends
 
 <!-- badges: start -->
+
+[![Automated update of the common category
+trend](https://github.com/johannes97s/ifwtrends/actions/workflows/schedule_category_trends_update.yaml/badge.svg?branch=main)](https://github.com/johannes97s/ifwtrends/actions/workflows/schedule_category_trends_update.yaml)
 <!-- badges: end -->
 
 ifwtrends is used to evaluate Google Trends data to support economic
@@ -41,16 +44,16 @@ pca(keywords = c("Pluto", "Saturn"),
 #> # A tibble: 22 x 5
 #>    date          PC1    PC2 Pluto Saturn
 #>    <date>      <dbl>  <dbl> <int>  <int>
-#>  1 2020-01-01  1.70   0.549    12     56
-#>  2 2020-02-01 -4.30   0.697    12     50
-#>  3 2020-03-01 -6.33  -0.253    11     48
-#>  4 2020-04-01  2.74   2.52     14     57
-#>  5 2020-05-01  7.74   2.40     14     62
-#>  6 2020-06-01  8.74   2.38     14     63
-#>  7 2020-07-01  0.672 -0.426    11     55
-#>  8 2020-08-01 -0.328 -0.401    11     54
-#>  9 2020-09-01  0.672 -0.426    11     55
-#> 10 2020-10-01  2.65  -1.47     10     57
+#>  1 2020-01-01  2.66   1.24      9     56
+#>  2 2020-02-01 -3.32   0.115    10     50
+#>  3 2020-03-01 -3.34   1.12      9     50
+#>  4 2020-04-01  1.72  -1.78     12     55
+#>  5 2020-05-01  6.70  -0.684    11     60
+#>  6 2020-06-01  7.68   0.336    10     61
+#>  7 2020-07-01 -0.302 -0.824    11     53
+#>  8 2020-08-01 -1.32   0.155    10     52
+#>  9 2020-09-01 -1.32   0.155    10     52
+#> 10 2020-10-01  1.68   0.215    10     55
 #> # ... with 12 more rows
 
 # Search for a GTrends category and do a subsequent PC
@@ -63,28 +66,18 @@ pca(keywords = NA,
 #> # A tibble: 22 x 3
 #>    date          PC1 `651`
 #>    <date>      <dbl> <int>
-#>  1 2020-01-01 -5.82     37
-#>  2 2020-02-01 -2.82     40
-#>  3 2020-03-01 -1.82     41
-#>  4 2020-04-01 -3.82     39
-#>  5 2020-05-01 -1.82     41
-#>  6 2020-06-01  1.18     44
-#>  7 2020-07-01 -1.82     41
-#>  8 2020-08-01 -2.82     40
-#>  9 2020-09-01  0.182    43
-#> 10 2020-10-01  2.18     45
+#>  1 2020-01-01 -4.55     35
+#>  2 2020-02-01 -4.55     35
+#>  3 2020-03-01 -2.55     37
+#>  4 2020-04-01 -3.55     36
+#>  5 2020-05-01 -2.55     37
+#>  6 2020-06-01  1.45     41
+#>  7 2020-07-01 -0.545    39
+#>  8 2020-08-01 -2.55     37
+#>  9 2020-09-01 -0.545    39
+#> 10 2020-10-01  1.45     41
 #> # ... with 12 more rows
 ```
 
 Further examples and a detailed introduction can be found in the
 (German) vignette.
-
-## Functions and Roadmap
-
-| Function         | Description                                                                      | Status        |
-|------------------|----------------------------------------------------------------------------------|---------------|
-| `daily_series()` | Uses a complex econometric method to calculate daily data based on monthly data. | 🟢 Implemented |
-| `est_trends()`   | Estimates the trend of a Google Trends category.                                 | 🟢 Implemented |
-| `factorR2()`     | Calculates and plots the *R*<sup>2</sup> of the time series.                     | 🟢 Implemented |
-| `roll()`         | A function to use `pca()` on backtesting.                                        | 🟢 Implemented |
-| `pca()`          | A function to do a Principal Component Analysis on GTrends data.                 | 🟢 Implemented |

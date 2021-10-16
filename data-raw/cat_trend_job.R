@@ -19,7 +19,7 @@ est_trend <- function() {
 
 
   series <- tibble::tibble(date = dates)
-  missing <- NULL
+
 
   # Creates a sample of 250 Google Trends categories and
   # a fixed category (67 is arbitrary chosen).

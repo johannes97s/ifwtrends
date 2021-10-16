@@ -13,7 +13,11 @@ of degree five of a category.
 \description{
 \code{est_trend} downloads for a sample
 of 250 random Google Trends categories the relative search volume.
-Based on this, a common trend is calculated.
+Based on this, a common trend is calculated and saved in an
+internal dataframe the user cannot access but the packages' functions do.
+The user can use this function to calculate the trend for himself,
+but the internal dataframe used in other functions is updated on a
+monthly basis (on the second day of each month) on GitHub.
 }
 \examples{
 \dontrun{

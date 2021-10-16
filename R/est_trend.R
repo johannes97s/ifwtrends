@@ -2,24 +2,28 @@
 #'
 #' @description \code{est_trend} downloads for a sample
 #' of 250 random Google Trends categories the relative search volume.
-#' Based on this, a common trend is calculated.
+#' Based on this, a common trend is calculated and saved in an
+#' internal dataframe the user cannot access but the packages' functions do.
+#' The user can use this function to calculate the trend for himself,
+#' but the internal dataframe used in other functions is updated on a
+#' monthly basis (on the second day of each month) on GitHub.
+#'
 #'
 #' @return Returns a time series which consists of a polynomial trend
 #' of degree five of a category.
 #' @examples \dontrun{
 #' est_trend()
 #' }
-#' @import tibble magrittr gtrendsR
-#' @importFrom stringr str_c
+#' @import tibble magrittr gtrendsR rlang
 #' @importFrom dplyr arrange
 #' @importFrom dplyr bind_cols
+#' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
-#' @importFrom dplyr filter
 #' @importFrom tidyr pivot_longer
+#' @importFrom stats lm
 #' @importFrom stats poly
-#' @importFrom rlang !!
-#' @importFrom rlang :=
+#' @importFrom stringr str_c
 #' @export
 est_trend <- function() {
   end <- Sys.Date()
@@ -29,10 +33,9 @@ est_trend <- function() {
     by = "month"
   )
 
-  result <- vector("list", length = 2)
 
   series <- tibble(date = dates)
-  missing <- NULL
+
 
   # Creates a sample of 250 Google Trends categories and
   # a fixed category (67 is arbitrary chosen).
@@ -42,34 +45,40 @@ est_trend <- function() {
     "67"
   ))
 
-  k <- 0
 
   for (i in cat_samp) {
-    Sys.sleep(0.1)
 
-    g <- gtrends(
-      geo = "DE",
-      time = str_c("2006-01-01 ", end),
-      category = i
-    )$interest_over_time
+    # Error catcher to catch gtrends errors
+    tryCatch(
+      {
+        g <- gtrends(
+          geo = "DE",
+          time = str_c("2006-01-01 ", end),
+          category = i
+        )$interest_over_time
+      },
+      error = function(e) {
+        message("Caught an error!")
+        print(e)
+      },
+      warning = function(w) {
+        message("Caught an warning!")
+        print(w)
+      }
+    )
 
-    if (is.null(g)) {
-      missing <- c(missing, i)
-    } else {
-      series <- bind_cols(series, !!as.character(eval(i)) := g$hits)
+    # If we get a valid time series, add this to the result tibble
+    if (!is.null(g)) {
+      series <- bind_cols(series, {{ i }} := g$hits)
     }
-
-    k <- k + 1
-
   }
-
+  # transform the tibble to a sensible format
   series <- series %>%
     pivot_longer(cols = -date, names_to = "id", values_to = "value") %>%
     mutate(value = log(value)) %>%
     arrange(id)
 
-  result[[1]] <- series
-
+  # calculate the common trend of the time series
   fit <- unname(
     lm(
       value ~ id - 1 + poly(as.numeric(date), 5, raw = T),
@@ -77,12 +86,16 @@ est_trend <- function() {
     )$fitted.values
   )
 
+  # return the common trend of time series category 67
+  # (67 is arbitrary chosen, but most categories have nevertheless
+  # a very similar trend, so that it doesn't make much of a difference.
+  # More importantly,
+  # category 67 has always values,
+  # so we wont take an empty time series.)
   comtrend <- series %>%
     mutate(trend = fit) %>%
     filter(id == 67) %>%
     select(date, trend)
 
-  result[[2]] <- comtrend
-
-  return(result)
+  return(comtrend)
 }
