@@ -32,19 +32,31 @@ est_trend <- function() {
 
   for (i in cat_samp) {
 
+    # Error catcher to catch gtrends errors
+    tryCatch(
+      {
+        g <- gtrendsR::gtrends(
+          geo = "DE",
+          time = stringr::str_c("2006-01-01 ", end),
+          category = i
+        )$interest_over_time
+      },
+      error = function(e) {
+        message("Caught an error!")
+        print(e)
+      },
+      warning = function(w) {
+        message("Caught an warning!")
+        print(w)
+      }
+    )
 
-    g <- gtrendsR::gtrends(
-      geo = "DE",
-      time = stringr::str_c("2006-01-01 ", end),
-      category = i
-    )$interest_over_time
-
+    #
     if (is.null(g)) {
       missing <- c(missing, i)
     } else {
       series <- dplyr::bind_cols(series, {{ i }} := g$hits)
     }
-
   }
 
   series <- series %>%
@@ -73,4 +85,5 @@ comtrend <- est_trend()
 
 
 usethis::use_data(comtrend,
-                  overwrite = TRUE, internal = TRUE)
+  overwrite = TRUE, internal = TRUE
+)
