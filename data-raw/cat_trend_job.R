@@ -29,10 +29,9 @@ est_trend <- function() {
     "67"
   ))
 
-  k <- 0
 
   for (i in cat_samp) {
-    Sys.sleep(0.1)
+
 
     g <- gtrendsR::gtrends(
       geo = "DE",
@@ -45,8 +44,6 @@ est_trend <- function() {
     } else {
       series <- dplyr::bind_cols(series, {{ i }} := g$hits)
     }
-
-    k <- k + 1
 
   }
 
@@ -66,8 +63,6 @@ est_trend <- function() {
     dplyr::mutate(trend = fit) %>%
     dplyr::filter(id == 67) %>%
     dplyr::select(date, trend)
-
-
 
   return(comtrend)
 }
