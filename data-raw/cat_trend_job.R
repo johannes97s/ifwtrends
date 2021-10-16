@@ -7,6 +7,7 @@ library(stringr)
 library(dplyr)
 library(tidyr)
 library(gtrendsR)
+library(usethis)
 
 est_trend <- function() {
   end <- Sys.Date()
