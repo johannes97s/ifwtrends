@@ -8,7 +8,7 @@ gtsearch(
   keywords = NA,
   categories = 0,
   geo = "DE",
-  time_frame = paste("2006-01-01 CET", Sys.Date())
+  time_frame = paste("2006-01-01", Sys.Date())
 )
 }
 \arguments{

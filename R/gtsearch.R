@@ -18,12 +18,13 @@
 #' @examples
 #' gtsearch(keywords = c("pluto", "saturn"), time_frame = "2020-01-01 2020-06-01")
 #'
-#' @import tibble magrittr
+#' @import tibble
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
+#' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
 #' @importFrom stringr str_c
 #' @importFrom tidyselect any_of
@@ -31,7 +32,7 @@
 gtsearch <- function(keywords = NA,
                      categories = 0,
                      geo = "DE",
-                     time_frame = paste("2006-01-01 CET", Sys.Date())) {
+                     time_frame = paste("2006-01-01", Sys.Date())) {
 
   stopifnot("You can only enter something either in keywords or in categories!" = is.na(keywords) | categories == 0)
 
