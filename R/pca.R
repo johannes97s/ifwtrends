@@ -16,12 +16,13 @@
 #' @examples
 #' pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 #'
-#' @import magrittr tibble
+#' @import tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr bind_rows
+#' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider

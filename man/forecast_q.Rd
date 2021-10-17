@@ -22,5 +22,4 @@ Todo
 \examples{
 1+1
 1 + 2
-
 }

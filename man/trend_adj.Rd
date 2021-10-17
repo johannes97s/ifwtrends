@@ -39,4 +39,5 @@ of time series and returns a tibble with trend adjusted values.
 \examples{
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
 trend_adj(series, log.trafo = TRUE, method = "firstdiff")
+
 }

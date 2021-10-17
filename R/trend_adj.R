@@ -9,7 +9,9 @@
 #' with columns \code{time}, \code{value} and optional column \code{id}.
 #' @param log.trafo Logical, indicates if value
 #' should be transformed to log(value).
+#'
 #' @importFrom dplyr mutate
+#' @importFrom magrittr %>%
 #' @importFrom tsbox ts_tbl
 #' @keywords internal
 helper_adj <- function(series, log.trafo = F){
@@ -60,6 +62,7 @@ helper_adj <- function(series, log.trafo = F){
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
 #' trend_adj(series, log.trafo = TRUE, method = "firstdiff")
+#'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
 #' @importFrom dplyr ungroup

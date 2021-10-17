@@ -20,9 +20,10 @@
 #'
 #' factorR2(series, factors, plot = T)
 #' }
-#' @import tibble ggplot2 magrittr
+#' @import tibble ggplot2
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr bind_cols
+#' @importFrom magrittr %>%
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_c
 #' @importFrom stats lm

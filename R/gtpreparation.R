@@ -18,7 +18,8 @@
 #' Furthermore, the first derivatives of these adjusted time
 #' series will be returned (optionally with additional columns containing
 #' lags).
-#' @import magrittr tibble zoo trendecon dplyr tsbox
+#' @import tibble zoo trendecon dplyr tsbox
+#' @importFrom magrittr %>%
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
 #' @importFrom stats prcomp

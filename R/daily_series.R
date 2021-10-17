@@ -17,10 +17,11 @@
 #' @examples \dontrun{
 #' daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
 #' }
-#' @import trendecon tsbox lubridate zoo tibble tempdisagg magrittr
+#' @import trendecon tsbox lubridate zoo tibble tempdisagg
 #' @importFrom dplyr select
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
+#' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
 #' @importFrom stats time
 #' @export

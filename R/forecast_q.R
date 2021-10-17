@@ -19,7 +19,7 @@
 #' @examples
 #' 1+1
 #' 1 + 2
-#'
+#' @importFrom magrittr %>%
 #' @importFrom glmnet cv.glmnet
 #' @importFrom glmnet glmnet
 #' @importFrom stats predict
