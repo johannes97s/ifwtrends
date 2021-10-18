@@ -26,7 +26,7 @@
 #' \code{simple_daily_series} won't have a value in the time
 #' series that is above 100. But this function will also have outliers.
 #' If you search for a smoothed (and adjusted) time series, try
-#' the [tempdisagg:td] function from the [tempdisagg] package.
+#' the [tempdisagg::td()] function from the \link[tempdisagg] package.
 #'
 #' @examples
 #' simple_daily_series <- function(keyword = "covid-19",
@@ -51,6 +51,11 @@ simple_daily_series <- function(keyword = "arbeitslos",
                                 geo = "DE",
                                 from = "2006-01-01",
                                 verbose = TRUE) {
+
+  stopifnot("simple_daily_series(): At the moment, you can only use one keyword" = length(keyword) == 1)
+  stopifnot("simple_daily_series(): Google Trends data only goes back to 2006-01-01. So start at least there." = as.Date(from) - as.Date("2006-01-01") >= 0)
+  stopifnot("simple_daily_series(): The time frame must atleast include a week!" = as.Date(Sys.Date()) - as.Date(from) >= 7)
+
   # construct a time frame
   start <- as_date(from)
   end <- as_date(today())

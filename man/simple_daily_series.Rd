@@ -44,7 +44,7 @@ trend to a certain degree. Important to note,
 \code{simple_daily_series} won't have a value in the time
 series that is above 100. But this function will also have outliers.
 If you search for a smoothed (and adjusted) time series, try
-the \link{tempdisagg:td} function from the \link{tempdisagg} package.
+the \code{\link[tempdisagg:td]{tempdisagg::td()}} function from the \link\link{tempdisagg} package.
 }
 
 \examples{
