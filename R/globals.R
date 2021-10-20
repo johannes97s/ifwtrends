@@ -12,6 +12,7 @@ utils::globalVariables(c(
   "adj",
   "s_adj",
   "trend",
-  "where"
+  "where",
+  "keyword"
 ))
 
