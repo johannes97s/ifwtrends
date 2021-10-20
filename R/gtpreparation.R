@@ -13,12 +13,14 @@
 #' (for more information, visit the
 #' documentation of \code{\link[trendecon]{ts_gtrends}}).
 #' @param lags Number of delays in additional columns (max. value: 4).
+#'
 #' @return Firstly, each row will be log transformed and
 #' seasonal adjusted (via RJDemetra's X-13 ARIMA methods).
 #' Furthermore, the first derivatives of these adjusted time
 #' series will be returned (optionally with additional columns containing
 #' lags).
-#' @import tibble zoo trendecon dplyr tsbox
+#'
+#' @import tibble zoo dplyr
 #' @importFrom magrittr %>%
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
@@ -27,9 +29,10 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @importFrom gtrendsR gtrends
-#' @examples \dontrun{
-#' gtpreparation(keyword = c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-#' }
+#' @importFrom trendecon ts_gtrends
+#' @examples
+#' gtpreparation(keyword = c("ikea", "saturn"), time = "2020-01-01 2021-01-01")
+#'
 #' @export
 gtpreparation <- function(keyword = NA,
                     category = 0,
@@ -43,13 +46,14 @@ gtpreparation <- function(keyword = NA,
   dates <- seq.Date(from = as.Date(start), to = as.Date(end), by = "month")
 
   # data containing a trend calculated on 250 GTrends time series'.
-
-  # comtrend is saved as internal data in R/sysdata.rda and is automatically
+  # comtrend is saved as internal data in
+  # R/sysdata.rda and is automatically
   # loaded into namespace
   fit <- comtrend %>%
     select(time = date, trend) %>%
     filter(time >= as.Date(start))
 
+  # make search queries
   g_dat2 <- ts_gtrends(
     keyword = keyword,
     category = category,
@@ -60,6 +64,8 @@ gtpreparation <- function(keyword = NA,
     mutate(value = replace(value, value == -Inf, NA_real_)) %>%
     mutate(value = na.approx(value, rule = 2))
 
+
+  # TODO: add comments
   if (!("id" %in% names(g_dat2))) {
     # Add category
     g_dat2 <- mutate(
