@@ -1,22 +1,27 @@
-#' Gibt pca fuer Backtesting zurueck
-#'@description \code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
+#' Returns a tibble for backtesting with PCA.
 #'
-#'@param keyword Eine character-Vektor mit dem Suchbegriffen
-#'@param category Ein Numeric Vektor mit den Kategorien
-#'@param geo Die Region
-#'@param start_series Das Startdatum der Zeitreihen.
-#'@param start_period Das Startdatum des Ausgabefensters.
-#'@param end Das Enddatum der Zeitreihen.
-#'@param fun Funktion, die auf die rollende Zeitreihe angewendet werden soll.
-#'@param ... Zusaetzliche Parameter, die an die Funktion in fun weitergegeben werden
-#'@return Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
+#' @description \code{roll}
+#' Returns for the time from start_period to end
+#' the respective result from [pca()] back.
 #'
-#'@examples \dontrun{
-#'roll(keyword = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
-#'}
-#'@importFrom stringr str_c
-#'@importFrom trendecon ts_gtrends
-#'@export
+#' @param keyword A vector (chr) with search queries (or a single search query).
+#' @param category A vector (num) with Google Trends category numbers.
+#' @param geo A geographical region to restrict the search queries to.
+#' @param start_series Start date of the time series.
+#' @param start_period Start date of the returned time frame.
+#' @param end End date of time series and to be returned time frame.
+#' @param fun Name of a function, that will be applied to a time series.
+#' @param ... Additional parameter for
+#' the function that is in \code{fun} specified.
+#' @return Tibble with monthly data where [pca()] is
+#' applied on every column.
+#' For each column, a new month is added.
+#'
+#' @examples
+#' roll(keyword = "ikea", start_series = "2018-01-01", start_period = "2019-01-01", end = "2020-01-01")
+#' @importFrom stringr str_c
+#' @importFrom trendecon ts_gtrends
+#' @export
 roll <- function(keyword = NA,
                  category = 0,
                  geo = "DE",
@@ -24,18 +29,22 @@ roll <- function(keyword = NA,
                  start_period = "2014-01-01",
                  end = Sys.Date(),
                  fun = trendecon::ts_gtrends,
-                 ...){
-  period <-  seq.Date(as.Date(start_period), as.Date(end), by = "month")
+                 ...) {
+  period <- seq.Date(as.Date(start_period), as.Date(end), by = "month")
   dates <- seq.Date(as.Date(start_series), as.Date(end), by = "month")
-  n <- length(dates)
-  f <- function(d) fun(keyword = keyword,
-                       category = category,
-                       geo = geo,
-                       time = stringr::str_c(start_series," ", d),
-                       ...)
+
+
+  f <- function(d) {
+    fun(
+      keyword = keyword,
+      category = category,
+      geo = geo,
+      time = stringr::str_c(start_series, " ", d),
+      ...
+    )
+  }
+
   tl <- lapply(period, f)
 
   return(tl)
-
 }
-

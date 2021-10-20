@@ -2,7 +2,7 @@
 % Please edit documentation in R/roll.R
 \name{roll}
 \alias{roll}
-\title{Gibt pca fuer Backtesting zurueck}
+\title{Returns a tibble for backtesting with PCA.}
 \usage{
 roll(
   keyword = NA,
@@ -16,30 +16,33 @@ roll(
 )
 }
 \arguments{
-\item{keyword}{Eine character-Vektor mit dem Suchbegriffen}
+\item{keyword}{A vector (chr) with search queries (or a single search query).}
 
-\item{category}{Ein Numeric Vektor mit den Kategorien}
+\item{category}{A vector (num) with Google Trends category numbers.}
 
-\item{geo}{Die Region}
+\item{geo}{A geographical region to restrict the search queries to.}
 
-\item{start_series}{Das Startdatum der Zeitreihen.}
+\item{start_series}{Start date of the time series.}
 
-\item{start_period}{Das Startdatum des Ausgabefensters.}
+\item{start_period}{Start date of the returned time frame.}
 
-\item{end}{Das Enddatum der Zeitreihen.}
+\item{end}{End date of time series and to be returned time frame.}
 
-\item{fun}{Funktion, die auf die rollende Zeitreihe angewendet werden soll.}
+\item{fun}{Name of a function, that will be applied to a time series.}
 
-\item{...}{Zusaetzliche Parameter, die an die Funktion in fun weitergegeben werden}
+\item{...}{Additional parameter for
+the function that is in \code{fun} specified.}
 }
 \value{
-Monatliche Tabelle mit pca in jeder Spalte. Je Spalte wird ein neuer Monat hinzugenommen.
+Tibble with monthly data where \code{\link[=pca]{pca()}} is
+applied on every column.
+For each column, a new month is added.
 }
 \description{
-\code{roll} Gibt fuer start_period bis end die jeweils dann aktuelle Berechnung von pca aus.
+\code{roll}
+Returns for the time from start_period to end
+the respective result from \code{\link[=pca]{pca()}} back.
 }
 \examples{
-\dontrun{
-roll(keyword = c("ikea", "saturn"), start_period = "2018-01-01", end = "2020-01-01")
-}
+roll(keyword = "ikea", start_series = "2018-01-01", start_period = "2019-01-01", end = "2020-01-01")
 }
