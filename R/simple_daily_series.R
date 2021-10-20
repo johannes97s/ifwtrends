@@ -26,7 +26,7 @@
 #' \code{simple_daily_series} won't have a value in the time
 #' series that is above 100. But this function will also have outliers.
 #' If you search for a smoothed (and adjusted) time series, try
-#' the [tempdisagg::td()] function from the \link[tempdisagg] package.
+#' the [tempdisagg::td()] function from the \code{tempdisagg} package.
 #'
 #' @examples
 #' simple_daily_series <- function(keyword = "covid-19",
@@ -64,7 +64,7 @@ simple_daily_series <- function(keyword = "arbeitslos",
 
   # For timeframes up to 9 months, Google provides daily data
   if (length(check_length_timeframe) < 9) {
-    query <- gtsearch(keywords = keyword, geo = geo, time_frame = timeframe)
+    query <- gtsearch(keywords = keyword, geo = geo, timeframe = timeframe)
 
     return(query)
 
@@ -98,7 +98,7 @@ simple_daily_series <- function(keyword = "arbeitslos",
       }
 
       # search for the keyword in a given time frame
-      temp <- gtsearch(keywords = keyword, geo = geo, time_frame = tf)
+      temp <- gtsearch(keywords = keyword, geo = geo, timeframe = tf)
 
       # creates a copy of temp with empty data
       ol_temp <- tibble(temp)
@@ -175,46 +175,21 @@ simple_daily_series <- function(keyword = "arbeitslos",
 
     # get a vector with values only
     relevant_cols <- df %>%
-      select({{ keyword }}) %>%
+      select({{keyword}}) %>%
       pull()
 
     # re-normalized to the overall maximum value to have max = 100
     result <- df %>%
       mutate(
-        {{keyword }} := round((100 * relevant_cols / maxi), 4)
+        {{ keyword }} := round((100 * relevant_cols / maxi), 4)
       )
 
     # check if last value is zero
+    # and remove it, if it is
     if (result[dim(result)[1], 2] == 0) {
         result <- result[1:dim(result)[1] - 1, ]
     }
 
     return(result)
-
-    # df <- full_join(df, ol, by = "date")
-    #
-    # # cut to only relevant time frame
-    # df <- df[df$date >= start_d & df$date < init_end_d, ]
-    #
-    #
-    # # combine all columns to one column with the relevant time series
-    # df <- df %>%
-    #   mutate(!!keyword := as.numeric(coalesce(!!!rlang::syms(names(.)[-1])))) %>%
-    #   select(date, {{ keyword }})
-    #
-    # # get maximum
-    # maxi <- max(df[, {{keyword}}])
-    #
-    #
-    # # get a vector with values only
-    # relevant_cols <- df |> select({{ keyword }}) |> pull()
-    #
-    # # re-normalized to the overall maximum value to have max =100
-    # result <- df |>
-    #   mutate(
-    #     {{keyword }} := round((100 * relevant_cols / maxi), 4)
-    #   )
-    #
-    # return(result)
   }
 }
