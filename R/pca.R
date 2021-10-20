@@ -55,6 +55,7 @@ pca <- function(keywords = NA,
   dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
   dat <- tibble::tibble()
 
+  # Loop through input to get a temporary result df for every input
   for (kw in keywords) {
     for (cat in categories) {
       temp <-
@@ -66,7 +67,7 @@ pca <- function(keywords = NA,
         )$interest_over_time)
 
       if (nrow(temp) == 0) {
-        stop(str_c("Keine Daten fuer Kategorie ", cat))
+        stop(str_c("No data available for category", cat))
       }
 
       if ("keyword" %in% names(temp)) {
