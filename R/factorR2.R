@@ -1,4 +1,5 @@
 #' R squared of the series' regression on factors
+#'
 #' @description \code{factorR2} returns the \eqn{R^2}
 #' of the series' regression on the factors
 #' in form of a tibble.
@@ -7,19 +8,23 @@
 #' @param factors tibble with factors as columns.
 #' @param plot plot=TRUE returns additionally to the tibble with
 #' \eqn{R^2} a bar plot of these.
+#'
 #' @return Tibble of \eqn{R^2} from each time series for each factor.
 #' If \code{plot = TRUE}, a plot containing the \eqn{R^2} is returned
 #' and displayed.
-#' @examples \dontrun{
-#' dat <- pca(keywords = c("Pluto", "Saturn"),
-#' categories = 0,
-#' geo = "DE",
-#' time = paste("2020-01-01", "2020-06-01"))
-#' series <- dat %>% select(date, 6:9)
-#' factors <- dat %>% select(date, 2:5)
+#'
+#' @examples
+#' dat <- pca(
+#'   keywords = c("Pluto", "Saturn"),
+#'   categories = 0,
+#'   geo = "DE",
+#'   time = paste("2020-01-01", "2020-06-01")
+#' )
+#'
+#' series <- dplyr::select(dat, date, 4:5)
+#' factors <- dplyr::select(dat, date, 2:3)
 #'
 #' factorR2(series, factors, plot = T)
-#' }
 #' @import tibble ggplot2
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr bind_cols
