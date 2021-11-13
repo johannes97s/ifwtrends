@@ -24,7 +24,7 @@
 #' series <- dplyr::select(dat, date, 4:5)
 #' factors <- dplyr::select(dat, date, 2:3)
 #'
-#' factorR2(series, factors, plot = T)
+#' factorR2(series, factors, plot = TRUE)
 #' @import tibble ggplot2
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr bind_cols
