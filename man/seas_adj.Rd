@@ -27,7 +27,7 @@ date column.
 For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
 If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
 If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
-(performed by the \code{\link[seasonal:seas]{seasonal::seas()}} function from the seasonal package).
+(performed by \code{\link[seasonal:seas]{seasonal::seas()}} from the seasonal package).
 }
 \description{
 \code{seas_adj} takes a tibble of
