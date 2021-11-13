@@ -10,6 +10,8 @@
 #' @param log.trafo Logical, indicates if value
 #' should be transformed to log(value).
 #'
+#' @return This function returns a tibble.
+#'
 #' @importFrom dplyr mutate
 #' @importFrom magrittr %>%
 #' @importFrom tsbox ts_tbl
