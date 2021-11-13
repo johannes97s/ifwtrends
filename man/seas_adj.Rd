@@ -24,9 +24,10 @@ adjustment should be choosen. See Details.}
 Returns a tibble with trend adjusted values and a
 date column.
 
-For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
-If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
-If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
+For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
+If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
+If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
+(performed by the \code{\link[seasonal:seas]{seasonal::seas()}} function from the seasonal package).
 }
 \description{
 \code{seas_adj} takes a tibble of

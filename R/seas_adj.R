@@ -15,18 +15,20 @@
 #' @return Returns a tibble with trend adjusted values and a
 #' date column.
 #'
-#' For method there can be choosen \code{"firstdiff"} and \code{"arima"}.
-#' If \code{"firstdiff"}, first differences with \code{lag = 1} is executed.
-#' If \code{"arima"}, the X-13ARIMA-SEATS of US  procedure is used.
+#' For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
+#' If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
+#' If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
+#' (performed by the [seasonal::seas()] function from the seasonal package).
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
 #' seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 #'
-#' @import dplyr rJava tsbox zoo
+#' @import dplyr tsbox zoo
 #' @importFrom magrittr %>%
-#' @importFrom RJDemetra x13
 #' @importFrom gtrendsR gtrends
+#' @importFrom seasonal seas
+#' @importFrom seasonal final
 #' @export
 seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
 
@@ -34,26 +36,13 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
 
   # Seasonal adjustment with X-13 ARIMA
   if (method == "arima") {
-    #Saisonbereinigung mit X-13 ARIMA
 
-    series <- ts_ts(series)
+    series <- series %>%
+      ts_ts() %>%
+      seas(transform.function = "none") %>%
+      final() %>%
+      ts_tbl()
 
-    h <- function(ts){
-      m <- x13(ts)
-      return(m$final$series[,"sa"])
-    }
-
-    if (identical(dim(series), NULL)){
-      series <- ts_tbl(h(series))
-    } else {
-      series <- as.list(series)
-      series <- lapply(series, h)
-      n <- names(series)
-      t1 <- series[[1]]
-      for (i in 2:length(series)) t1 <- ts_c(t1, series[[i]])
-      dimnames(t1)[[2]] <- n
-      series <- ts_tbl(t1)
-    }
 
   } else if (method == "firstdiff"){
     # Seasonal adjustment with first derivates and lag = 4
