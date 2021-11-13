@@ -17,33 +17,42 @@
 #' @examples \dontrun{
 #' daily_series(keyword = "Ikea", geo = "NL", from = "2021-01-01")
 #' }
-#' @import trendecon tsbox lubridate zoo tibble tempdisagg magrittr
+#' @import trendecon tsbox lubridate zoo tibble tempdisagg
 #' @importFrom dplyr select
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
+#' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
 #' @importFrom stats time
 #' @export
 daily_series <- function(keyword = c("arbeitslos"),
                          geo = "DE",
                          from = "2006-01-01") {
+
+  # Convert date and compute first time frame
   from <- as.Date(from)
   n1 <- as.numeric((Sys.Date() - from - 180) / 15) + 50
-  ifelse(n1 > 0, n1 <- n1, n1 <- 4) # set n1 if negativ
+  # set n1 to a positive value if it was negativ before
+  ifelse(n1 > 0, n1 <- n1, n1 <- 4)
 
+  # Retrieve and transform the gtrends volume
+  # for all time frames.
 
+  # start by download daily series
   d <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
     from = from,
     stepsize = "15 days", windowsize = "6 months",
-    n_windows = n1, wait = 20, retry = 10, # n_windows calculated such that it reaches up to current date
+    # n_windows calculated such that it reaches up to current date
+    n_windows = n1, wait = 20, retry = 10,
     prevent_window_shrinkage = TRUE
   )
   d2 <- trendecon:::ts_gtrends_windows(
     keyword = keyword,
     geo = geo,
-    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2], # Heute -90 Tage
+    # by: today - 90 days
+    from = seq(Sys.Date(), length.out = 2, by = "-90 days")[2],
     stepsize = "1 day", windowsize = "3 months",
     n_windows = 12, wait = 20, retry = 10,
     prevent_window_shrinkage = FALSE

@@ -25,14 +25,15 @@ of the series' regression on the factors
 in form of a tibble.
 }
 \examples{
-\dontrun{
-dat <- pca(keywords = c("Pluto", "Saturn"),
-categories = 0,
-geo = "DE",
-time = paste("2020-01-01", "2020-06-01"))
-series <- dat \%>\% select(date, 6:9)
-factors <- dat \%>\% select(date, 2:5)
+dat <- pca(
+  keywords = c("Pluto", "Saturn"),
+  categories = 0,
+  geo = "DE",
+  time = paste("2020-01-01", "2020-06-01")
+)
+
+series <- dplyr::select(dat, date, 4:5)
+factors <- dplyr::select(dat, date, 2:3)
 
 factorR2(series, factors, plot = T)
-}
 }

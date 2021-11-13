@@ -4,7 +4,7 @@ test_that("returns a tbl in due length", {
 
   expectation <- gtsearch(
     keywords = keywords,
-    time_frame = time_frame
+    time_frame = timeframe
   )
   expect_s3_class(
     expectation,

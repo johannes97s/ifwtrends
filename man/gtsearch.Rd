@@ -8,7 +8,7 @@ gtsearch(
   keywords = NA,
   categories = 0,
   geo = "DE",
-  time_frame = paste("2006-01-01 CET", Sys.Date())
+  timeframe = paste("2006-01-01", Sys.Date())
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ gtsearch(
 
 \item{geo}{The region to search in.}
 
-\item{time_frame}{A time frame to search the queries in.}
+\item{timeframe}{A time frame to search the queries in.}
 }
 \value{
 A tibble with a time series of Google Trends search volume from
@@ -28,13 +28,12 @@ given inputs.
 \code{gtsearch} is a simple wrapper
 around the \code{gtrends} function from package. It only
 returns a time series in form of a tibble with the actual
-(in relative terms) search volume of keywords or categories
+(in relative terms) search volume of keywords or categories.
 }
 \details{
 \code{gtsearch} returns a simple tibble with the original
 interest data in a keyword or category from Google Trends.
 }
 \examples{
-gtsearch(keywords = c("pluto", "saturn"), time_frame = "2020-01-01 2020-06-01")
-
+gtsearch(keywords = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
 }

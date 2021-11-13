@@ -16,12 +16,13 @@
 #' @examples
 #' pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 #'
-#' @import magrittr tibble
+#' @import tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr bind_rows
+#' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
@@ -54,6 +55,7 @@ pca <- function(keywords = NA,
   dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
   dat <- tibble::tibble()
 
+  # Loop through input to get a temporary result df for every input
   for (kw in keywords) {
     for (cat in categories) {
       temp <-
@@ -65,7 +67,7 @@ pca <- function(keywords = NA,
         )$interest_over_time)
 
       if (nrow(temp) == 0) {
-        stop(str_c("Keine Daten fuer Kategorie ", cat))
+        stop(str_c("No data available for category", cat))
       }
 
       if ("keyword" %in% names(temp)) {

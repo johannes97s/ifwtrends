@@ -13,6 +13,9 @@ with columns \code{time}, \code{value} and optional column \code{id}.}
 \item{log.trafo}{Logical, indicates if value
 should be transformed to log(value).}
 }
+\value{
+This function returns a tibble.
+}
 \description{
 This function is a helper function to reduce
 duplicate code in\code{\link{trend_adj}()}

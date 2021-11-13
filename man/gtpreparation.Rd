@@ -40,7 +40,6 @@ seasonal adjustment.
 The function returns first derivatives (lagged if desired).
 }
 \examples{
-\dontrun{
-gtpreparation(keyword = c("ikea", "saturn"), time = "2018-01-01 2021-01-01")
-}
+gtpreparation(keyword = c("ikea", "saturn"), time = "2020-01-01 2021-01-01")
+
 }

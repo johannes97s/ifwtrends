@@ -1,0 +1,25 @@
+test_that("returns a tbl in due length", {
+  keyword <-  "mars"
+  start <- "2020-01-01"
+
+  expectation <- simple_daily_series(
+    keyword = keyword, geo = "DE",
+    from = start, verbose = F
+  )
+  expect_s3_class(
+    expectation,
+    "tbl"
+  )
+
+  # tbl has the right dimension
+  expect_equal(dim(expectation)[2], 2)
+
+  # tibble has the correct colnames
+  expect_equal(colnames(expectation)[2], keyword)
+
+  # tibble has the correct first date
+  expect_equal(
+    as.character(expectation$date[1]),
+    substring(start, 1, 10)
+  )
+})
