@@ -5,7 +5,8 @@
 \title{Generate a daily time series from a broader time frame.}
 \usage{
 simple_daily_series(
-  keyword = "arbeitslos",
+  keyword = NA,
+  category = NA,
   geo = "DE",
   from = "2006-01-01",
   verbose = TRUE
@@ -14,6 +15,9 @@ simple_daily_series(
 \arguments{
 \item{keyword}{A string with a single search query. At the moment,
 multiple search queries are not allowed.}
+
+\item{category}{A string with a single search category. Note: You can either
+input a keyword for this function or a single category but not both!}
 
 \item{geo}{A geographical region to restrict the search query to.}
 
@@ -48,9 +52,10 @@ the \code{\link[tempdisagg:td]{tempdisagg::td()}} function from the \code{tempdi
 }
 
 \examples{
-simple_daily_series <- function(keyword = "covid-19",
-geo = "DE",
-from = "2020-01-01",
-verbose = TRUE)
-
+simple_daily_series(
+  keyword = "covid-19",
+  geo = "DE",
+  from = "2020-01-01",
+  verbose = TRUE
+)
 }
