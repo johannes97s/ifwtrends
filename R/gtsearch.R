@@ -30,18 +30,20 @@ gtsearch <- function(keyword = NA,
                      timeframe = paste("2006-01-01", Sys.Date())) {
   # stopifnot("You can only enter something either in keyword or in category!" = is.na(keyword) | category == 0)
 
-  result <- gtrends(
-    keyword = keyword, category = category, geo = geo,
-    time = timeframe
-  )$interest_over_time
-
-  result <- result %>%
-    select(date, hits, keyword, category)
-
   if (is.na(keyword)) {
-    result <- result %>% select(-keyword)
+    result <- gtrends(
+      category = category, geo = geo,
+      time = timeframe
+    )$interest_over_time %>%
+      select(date, hits, category) %>%
+      as_tibble()
   } else if (is.na(category)) {
-    result <- result %>% select(-category)
+    result <- gtrends(
+      keyword = keyword, geo = geo,
+      time = timeframe
+    )$interest_over_time %>%
+      select(date, hits, keyword) %>%
+      as_tibble()
   }
 
   return(result)
