@@ -5,20 +5,37 @@
 \alias{ifwtrends}
 \title{ifwtrends: A package for evaluating data from Google Trends}
 \description{
-The package ifwtrends is based on trendecon and GtrendsR and takes
+The package ifwtrends is based on trendecon and gtrendsR and takes
 data from Google Trends to support economic forecasting.
 }
 \section{Functions}{
 
-\code{\link{pca}()}
 
-\code{\link{roll}()}
+\code{\link[=daily_series]{daily_series()}}
 
-\code{\link{daily_series}()}
+\code{\link[=est_trend]{est_trend()}}
 
-\code{\link{factorR2}()}
+\code{\link[=factorR2]{factorR2()}}
 
-For in-depth information and showcases, see the vignette
+\code{\link[=forecast_m]{forecast_m()}}
+
+\code{\link[=forecast_q]{forecast_q()}}
+
+\code{\link[=gtpreparation]{gtpreparation()}}
+
+\code{\link[=gtsearch]{gtsearch()}}
+
+\code{\link[=pca]{pca()}}
+
+\code{\link[=roll]{roll()}}
+
+\code{\link[=seas_adj]{seas_adj()}}
+
+\code{\link[=simple_daily_series]{simple_daily_series()}}
+
+\code{\link[=trend_adj]{trend_adj()}}
+
+For in-depth information and showcases, see the German vignette
 at \code{vignette(topic = "ifwtrends-demo", package = "ifwtrends")}
 }
 

@@ -7,6 +7,8 @@
 #'
 #' @param keyword A string with a single search query. At the moment,
 #' multiple search queries are not allowed.
+#' @param category A string with a single search category. Note: You can either
+#' input a keyword for this function or a single category but not both!
 #' @param geo A geographical region to restrict the search query to.
 #' @param from Start date of the search query.
 #' @param verbose Boolean value. True, if some status messages
@@ -29,11 +31,12 @@
 #' the [tempdisagg::td()] function from the \code{tempdisagg} package.
 #'
 #' @examples
-#' simple_daily_series <- function(keyword = "covid-19",
-#' geo = "DE",
-#' from = "2020-01-01",
-#' verbose = TRUE)
-#'
+#' simple_daily_series(
+#'   keyword = "covid-19",
+#'   geo = "DE",
+#'   from = "2020-01-01",
+#'   verbose = TRUE
+#' )
 #' @import rlang tibble
 #' @importFrom dplyr across
 #' @importFrom dplyr arrange
@@ -47,11 +50,11 @@
 #' @importFrom lubridate days
 #' @importFrom magrittr %>%
 #' @export
-simple_daily_series <- function(keyword = "arbeitslos",
+simple_daily_series <- function(keyword = NA,
+                                category = NA,
                                 geo = "DE",
                                 from = "2006-01-01",
                                 verbose = TRUE) {
-
   stopifnot("simple_daily_series(): At the moment, you can only use one keyword" = length(keyword) == 1)
   stopifnot("simple_daily_series(): Google Trends data only goes back to 2006-01-01. So start at least there." = as.Date(from) - as.Date("2006-01-01") >= 0)
   stopifnot("simple_daily_series(): The time frame must atleast include a week!" = as.Date(Sys.Date()) - as.Date(from) >= 7)
@@ -64,7 +67,11 @@ simple_daily_series <- function(keyword = "arbeitslos",
 
   # For timeframes up to 9 months, Google provides daily data
   if (length(check_length_timeframe) < 9) {
-    query <- gtsearch(keywords = keyword, geo = geo, timeframe = timeframe)
+    if (is.na(category)) {
+      query <- gtsearch(keywords = keyword, geo = geo, timeframe = timeframe)
+    } else {
+      query <- gtsearch(categories = category, geo = geo, timeframe = timeframe)
+    }
 
     return(query)
 
@@ -94,11 +101,19 @@ simple_daily_series <- function(keyword = "arbeitslos",
       # compute time frame
       tf <- paste(itr_d, end_d)
       if (verbose) {
-        print(paste("Fetching \\", keyword, "\\ for period:", tf))
+        if (is.na(category)) {
+          print(paste("Fetching ", keyword, " for period:", tf))
+        } else {
+          print(paste("Fetching ", category, " for period:", tf))
+        }
       }
 
       # search for the keyword in a given time frame
-      temp <- gtsearch(keywords = keyword, geo = geo, timeframe = tf)
+      if (is.na(category)) {
+        temp <- gtsearch(keywords = keyword, geo = geo, timeframe = tf)
+      } else {
+        temp <- gtsearch(categories = category, geo = geo, timeframe = tf)
+      }
 
       # creates a copy of temp with empty data
       ol_temp <- tibble(temp)
@@ -112,18 +127,18 @@ simple_daily_series <- function(keyword = "arbeitslos",
 
         # normalize using the maximum value of the overlapped period
         y1 <- max(temp[, 2], na.rm = TRUE)
-          # temp %>%
-          # filter(date >= overlap_start & date < end_d) %>%
-          # select({{ keyword }}) %>%
-          # slice_max(n = 1, order_by = {{ keyword }}) %>%
-          # pull()
+        # temp %>%
+        # filter(date >= overlap_start & date < end_d) %>%
+        # select({{ keyword }}) %>%
+        # slice_max(n = 1, order_by = {{ keyword }}) %>%
+        # pull()
 
         y2 <- max(select(df, last_col()), na.rm = TRUE)
-          # df %>%
-          # filter(date >= overlap_start & date < end_d) %>%
-          # select(last_col()) %>%
-          # slice_max(n = 1, order_by = {{ keyword }}) %>%
-          # pull()
+        # df %>%
+        # filter(date >= overlap_start & date < end_d) %>%
+        # select(last_col()) %>%
+        # slice_max(n = 1, order_by = {{ keyword }}) %>%
+        # pull()
 
         coef <- y2 / y1
 
@@ -165,7 +180,12 @@ simple_daily_series <- function(keyword = "arbeitslos",
 
     # combine adjusted values with a date column
     df <- tibble(dates, df)
-    colnames(df) <- c("date", {{keyword}})
+    if (is.na(category)) {
+      colnames(df) <- c("date", {{ keyword }})
+    } else {
+      colnames(df) <- c("date", {{ category }})
+    }
+
 
     # cut to only relevant time frame
     df <- df[df$date >= start_d & df$date < init_end_d, ]
@@ -174,20 +194,33 @@ simple_daily_series <- function(keyword = "arbeitslos",
     maxi <- max(df[, 2], na.rm = TRUE)
 
     # get a vector with values only
-    relevant_cols <- df %>%
-      select({{keyword}}) %>%
-      pull()
+    if (is.na(category)) {
+      relevant_cols <- df %>%
+        select({{ keyword }}) %>%
+        pull()
 
-    # re-normalized to the overall maximum value to have max = 100
-    result <- df %>%
-      mutate(
-        {{ keyword }} := round((100 * relevant_cols / maxi), 4)
-      )
+      # re-normalized to the overall maximum value to have max = 100
+      result <- df %>%
+        mutate(
+          {{ keyword }} := round((100 * relevant_cols / maxi), 4)
+        )
+    } else {
+      relevant_cols <- df %>%
+        select({{ category }}) %>%
+        pull()
+
+      # re-normalized to the overall maximum value to have max = 100
+      result <- df %>%
+        mutate(
+          {{ category }} := round((100 * relevant_cols / maxi), 4)
+        )
+    }
+
 
     # check if last value is zero
     # and remove it, if it is
     if (result[dim(result)[1], 2] == 0) {
-        result <- result[1:dim(result)[1] - 1, ]
+      result <- result[1:dim(result)[1] - 1, ]
     }
 
     return(result)

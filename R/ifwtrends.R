@@ -1,18 +1,35 @@
 #' ifwtrends: A package for evaluating data from Google Trends
 #'
-#' The package ifwtrends is based on trendecon and GtrendsR and takes
+#' The package ifwtrends is based on trendecon and gtrendsR and takes
 #' data from Google Trends to support economic forecasting.
 #'
 #' @section Functions:
-#' \code{\link{pca}()}
 #'
-#' \code{\link{roll}()}
+#' [daily_series()]
 #'
-#' \code{\link{daily_series}()}
+#' [est_trend()]
 #'
-#' \code{\link{factorR2}()}
+#' [factorR2()]
 #'
-#' For in-depth information and showcases, see the vignette
+#' [forecast_m()]
+#'
+#' [forecast_q()]
+#'
+#' [gtpreparation()]
+#'
+#' [gtsearch()]
+#'
+#' [pca()]
+#'
+#' [roll()]
+#'
+#' [seas_adj()]
+#'
+#' [simple_daily_series()]
+#'
+#' [trend_adj()]
+#'
+#' For in-depth information and showcases, see the German vignette
 #' at \code{vignette(topic = "ifwtrends-demo", package = "ifwtrends")}
 #'
 #' @docType package

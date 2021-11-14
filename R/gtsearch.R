@@ -40,7 +40,7 @@ gtsearch <- function(keywords = NA,
   # so that one can loop through all given
   # (or, in the case that one categories given, not given)
   # keywords.
-  if (length(categories) == 1) {
+  if (length(categories) == 1 & length(keywords) > 1) {
     result_list <- vector("list", length = length(keywords))
 
     for (i in seq_along(keywords)) {
@@ -69,7 +69,7 @@ gtsearch <- function(keywords = NA,
 
 
     # Repeat for the vice versa case.
-  } else if (length(keywords) == 1) {
+  } else if (length(keywords) == 1 & length(categories) > 1) {
     result_list <- vector("list", length = length(categories))
 
     for (i in seq_along(categories)) {

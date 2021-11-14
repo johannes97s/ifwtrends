@@ -18,7 +18,7 @@
 #' For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
 #' If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
 #' If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
-#' (performed by the [seasonal::seas()] function from the seasonal package).
+#' (performed by [seasonal::seas()] from the seasonal package).
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
