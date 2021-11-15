@@ -14,5 +14,5 @@ test_that("function returns a tibble", {
 
   skip_if_not(check_connection(), message = "No connection couldn't be established!")
 
-  expect_s3_class(gtpreparation(keyword = c("ikea", "saturn"), time = "2021-01-01 2021-06-01"), "tbl")
+  expect_s3_class(gtpreparation(keyword = "ikea", time = "2021-01-01 2021-06-01"), "tbl")
 })
