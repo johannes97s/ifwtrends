@@ -5,20 +5,21 @@
 \title{Simple Google Trends data search}
 \usage{
 gtsearch(
-  keywords = NA,
-  categories = 0,
+  keyword = NA,
+  category = NA,
   geo = "DE",
   timeframe = paste("2006-01-01", Sys.Date())
 )
 }
 \arguments{
+\item{geo}{The region to search in.}
+
+\item{timeframe}{A time frame to search the queries in consisting of
+a start date and an end date in YYYY-MM-DD form.}
+
 \item{keywords}{A vector (chr) of keywords to search for.}
 
 \item{categories}{A vector (numeric) of category numbers to search for.}
-
-\item{geo}{The region to search in.}
-
-\item{timeframe}{A time frame to search the queries in.}
 }
 \value{
 A tibble with a time series of Google Trends search volume from

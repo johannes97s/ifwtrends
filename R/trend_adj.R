@@ -16,19 +16,18 @@
 #' @importFrom magrittr %>%
 #' @importFrom tsbox ts_tbl
 #' @keywords internal
-helper_adj <- function(series, log.trafo = F){
-
-  if ("ts" %in% class(series)){
+helper_adj <- function(series, log.trafo = F) {
+  if ("ts" %in% class(series)) {
     series <- series %>%
       ts_tbl()
   }
 
   # Log transformation
-  if (log.trafo){
+  if (log.trafo) {
     series <- mutate(series, value = log(value))
   }
 
-  if (!("id" %in% names(series))){
+  if (!("id" %in% names(series))) {
     series <- mutate(series, id = "id")
   }
 
@@ -49,11 +48,15 @@ helper_adj <- function(series, log.trafo = F){
 #' @return Returns a tibble with trend adjusted values and a
 #' date column.
 #'
-#' For trend_method there can be choosen
-#' \code{"firstdiff"} and \code{"comtrend"}.
+#' For trend_method there can be choosen between
+#' \code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 #' If you choose \code{"firstdiff"},
 #' first differences with \code{lag = 1} is executed.
-#' Else with \code{"comtrend"},
+#' If you choose the moving average,
+#' the time series will be decomposed into its components
+#' and the trend will be subtracted
+#' from the whole time series (using loess).
+#' With \code{"comtrend"},
 #' there is a polynom of degree 5
 #' with id-fixed effects estimated,
 #' which captures the common trend.
@@ -63,33 +66,38 @@ helper_adj <- function(series, log.trafo = F){
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
-#' trend_adj(series, log.trafo = TRUE, method = "firstdiff")
-#'
+#' trend_adj(series, log.trafo = TRUE, method = "moving_avg")
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
 #' @importFrom dplyr ungroup
 #' @importFrom magrittr %>%
 #' @importFrom stats lm
 #' @importFrom stats poly
+#' @importFrom tsbox ts_ts
 #' @export
-trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
-
-  series <- helper_adj(series, log.trafo)
+trend_adj <- function(series, log.trafo = F, method = "moving_avg") {
 
   # Trend adjustmend with first differences and lag = 1
-  if(method == "firstdiff"){
+  if (method == "firstdiff") {
+    series <- helper_adj(series, log.trafo)
 
-    series <- series %>%
+    trend_adj_series <- series %>%
       group_by(id) %>%
       mutate(value = c(0, diff(value))) %>%
       ungroup()
+  } else if (method == "moving_avg") {
+    if (!("ts" %in% class(series))) {
+      series <- ts_ts(series)
+    }
+    components <- stl(x = series, s.window = "periodic")
 
-  } else if(method == "comtrend"){
+    trend_adj_series <- series - components$time.series[, 2]
+  } else if (method == "comtrend") {
     # Trend adjustmented as mentionend in Paper (which??)
     stop("trend_adj(): method 'comtrend' is not implemented as of now. Please use 'firstdiff' instead.")
     # As of now, this method fails to be correctly implemented.
-    if (("id" %in% names(series))){
-      fit <- lm(value ~ id -1 +poly(as.numeric(time), 3, raw = T), data = series)
+    if (("id" %in% names(series))) {
+      fit <- lm(value ~ id - 1 + poly(as.numeric(time), 3, raw = T), data = series)
     } else {
       fit <- lm(value ~ +poly(as.numeric(time), 3, raw = T), data = series)
     }
@@ -97,6 +105,5 @@ trend_adj <- function(series, log.trafo = F, method = "firstdiff"){
     series <- mutate(series, value = fit$residuals)
   }
 
-  return(series)
+  return(trend_adj_series)
 }
-
