@@ -4,7 +4,7 @@
 \alias{trend_adj}
 \title{Trend adjustment}
 \usage{
-trend_adj(series, log.trafo = F, method = "firstdiff")
+trend_adj(series, log.trafo = F, method = "moving_avg")
 }
 \arguments{
 \item{series}{The input tibble in tidy form
@@ -20,11 +20,15 @@ trend adjustment should be choosen. See Details.}
 Returns a tibble with trend adjusted values and a
 date column.
 
-For trend_method there can be choosen
-\code{"firstdiff"} and \code{"comtrend"}.
+For trend_method there can be choosen between
+\code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 If you choose \code{"firstdiff"},
 first differences with \code{lag = 1} is executed.
-Else with \code{"comtrend"},
+If you choose the moving average,
+the time series will be decomposed into its components
+and the trend will be subtracted
+from the whole time series (using loess).
+With \code{"comtrend"},
 there is a polynom of degree 5
 with id-fixed effects estimated,
 which captures the common trend.
@@ -38,6 +42,5 @@ of time series and returns a tibble with trend adjusted values.
 }
 \examples{
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
-trend_adj(series, log.trafo = TRUE, method = "firstdiff")
-
+trend_adj(series, log.trafo = TRUE, method = "moving_avg")
 }
