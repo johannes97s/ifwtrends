@@ -31,7 +31,7 @@
 #' @importFrom gtrendsR gtrends
 #' @importFrom trendecon ts_gtrends
 #' @examples
-#' gtpreparation(keyword = c("ikea", "saturn"), time = "2020-01-01 2021-01-01")
+#' gtpreparation(keyword = "ikea", time = "2020-01-01 2021-01-01")
 #'
 #' @export
 gtpreparation <- function(keyword = NA,

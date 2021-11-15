@@ -40,6 +40,6 @@ seasonal adjustment.
 The function returns first derivatives (lagged if desired).
 }
 \examples{
-gtpreparation(keyword = c("ikea", "saturn"), time = "2020-01-01 2021-01-01")
+gtpreparation(keyword = "ikea", time = "2020-01-01 2021-01-01")
 
 }
