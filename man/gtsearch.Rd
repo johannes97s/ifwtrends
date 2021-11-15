@@ -8,22 +8,26 @@ gtsearch(
   keyword = NA,
   category = NA,
   geo = "DE",
-  timeframe = paste("2006-01-01", Sys.Date())
+  timeframe = paste("2006-01-01", Sys.Date()),
+  as_tbl_ts = TRUE
 )
 }
 \arguments{
+\item{keyword}{A vector (chr) of keywords to search for.}
+
+\item{category}{A vector (numeric) of category numbers to search for.}
+
 \item{geo}{The region to search in.}
 
 \item{timeframe}{A time frame to search the queries in consisting of
 a start date and an end date in YYYY-MM-DD form.}
 
-\item{keywords}{A vector (chr) of keywords to search for.}
-
-\item{categories}{A vector (numeric) of category numbers to search for.}
+\item{as_tbl_ts}{Logical value to determine if tibble should already
+be coerced to a tsibble with keyword or category column as key.}
 }
 \value{
-A tibble with a time series of Google Trends search volume from
-given inputs.
+A tsibble with a time series of Google Trends search volume from
+given inputs and the keyword respective category as key for it.
 }
 \description{
 \code{gtsearch} is a simple wrapper
