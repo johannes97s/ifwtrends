@@ -17,19 +17,20 @@
 #' @importFrom tsibble as_tsibble
 #' @keywords internal
 helper_adj <- function(series, log.trafo = F) {
+
   if (!("tbl_ts" %in% class(series))) {
     series <- series %>%
-      as_tsibble(key = ifelse(("id" %in% names(series)), "id", NULL))
+      # Use the first character column as a key
+      # (because the column name is not known ex ante)
+      as_tsibble(
+        key = colnames(series[lapply(series, typeof)== "character"])[1]
+        )
   }
 
   # Log transformation
   if (log.trafo) {
     series <- mutate(series, value = log(value))
   }
-
-  # if (!("id" %in% names(series))) {
-  #   series <- mutate(series, id = "id")
-  # }
 
   return(series)
 }
