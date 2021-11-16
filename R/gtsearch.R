@@ -4,7 +4,7 @@
 #' interest data in a keyword or category from Google Trends.
 #'
 #' @description \code{gtsearch} is a simple wrapper
-#' around the \code{gtrends} function from package. It only
+#' around the [gtrendsR::gtrends()] function. It only
 #' returns a time series in form of a tibble with the actual
 #' (in relative terms) search volume of keywords or categories.
 #'
