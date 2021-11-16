@@ -92,7 +92,8 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
 #' to this with single time series with one keyword or category.
 #'
 #' @section Methods:
-#' For method, there can be choosen \code{"firstdiff"} and \code{"arima"}.
+#' With the seasonal adjustment method,
+#' a choice can be made between \code{"firstdiff"} and \code{"arima"}.
 #' If \code{"firstdiff"}, first derivatives with \code{lag = 1} are computed.
 #' If \code{"arima"}, the X-13ARIMA-SEATS  procedure is used
 #' (performed by [seasonal::seas()] from the seasonal package).
