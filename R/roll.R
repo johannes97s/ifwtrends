@@ -1,6 +1,6 @@
 #' Returns a tibble for backtesting with PCA.
 #'
-#' @description \code{roll}
+#' @description
 #' Returns for the time from start_period to end
 #' the respective result from [pca()] back.
 #'
