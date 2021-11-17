@@ -15,19 +15,25 @@ gtpreparation(
 \arguments{
 \item{keyword}{A vector (chr) with search requests.}
 
-\item{category}{A vector (num) with category numbers from Google Trends.}
+\item{category}{A category ID from Google Trends. As of now,
+only one category can be given. If you need to use more categories,
+the use of a \code{for}-loop is recommended.}
 
 \item{geo}{A geographical region to restrict the search queries to.}
 
 \item{time}{Time period from where the relative values should be taken
 (for more information, visit the
-documentation of \code{\link[trendecon]{ts_gtrends}}).}
+documentation of \code{\link[trendecon]{ts_gtrends}}). Attention:
+As this function will only work on monthly data, you need to enter
+for time a time frame that is longer than 5 years.
+Otherwise, the time series from Google Trends will be based on
+monthly or daily data and cannot be evaluated.}
 
 \item{lags}{Number of delays in additional columns (max. value: 4).}
 }
 \value{
 Firstly, each row will be log transformed and
-seasonal adjusted (via RJDemetra's X-13 ARIMA methods).
+seasonal adjusted (via \code{seasonal}'s X-13 ARIMA methods).
 Furthermore, the first derivatives of these adjusted time
 series will be returned (optionally with additional columns containing
 lags).
@@ -37,9 +43,9 @@ lags).
 various search requests respective trends categories
 data and applies a logarithmic transformation aswell as a
 seasonal adjustment.
-The function returns first derivatives (lagged if desired).
+The function returns seasonal adjusted
+first derivatives (lagged if desired).
 }
 \examples{
 gtpreparation(keyword = "ikea", time = "2020-01-01 2021-01-01")
-
 }
