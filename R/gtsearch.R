@@ -31,7 +31,7 @@
 #' @importFrom tibble as_tibble
 #' @export
 gtsearch <- function(keyword = NA,
-                     category = NA,
+                     category = 0,
                      geo = "DE",
                      timeframe = paste("2006-01-01", Sys.Date()),
                      as_tbl_ts = TRUE) {
@@ -40,7 +40,7 @@ gtsearch <- function(keyword = NA,
   # check if keyword is still NA,
   # then go by category
   if (anyNA(keyword)) {
-    stopifnot("You can only enter one single category number!", length(category) == 1)
+    stopifnot("You can only enter one single category number!" =  length(category) == 1)
     result <- gtrends(
       category = category, geo = geo,
       time = timeframe
@@ -55,7 +55,7 @@ gtsearch <- function(keyword = NA,
         as_tsibble(key = category)
     }
 
-  } else if (anyNA(category)) {
+  } else if (anyNA(category) | category == 0) {
 
     result <- gtrends(
       keyword = keyword, geo = geo,

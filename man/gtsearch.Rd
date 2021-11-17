@@ -6,7 +6,7 @@
 \usage{
 gtsearch(
   keyword = NA,
-  category = NA,
+  category = 0,
   geo = "DE",
   timeframe = paste("2006-01-01", Sys.Date()),
   as_tbl_ts = TRUE
