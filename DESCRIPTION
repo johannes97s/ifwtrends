@@ -1,6 +1,6 @@
 Package: ifwtrends
 Title: Evaluating Google Trends data for economic forecasts
-Version: 0.3.2
+Version: 0.3.4
 Authors@R: c(
     person("Johannes", "Schnebel", email = "johannes.schnebel@ifw-kiel.de", role = c("cre", "aut")),
     person("Mathis", "Clausen", email = "mathis.clausen@ifw-kiel.de", role = "ctb"))
@@ -34,6 +34,7 @@ Imports:
     tidyselect,
     trendecon,
     tsbox,
+    tsibble,
     zoo
 Remotes: trendecon/trendecon
 VignetteBuilder: knitr

@@ -18,8 +18,8 @@ test_that("returns a tbl in due length", {
   time_frame <- "2020-01-01 2020-06-01"
 
   expectation <- gtsearch(
-    keywords = keywords,
-    time_frame = timeframe
+    keyword = keywords,
+    timeframe = time_frame
   )
   expect_s3_class(
     expectation,
@@ -27,10 +27,10 @@ test_that("returns a tbl in due length", {
   )
 
   # tbl has the right dimensions
-  expect_equal(dim(expectation), c(153, 3))
+  expect_equal(dim(expectation), c(306, 3))
 
   # tibble has the correct colnames
-  expect_equal(colnames(expectation)[2:3], keywords)
+  expect_equal(colnames(expectation)[2:3], c("hits", "keyword"))
 
   # tibble has the correct first date
   expect_equal(

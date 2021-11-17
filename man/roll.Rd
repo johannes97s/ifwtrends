@@ -39,7 +39,6 @@ applied on every column.
 For each column, a new month is added.
 }
 \description{
-\code{roll}
 Returns for the time from start_period to end
 the respective result from \code{\link[=pca]{pca()}} back.
 }

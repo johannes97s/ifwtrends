@@ -49,6 +49,7 @@
 #' @importFrom lubridate today
 #' @importFrom lubridate days
 #' @importFrom magrittr %>%
+#' @importFrom tsbox ts_tbl
 #' @export
 simple_daily_series <- function(keyword = NA,
                                 category = NA,
@@ -68,9 +69,13 @@ simple_daily_series <- function(keyword = NA,
   # For timeframes up to 9 months, Google provides daily data
   if (length(check_length_timeframe) < 9) {
     if (is.na(category)) {
-      query <- gtsearch(keywords = keyword, geo = geo, timeframe = timeframe)
+      query <- gtsearch(keyword = keyword,
+                        geo = geo, timeframe = timeframe,
+                        as_tbl_ts =  TRUE)
     } else {
-      query <- gtsearch(categories = category, geo = geo, timeframe = timeframe)
+      query <- gtsearch(category = category,
+                        geo = geo, timeframe = timeframe,
+                        as_tbl_ts =  TRUE)
     }
 
     return(query)
@@ -98,6 +103,7 @@ simple_daily_series <- function(keyword = NA,
 
     #--------------
     while (end_d > start_d) {
+
       # compute time frame
       tf <- paste(itr_d, end_d)
       if (verbose) {
@@ -110,9 +116,17 @@ simple_daily_series <- function(keyword = NA,
 
       # search for the keyword in a given time frame
       if (is.na(category)) {
-        temp <- gtsearch(keywords = keyword, geo = geo, timeframe = tf)
+        temp <- gtsearch(keyword = keyword, geo = geo, timeframe = tf,
+                         as_tbl_ts = FALSE) %>%
+          pivot_wider(names_from = keyword, values_from = hits)
+
+
       } else {
-        temp <- gtsearch(categories = category, geo = geo, timeframe = tf)
+        temp <- gtsearch(category = category, geo = geo, timeframe = tf,
+                         as_tbl_ts = FALSE) %>%
+          pivot_wider(names_from = keyword, values_from = hits)
+
+
       }
 
       # creates a copy of temp with empty data
@@ -126,6 +140,7 @@ simple_daily_series <- function(keyword = NA,
         }
 
         # normalize using the maximum value of the overlapped period
+
         y1 <- max(temp[, 2], na.rm = TRUE)
         # temp %>%
         # filter(date >= overlap_start & date < end_d) %>%
@@ -141,6 +156,7 @@ simple_daily_series <- function(keyword = NA,
         # pull()
 
         coef <- y2 / y1
+
 
         temp <- temp %>%
           mutate(across(where(is.numeric), ~ .x * coef))
@@ -163,8 +179,10 @@ simple_daily_series <- function(keyword = NA,
 
       # sort tibbles by date
       df <- df %>%
+        mutate(date = as.Date(date)) %>%
         arrange(date)
       temp <- temp %>%
+        mutate(date = as.Date(date)) %>%
         arrange(date)
 
       # if clause

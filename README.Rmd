@@ -35,6 +35,9 @@ remotes::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 
 # If not, then use instead:
 remotes::install_github("johannes97s/ifwtrends", build_vignettes = FALSE)
+
+# If not, then use instead:
+remotes::install_github("johannes97s/ifwtrends", build_vignettes = FALSE)
 ```
 ## Example
 

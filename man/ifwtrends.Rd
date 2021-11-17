@@ -10,30 +10,32 @@ data from Google Trends to support economic forecasting.
 }
 \section{Functions}{
 
-
-\code{\link[=daily_series]{daily_series()}}
-
-\code{\link[=est_trend]{est_trend()}}
-
-\code{\link[=factorR2]{factorR2()}}
-
-\code{\link[=forecast_m]{forecast_m()}}
-
-\code{\link[=forecast_q]{forecast_q()}}
-
-\code{\link[=gtpreparation]{gtpreparation()}}
-
-\code{\link[=gtsearch]{gtsearch()}}
-
-\code{\link[=pca]{pca()}}
-
-\code{\link[=roll]{roll()}}
-
-\code{\link[=seas_adj]{seas_adj()}}
-
-\code{\link[=simple_daily_series]{simple_daily_series()}}
-
-\code{\link[=trend_adj]{trend_adj()}}
+\itemize{
+\item \code{\link[=daily_series]{daily_series()}}: Creates a daily series for time frames where Google
+usually doesn't provide daily data. Uses the Chow-Lin-method.
+\item \code{\link[=est_trend]{est_trend()}}: Estimates a common trend between all Google Trends categories
+and uses that to trend adjust in some other functions. This is updated on
+a monthly basis in the package. However, the user may use this function
+for himself on his own.
+\item \code{\link[=factorR2]{factorR2()}}: Estimates the R squared between keywords.
+\item \code{\link[=forecast_m]{forecast_m()}}: Makes a monthly forecast.
+\item \code{\link[=forecast_q]{forecast_q()}}: Makes a quarterly forecast.
+\item \code{\link[=gtpreparation]{gtpreparation()}}: Makes a search query and applies a
+trend adjustment (with the common
+trend), a seasonal adjustment and, if wished, adds lag variables
+to the resulting data frame.
+\item \code{\link[=gtsearch]{gtsearch()}}: Makes a Google search.
+\item \code{\link[=gtseas_adj]{gtseas_adj()}}: Seasonal adjusts a given time series or uses
+\code{\link[=gtsearch]{gtsearch()}} to seasonal adjust a search query. The seasonal adjustment
+is done via X-13-ARIMA-SEATS from \code{\link[seasonal:seas]{seasonal::seas()}}.
+\item \code{\link[=gttrend_adj]{gttrend_adj()}}: Trend adjusts a given time series or uses
+\code{\link[=gtsearch]{gtsearch()}} to trend adjust a search query. It either can use
+first differences or a moving average to adjust the time series.
+\item \code{\link[=pca]{pca()}}: Does a Principal Component Analysis on a search query.
+\item \code{\link[=roll]{roll()}}: Does a rolling \code{\link[=pca]{pca()}}.
+\item \code{\link[=simple_daily_series]{simple_daily_series()}}: A more simplistic alternativ for
+\code{\link[=daily_series]{daily_series()}} that doesn't rely on inner functions from other packages.
+}
 
 For in-depth information and showcases, see the German vignette
 at \code{vignette(topic = "ifwtrends-demo", package = "ifwtrends")}
