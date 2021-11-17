@@ -15,9 +15,11 @@ gtsearch(
 \arguments{
 \item{keyword}{A vector (chr) of keywords to search for.}
 
-\item{category}{A vector (numeric) of category numbers to search for.}
+\item{category}{A single numeric value stating the category number.
+To search for multiple categories at once is as of today not possible.
+Use an \code{for}-loop instead.}
 
-\item{geo}{The region to search in.}
+\item{geo}{The region to search in (e.g. for Germany "DE").}
 
 \item{timeframe}{A time frame to search the queries in consisting of
 a start date and an end date in YYYY-MM-DD form.}

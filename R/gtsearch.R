@@ -9,8 +9,10 @@
 #' (in relative terms) search volume of keywords or categories.
 #'
 #' @param keyword A vector (chr) of keywords to search for.
-#' @param category A vector (numeric) of category numbers to search for.
-#' @param geo The region to search in.
+#' @param category A single numeric value stating the category number.
+#' To search for multiple categories at once is as of today not possible.
+#' Use an \code{for}-loop instead.
+#' @param geo The region to search in (e.g. for Germany "DE").
 #' @param timeframe A time frame to search the queries in consisting of
 #' a start date and an end date in YYYY-MM-DD form.
 #' @param as_tbl_ts Logical value to determine if tibble should already
@@ -33,9 +35,12 @@ gtsearch <- function(keyword = NA,
                      geo = "DE",
                      timeframe = paste("2006-01-01", Sys.Date()),
                      as_tbl_ts = TRUE) {
-  # stopifnot("You can only enter something either in keyword or in category!" = is.na(keyword) | category == 0)
+  stopifnot("You can only enter something either in keyword or in category!" = is.na(keyword) | category == 0)
 
+  # check if keyword is still NA,
+  # then go by category
   if (anyNA(keyword)) {
+    stopifnot("You can only enter one single category number!", length(category) == 1)
     result <- gtrends(
       category = category, geo = geo,
       time = timeframe
@@ -44,12 +49,14 @@ gtsearch <- function(keyword = NA,
       mutate(date = as.Date(date)) %>%
       as_tibble()
 
+    # if wished, tibble can be coerced to a tsibble
     if (as_tbl_ts) {
       result <- result %>%
         as_tsibble(key = category)
     }
 
   } else if (anyNA(category)) {
+
     result <- gtrends(
       keyword = keyword, geo = geo,
       time = timeframe
