@@ -14,5 +14,12 @@ test_that("function returns a tibble", {
 
   skip_if_not(check_connection(), message = "No connection couldn't be established!")
 
-  expect_s3_class(gtpreparation(keyword = "ikea", time = "2021-01-01 2021-06-01"), "tbl")
+  expect_s3_class(gtpreparation(keyword = "ikea", time = "2014-01-01 2021-06-01"), "tbl")
+})
+
+test_that("time frame < 5 years returns an error", {
+
+  skip_if_not(check_connection(), message = "No connection couldn't be established!")
+
+  expect_error(gtpreparation(keyword = "ikea", time = "2017-01-01 2021-06-01"))
 })
