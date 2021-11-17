@@ -5,29 +5,41 @@
 #'
 #' @section Functions:
 #'
-#' [daily_series()]
+#' * [daily_series()]: Creates a daily series for time frames where Google
+#' usually doesn't provide daily data. Uses the Chow-Lin-method.
 #'
-#' [est_trend()]
+#' * [est_trend()]: Estimates a common trend between all Google Trends categories
+#' and uses that to trend adjust in some other functions. This is updated on
+#' a monthly basis in the package. However, the user may use this function
+#' for himself on his own.
 #'
-#' [factorR2()]
+#' * [factorR2()]: Estimates the R squared between keywords.
 #'
-#' [forecast_m()]
+#' * [forecast_m()]: Makes a monthly forecast.
 #'
-#' [forecast_q()]
+#' * [forecast_q()]: Makes a quarterly forecast.
 #'
-#' [gtpreparation()]
+#' * [gtpreparation()]: Makes a search query and applies a
+#' trend adjustment (with the common
+#' trend), a seasonal adjustment and, if wished, adds lag variables
+#' to the resulting data frame.
 #'
-#' [gtsearch()]
+#' * [gtsearch()]: Makes a Google search.
 #'
-#' [pca()]
+#' * [gtseas_adj()]: Seasonal adjusts a given time series or uses
+#' [gtsearch()] to seasonal adjust a search query. The seasonal adjustment
+#' is done via X-13-ARIMA-SEATS from [seasonal::seas()].
 #'
-#' [roll()]
+#' * [gttrend_adj()]: Trend adjusts a given time series or uses
+#' [gtsearch()] to trend adjust a search query. It either can use
+#' first differences or a moving average to adjust the time series.
 #'
-#' [seas_adj()]
+#' * [pca()]: Does a Principal Component Analysis on a search query.
 #'
-#' [simple_daily_series()]
+#' * [roll()]: Does a rolling [pca()].
 #'
-#' [trend_adj()]
+#' * [simple_daily_series()]: A more simplistic alternativ for
+#' [daily_series()] that doesn't rely on inner functions from other packages.
 #'
 #' For in-depth information and showcases, see the German vignette
 #' at \code{vignette(topic = "ifwtrends-demo", package = "ifwtrends")}
