@@ -14,7 +14,7 @@ forecasts.
 
 ## Installation
 
-You can install the current development version of ifwtrends from
+You can install the current version of ifwtrends from
 [GitHub](https://github.com/johannes97s/ifwtrends) with:
 
 ``` r
@@ -26,8 +26,8 @@ remotes::install_github("johannes97s/ifwtrends", build_vignettes = TRUE)
 # If not, then use instead:
 remotes::install_github("johannes97s/ifwtrends", build_vignettes = FALSE)
 
-# If not, then use instead:
-remotes::install_github("johannes97s/ifwtrends", build_vignettes = FALSE)
+# If you want to use the development version, use:
+remotes::install_github("johannes97s/ifwtrends@dev", build_vignettes = FALSE)
 ```
 
 ## Example
