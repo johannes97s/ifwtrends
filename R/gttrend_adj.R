@@ -23,7 +23,7 @@ helper_adj <- function(series, log.trafo = F) {
       # Use the first character column as a key
       # (because the column name is not known ex ante)
       as_tsibble(
-        key = colnames(series[lapply(series, typeof)== "character"])[1]
+        key = ifelse("id" %in% colnames(series), "id", colnames(series[lapply(series, typeof)== "character"])[1])
         )
   }
 
