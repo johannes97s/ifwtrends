@@ -2,7 +2,7 @@ name: Automated update of the common category trend
 
 on:
   schedule:
-    - cron: '0 2 2 * *'
+    - cron: '15 7 18 * *'
 
 jobs:
   generate-data:
