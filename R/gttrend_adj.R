@@ -17,14 +17,13 @@
 #' @importFrom tsibble as_tsibble
 #' @keywords internal
 helper_adj <- function(series, log.trafo = F) {
-
   if (!("tbl_ts" %in% class(series))) {
     series <- series %>%
       # Use the first character column as a key
       # (because the column name is not known ex ante)
       as_tsibble(
-        key = ifelse("id" %in% colnames(series), "id", colnames(series[lapply(series, typeof)== "character"])[1])
-        )
+        key = ifelse("id" %in% colnames(series), "id", colnames(series[lapply(series, typeof) == "character"])[1])
+      )
   }
 
   # Log transformation
@@ -70,8 +69,10 @@ helper_adj <- function(series, log.trafo = F) {
 #' @examples
 #' series <- trendecon::ts_gtrends("ikea", time = "all")
 #' trend_adj(series, log.trafo = TRUE, method = "moving_avg")
-#' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
 #' @importFrom magrittr %>%
 #' @importFrom stats lm
 #' @importFrom stats poly
@@ -100,16 +101,13 @@ trend_adj <- function(series, method = "moving_avg", log.trafo = FALSE) {
     trend <- stl(x = series, s.window = "periodic")$time.series[, 2]
     trend_adj_series <- series - trend
   } else if (method == "comtrend") {
-    # Trend adjustmented as mentionend in Paper (which??)
-    stop("trend_adj(): method 'comtrend' is not implemented as of now. Please use 'firstdiff' instead.")
-    # As of now, this method fails to be correctly implemented.
-    if (("id" %in% names(series))) {
-      fit <- lm(value ~ id - 1 + poly(as.numeric(time), 3, raw = T), data = series)
-    } else {
-      fit <- lm(value ~ +poly(as.numeric(time), 3, raw = T), data = series)
-    }
+    stopifnot("Your input series needs a column 'date' and a column 'value'" = c("date", "value") %in% colnames(series))
 
-    series <- mutate(series, value = fit$residuals)
+    trend <- comtrend
+
+    trend_adj_series <- left_join(x = series, y = trend, by = "date") %>%
+      mutate(trend_adj = value - trend) %>%
+      select(date, trend_adj)
   }
 
   return(trend_adj_series)
@@ -151,16 +149,15 @@ trend_adj <- function(series, method = "moving_avg", log.trafo = FALSE) {
 #' with id-fixed effects estimated,
 #' which captures the common trend.
 #' The residuals where then used as the adjusted series.
-#' For further detail, see Woloszko et al. (2020). Attention:
-#' This method is not implemented as of the current development state.
+#' For further detail, see Woloszko et al. (2020).
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
 #' gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 #'
 #' gttrend_adj(
-#' category = 179, timeframe = "2015-01-01 2021-01-01",
-#' method = "moving_avg", log.trafo = FALSE
+#'   category = 179, timeframe = "2015-01-01 2021-01-01",
+#'   method = "moving_avg", log.trafo = FALSE
 #' )
 #' @export
 gttrend_adj <- function(timeseries = NULL, keyword = NA, category = NA,
