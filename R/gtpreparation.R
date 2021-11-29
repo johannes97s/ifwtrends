@@ -92,15 +92,9 @@ gtpreparation <- function(keyword = NA,
   adjusted_data <- google_data %>%
     full_join(fit, by = "time") %>%
     mutate(time = as.Date(time), adj = value - trend) %>%
-    select(id, time, adj) %>%
-    gtseas_adj(method = "arima") %>%
-    rename(s_adj = value) %>%
-    mutate(
-      id = as.character(
-        gtrendsR::categories[gtrendsR::categories$id == category, 1]
-      )
-    ) %>%
-    as_tsibble(key = id)
+    select(id, time, adj)   %>%
+    seas_adj(method = "arima") %>%
+    rename(s_adj = value)
 
   # group by category
   grouped_data <- adjusted_data %>%
