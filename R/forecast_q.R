@@ -26,20 +26,37 @@
 #' @export
 forecast_q <- function(r_list, dat, fd = T){
   r_raw <- r_list[1:length(r_list) %% 3 == 0]
+  number_of_lags <- sub(".*_", "", colnames(r_raw[[1]])[length(colnames(r_raw[[1]]))])
+
   r_raw <- lapply(r_raw, function(x){
-    mutate(x, time = floor_date(time, "quarter")) %>% #aggregate GT Data to quarter
-      group_by(time) %>%                              #
-      transmute_at(.vars = vars(-time), .funs =  mean) %>%  #
-      ungroup() %>%
-      unique()
+    y <- as_tibble(x) %>%
+      mutate(time = floor_date(time, "quarter")) %>%
+      group_by(id, time) %>%
+      summarise(across(1, mean))
+    if (number_of_lags >= 1) y <- mutate(y, lag_1 = lag(lag_0, 1))
+    if (number_of_lags >= 2) y <- mutate(y, lag_2 = lag(lag_0, 2))
+    if (number_of_lags >= 3) y <- mutate(y, lag_3 = lag(lag_0, 3))
+    if (number_of_lags == 4) y <- mutate(y, lag_4 = lag(lag_0, 4))
+    y <- ungroup(y)
+
+    return(y)
+  })
+
+  # compute first differences if fd=T
+  if (fd) {
+    r_raw <- lapply(r_raw, function(x){
+      mutate(
+        x,
+        across(
+          .cols = -c(1,2), function(y) c(0, diff(y,1))
+        ),
+        .keep = "all")
     })
+  }
 
-  if (fd) r_raw <- lapply(r_raw, function(x) mutate(x, time = time, #first differences if fd=T set
-                                                     across(.cols = -1, function(y) c(0, diff(y,1))),
-                                                    .keep = "used"))
 
   r_raw <- lapply(r_raw, function(x){
-      left_join(x, dat[1:nrow(x), ], by = "time") %>%
+    left_join(x, dat[1:nrow(x), ], by = "time") %>%
       select(time, dat = value, everything()) %>%
       filter(time != as.Date("2011-01-01")) %>% #omit structural breaks
       filter(time != as.Date("2016-01-01")) %>%
@@ -56,8 +73,11 @@ forecast_q <- function(r_list, dat, fd = T){
   # })
 
   r <- r_raw #set r <- r_factors to use PCA-Model
-
-
+  # Impute NAs with 0
+  r <- lapply(r, function(x){
+    x[is.na(x)] <- 0
+    return(x)})
+  return(r)
   build_model <- function(series){ #Function to estimate the model
     y <- as.matrix(series[2])
     x <- as.matrix(series[-c(1,2)])
@@ -65,17 +85,22 @@ forecast_q <- function(r_list, dat, fd = T){
 
     cv <- cv.glmnet(x, y, alpha = 0)
     model <- glmnet(x, y, alpha = 0, lambda = 0)#cv$lambda.min) #alpha = 1 LASSO
-    model                                                    #lambda= 0 OLS
+    return(model)                                                    #lambda= 0 OLS
   }
 
-  covariats <- lapply(r, function(x) as.matrix(x[-c(1,2)])) #Trends Data to forecast with
-                                                            #previous estimated model
-  models <- lapply(lag(r)[-1], function(x) build_model(x))           #estimate model
+
+
+
+  #Trends Data to forecast with previous estimated model
+  covariats <- lapply(r, function(x) data.matrix(x[-(1:3)]))
+
+  #estimate model, deselect everything besides variables
+  models <- lapply(data.matrix(r[-(1:3)]), function(x) build_model(x))
 
   pred_values <- mapply(predict, models, covariats[-c(1)]) #forecast
 
   last_values <- sapply(pred_values, last) #select last value in each vintage as forecast
-                                           #for relevant quarter
+  #for relevant quarter
 
   forec <- tibble(time = seq.Date(max(first(r)$time)+months(3), max(last(r)$time), by ="quarter"),
                   value = last_values) %>%
