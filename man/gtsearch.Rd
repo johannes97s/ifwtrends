@@ -38,9 +38,9 @@ returns a time series in form of a tibble with the actual
 (in relative terms) search volume of keywords or categories.
 }
 \details{
-\code{gtsearch} returns a simple tibble with the original
+\code{\link[=gtsearch]{gtsearch()}} returns a simple tibble with the original
 interest data in a keyword or category from Google Trends.
 }
 \examples{
-gtsearch(keywords = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
+gtsearch(keyword = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
 }
