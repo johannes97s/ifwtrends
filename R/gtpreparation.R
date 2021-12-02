@@ -40,7 +40,7 @@
 #' @importFrom trendecon ts_gtrends
 #' @importFrom tsibble as_tsibble
 #' @examples
-#' gtpreparation(keyword = "ikea", time = "2020-01-01 2021-01-01")
+#' gtpreparation(keyword = "ikea", time = "2015-01-01 2021-01-01")
 #' @export
 gtpreparation <- function(keyword = NA,
                           category = 0,
@@ -111,8 +111,17 @@ gtpreparation <- function(keyword = NA,
     ungroup() %>%
     rename(lag_0 = s_adj) %>%
     filter(across(everything(), ~ !is.na(.)))%>%
-    pivot_longer(cols = -c(id, time), names_to = "lag", values_to = "value") %>%
+    pivot_longer(cols = -c(time), names_to = "lag", values_to = "value") %>%
     pivot_wider(names_from = lag, values_from = value)
+
+  if (!("id" %in% names(result))) {
+    # Reformulate the category id into its name
+    result <- mutate(
+      result,
+      id = as.character(
+        gtrendsR::categories[gtrendsR::categories$id == category, 1]
+      ))
+  }
 
   return(result)
 }
