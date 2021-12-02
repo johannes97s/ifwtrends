@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
-#' seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+#' gtseas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 #'
 #' @import dplyr zoo
 #' @importFrom magrittr %>%

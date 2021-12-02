@@ -63,7 +63,7 @@ For further detail, see Woloszko et al. (2020).
 }
 
 \examples{
-series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+series <- trendecon::ts_gtrends("ikea", time = "all")
 gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 
 gttrend_adj(

@@ -66,9 +66,6 @@ helper_adj <- function(series, log.trafo = F) {
 #' For further detail, see Woloszko et al. (2020). Attention:
 #' This method is not implemented as of the current development state.
 #'
-#' @examples
-#' series <- trendecon::ts_gtrends("ikea", time = "all")
-#' trend_adj(series, log.trafo = TRUE, method = "moving_avg")
 #' @importFrom dplyr group_by
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
@@ -152,7 +149,7 @@ trend_adj <- function(series, method = "moving_avg", log.trafo = FALSE) {
 #' For further detail, see Woloszko et al. (2020).
 #'
 #' @examples
-#' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+#' series <- trendecon::ts_gtrends("ikea", time = "all")
 #' gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 #'
 #' gttrend_adj(
