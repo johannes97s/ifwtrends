@@ -55,7 +55,7 @@ the \code{\link[tempdisagg:td]{tempdisagg::td()}} function from the \code{tempdi
 simple_daily_series(
   keyword = "covid-19",
   geo = "DE",
-  from = "2020-01-01",
+  from = "2020-04-01",
   verbose = TRUE
 )
 }

@@ -34,7 +34,7 @@
 #' simple_daily_series(
 #'   keyword = "covid-19",
 #'   geo = "DE",
-#'   from = "2020-01-01",
+#'   from = "2020-04-01",
 #'   verbose = TRUE
 #' )
 #' @import rlang tibble
@@ -116,6 +116,7 @@ simple_daily_series <- function(keyword = NA,
 
       # search for the keyword in a given time frame
       if (is.na(category)) {
+
         temp <- gtsearch(keyword = keyword, geo = geo, timeframe = tf,
                          as_tbl_ts = FALSE) %>%
           pivot_wider(names_from = keyword, values_from = hits)
