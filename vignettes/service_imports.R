@@ -20,8 +20,8 @@ library(glmnet)
 r_list <- roll(
   keyword = NA,
   category = c(67, 1003),
-  start_series = "2015-01-01",
-  start_period = "2021-01-01",
+  start_series = "2006-01-01",
+  start_period = "2018-01-01",
   end = Sys.Date(),
   fun = gtpreparation,
   lags = 4
@@ -63,6 +63,7 @@ forecast_q <- function(r_list, dat, fd = T) {
       mutate(time = floor_date(time, "quarter")) %>%
       group_by(id, time) %>%
       summarise(across(1, mean))
+
     if (number_of_lags >= 1) y <- mutate(y, lag_1 = lag(lag_0, 1))
     if (number_of_lags >= 2) y <- mutate(y, lag_2 = lag(lag_0, 2))
     if (number_of_lags >= 3) y <- mutate(y, lag_3 = lag(lag_0, 3))
