@@ -7,17 +7,18 @@
 factorR2(series, factors, plot = F)
 }
 \arguments{
-\item{series}{tibble with multiple time series as columns.}
+\item{series}{A tibble with multiple time series as columns.}
 
-\item{factors}{tibble with factors as columns.}
+\item{factors}{A tibble with factors as columns.}
 
-\item{plot}{plot=TRUE returns additionally to the tibble with
-\eqn{R^2} a bar plot of these.}
+\item{plot}{A logical indicator whether the function should
+additionally return a bar plot of the \eqn{R^2}.}
 }
 \value{
-Tibble of \eqn{R^2} from each time series for each factor.
+A tibble of \eqn{R^2} from each time series for each factor will be
+returned.
 If \code{plot = TRUE}, a plot containing the \eqn{R^2} is returned
-and displayed.
+and displayed additonally.
 }
 \description{
 \code{factorR2} returns the \eqn{R^2}

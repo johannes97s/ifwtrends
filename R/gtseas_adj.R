@@ -58,6 +58,7 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
       stop("seas_adj(): Please enter 'month' respective 'quarter' for freq.")
     }
 
+    # compute the first differences according to month/quarter.
     series <- series %>%
       group_by_key() %>%
       mutate(value = c(rep(0,k), diff(value, k)))
@@ -141,7 +142,6 @@ gtseas_adj <- function(timeseries = NULL, keyword = NA, category = NA,
       log.trafo = log.trafo, method = method
     )
   }
-
 
   return(seas_adj_series)
 }

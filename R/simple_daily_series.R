@@ -1,6 +1,10 @@
 #' Generate a daily time series from a broader time frame.
 #'
-#' (experimental) This is a more simplistic approach to generate daily
+#' @description
+#'
+#' `r lifecycle::badge('experimental')`
+#'
+#' This is a more simplistic approach to generate daily
 #' data in a much broader time frame, where Google usually
 #' doesn't provide daily data at all. See more in section
 #' Method.

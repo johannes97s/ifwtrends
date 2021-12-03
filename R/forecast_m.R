@@ -7,7 +7,9 @@
 
 #' Monthly forecast evaluation of vintages
 #'
-#' @description Todo
+#' @description
+#'
+#' `r lifecycle::badge('experimental')`
 #'
 #' @param r_list todo
 #' @param dat todo

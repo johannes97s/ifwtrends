@@ -7,7 +7,8 @@
 est_trend()
 }
 \value{
-Returns a time series which consists of a polynomial trend
+Returns a tibble with a
+time series, which consists of a polynomial trend
 of degree five of a category.
 }
 \description{
@@ -15,10 +16,17 @@ of degree five of a category.
 of 250 random Google Trends categories the relative search volume.
 Based on this, a common trend is calculated and saved in an
 internal dataframe the user cannot access but the packages' functions do.
-The user can use this function to calculate the trend for himself,
-but the internal dataframe used in other functions is updated on a
-monthly basis (on the second day of each month) on GitHub.
+However, the user can use this
+function to calculate the trend for himself.
+The internal dataframe used in other functions is updated on a
+monthly basis (on the fifth day of each month) on GitHub.
 }
+\section{Warning}{
+
+This function takes a few minutes to work and generates
+a lot of traffic at Google. An IP ban is therefore quite likely.
+}
+
 \examples{
 \dontrun{
 est_trend()
