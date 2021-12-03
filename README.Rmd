@@ -41,27 +41,5 @@ remotes::install_github("johannes97s/ifwtrends@dev", build_vignettes = FALSE)
 ```
 ## Example
 
-If you want to do a principal component analysis
-(PCA) on a Google Trends (GTrends or GT) time series, 
-you can do:
-
-```{r example}
-library(ifwtrends)
-# Search keywords and do a subsequent PC analysis on a
-# GTrends time series 
-pca(keywords = c("Pluto", "Saturn"),
-    categories = 0,
-    geo = "DE",
-    time = paste("2020-01-01", Sys.Date()))
-
-# Search for a GTrends category and do a subsequent PC
-# analysis
-pca(keywords = NA,
-    categories = c(651),
-    geo = "DE",
-    time = paste("2020-01-01", Sys.Date()))
-
-```
-
-Further examples and a detailed 
+Examples and a detailed 
 introduction can be found in the (German) vignette.
