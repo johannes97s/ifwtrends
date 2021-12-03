@@ -13,9 +13,9 @@ gtpreparation(
 )
 }
 \arguments{
-\item{keyword}{A vector (chr) with search requests.}
+\item{keyword}{A character vector with search requests.}
 
-\item{category}{A category ID from Google Trends. As of now,
+\item{category}{A numerical category ID from Google Trends. As of now,
 only one category can be given. If you need to use more categories,
 the use of a \code{for}-loop is recommended.}
 
@@ -27,22 +27,25 @@ documentation of \code{\link[trendecon]{ts_gtrends}}). Attention:
 As this function will only work on monthly data, you need to enter
 for time a time frame that is longer than 5 years.
 Otherwise, the time series from Google Trends will be based on
-monthly or daily data and cannot be evaluated.}
+weekly or daily data and cannot be evaluated.}
 
-\item{lags}{Number of delays in additional columns (max. value: 4).}
+\item{lags}{Number of delays in additional columns (max. value: 4).
+Be careful, the first \code{i} months will not be returned
+with \code{i} being the number of lags.}
 }
 \value{
 Firstly, each row will be log transformed and
-seasonal adjusted (via \code{seasonal}'s X-13 ARIMA methods).
+seasonal adjusted (via \code{\link[seasonal:seas]{seasonal::seas()}}'s X-13 ARIMA methods).
 Furthermore, the first derivatives of these adjusted time
-series will be returned (optionally with additional columns containing
+series will be returned
+(optionally with additional columns containing
 lags).
 }
 \description{
 \code{gtpreparation} downloads for
-various search requests respective trends categories
+various search requests respective categories
 data and applies a logarithmic transformation aswell as a
-seasonal adjustment.
+seasonal adjustment on downloaded data.
 The function returns seasonal adjusted
 first derivatives (lagged if desired).
 }
