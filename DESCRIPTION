@@ -20,6 +20,7 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     dplyr,
+    lifecycle,
     ggplot2,
     glmnet,
     gtrendsR,
