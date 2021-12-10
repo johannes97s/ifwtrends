@@ -4,18 +4,18 @@
 \alias{forecast_q}
 \title{Quarterly forecast evaluation of vintages}
 \usage{
-forecast_q(r_list, dat, fd = T)
+forecast_q(r_list, data, fd = T)
 }
 \arguments{
 \item{r_list}{A Google Trends time series in form of a tibble (or tsibble)
 which is used to predict the next quarter in data.}
 
-\item{fd}{A logical value to indicate if you want to use the first differences
-in r_list (true) or normal values (false).}
-
 \item{data}{A tibble with some data
 you want to predict for the next quarter
 that is somewhat correlated with the data in r_list.}
+
+\item{fd}{A logical value to indicate if you want to use the first differences
+in r_list (true) or normal values (false).}
 }
 \value{
 Returns a list with the the predicted data and the used model
