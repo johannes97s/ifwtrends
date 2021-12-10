@@ -115,7 +115,7 @@ gtseas_adj <- function(timeseries = NULL, keyword = NA, category = NA,
   if (is.null(timeseries)) {
 
     # Query for the category respective keyword
-    if (!is.na(keyword)) {
+    if (all(!is.na(keyword))) {
       series <- gtsearch(
         keyword = keyword, geo = geo,
         timeframe = timeframe
