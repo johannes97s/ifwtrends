@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
-#' seas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
+#' gtseas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 #'
 #' @import dplyr zoo
 #' @importFrom magrittr %>%
@@ -58,6 +58,7 @@ seas_adj <- function(series, freq = "month", log.trafo = F, method = "arima"){
       stop("seas_adj(): Please enter 'month' respective 'quarter' for freq.")
     }
 
+    # compute the first differences according to month/quarter.
     series <- series %>%
       group_by_key() %>%
       mutate(value = c(rep(0,k), diff(value, k)))
@@ -114,7 +115,7 @@ gtseas_adj <- function(timeseries = NULL, keyword = NA, category = NA,
   if (is.null(timeseries)) {
 
     # Query for the category respective keyword
-    if (!is.na(keyword)) {
+    if (all(!is.na(keyword))) {
       series <- gtsearch(
         keyword = keyword, geo = geo,
         timeframe = timeframe
@@ -141,7 +142,6 @@ gtseas_adj <- function(timeseries = NULL, keyword = NA, category = NA,
       log.trafo = log.trafo, method = method
     )
   }
-
 
   return(seas_adj_series)
 }

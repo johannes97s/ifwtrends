@@ -4,14 +4,15 @@
 #' of the series' regression on the factors
 #' in form of a tibble.
 #'
-#' @param series tibble with multiple time series as columns.
-#' @param factors tibble with factors as columns.
-#' @param plot plot=TRUE returns additionally to the tibble with
-#' \eqn{R^2} a bar plot of these.
+#' @param series A tibble with multiple time series as columns.
+#' @param factors A tibble with factors as columns.
+#' @param plot A logical indicator whether the function should
+#' additionally return a bar plot of the \eqn{R^2}.
 #'
-#' @return Tibble of \eqn{R^2} from each time series for each factor.
+#' @return A tibble of \eqn{R^2} from each time series for each factor will be
+#' returned.
 #' If \code{plot = TRUE}, a plot containing the \eqn{R^2} is returned
-#' and displayed.
+#' and displayed additonally.
 #'
 #' @examples
 #' dat <- pca(
@@ -37,6 +38,7 @@ factorR2 <- function(series, factors, plot = F) {
   stopifnot("series must contain leading time column" = class(series[[1]]) == "Date")
   stopifnot("factors must contain leading time column" = class(factors[[1]]) == "Date")
 
+  # An empty list to later catch all data
   R2 <- vector("list", length = (dim(series)[2] - 1))
 
   # Helper to get the R2
@@ -50,7 +52,7 @@ factorR2 <- function(series, factors, plot = F) {
     R2[[i]] <- apply(series[-1], 2, f)
   }
 
-  # Combine the results
+  # Combine the results to a tibble
   res <- bind_cols(
     tibble(factors = str_c("PC", 1:length(factors[-1]))),
     bind_rows(R2)
@@ -60,7 +62,8 @@ factorR2 <- function(series, factors, plot = F) {
     # Plot is not displayed
     return(res)
   } else {
-    # Conversion to long tibble for creating a ggplot
+
+    # Conversion to a long tibble for creating a ggplot
     pcomp <- pivot_longer(factors, -date, names_to = "series", values_to = "value")
     series <- pivot_longer(series, -date, names_to = "series", values_to = "value")
     r2 <- pivot_longer(res, -factors, names_to = "series", values_to = "R2")

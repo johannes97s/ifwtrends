@@ -7,8 +7,9 @@
 daily_series(keyword = c("arbeitslos"), geo = "DE", from = "2006-01-01")
 }
 \arguments{
-\item{keyword}{Search query. As of now, you can only enter one single
-keyword.}
+\item{keyword}{A character vector consisting of the
+search query. As of now, you can only enter one single
+keyword. Categories are not possible.}
 
 \item{geo}{A geographical region to restrict the search query to.}
 
@@ -18,6 +19,9 @@ keyword.}
 Tibble with daily relative search volumes.
 }
 \description{
+Since Google only provides data for a short time
+period of less than nine months, one needs to apply tricks
+to get a longer time series with daily data.
 \code{daily_series} estimates
 via the Chow-Lin method a consistent long daily time series based
 on monthly data.

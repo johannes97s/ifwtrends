@@ -32,15 +32,15 @@ A tsibble with a time series of Google Trends search volume from
 given inputs and the keyword respective category as key for it.
 }
 \description{
-\code{gtsearch} is a simple wrapper
+\code{\link[=gtsearch]{gtsearch()}} is a simple wrapper
 around the \code{\link[gtrendsR:gtrends]{gtrendsR::gtrends()}} function. It only
 returns a time series in form of a tibble with the actual
 (in relative terms) search volume of keywords or categories.
 }
 \details{
-\code{gtsearch} returns a simple tibble with the original
+\code{\link[=gtsearch]{gtsearch()}} returns a simple tibble with the original
 interest data in a keyword or category from Google Trends.
 }
 \examples{
-gtsearch(keywords = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
+gtsearch(keyword = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
 }

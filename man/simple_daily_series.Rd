@@ -31,7 +31,9 @@ A tibble with a date column and a value column of a
 daily time series.
 }
 \description{
-(experimental) This is a more simplistic approach to generate daily
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This is a more simplistic approach to generate daily
 data in a much broader time frame, where Google usually
 doesn't provide daily data at all. See more in section
 Method.
@@ -55,7 +57,7 @@ the \code{\link[tempdisagg:td]{tempdisagg::td()}} function from the \code{tempdi
 simple_daily_series(
   keyword = "covid-19",
   geo = "DE",
-  from = "2020-01-01",
+  from = "2020-04-01",
   verbose = TRUE
 )
 }

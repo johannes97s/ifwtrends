@@ -40,7 +40,7 @@ category_test = c(560,277)
 
 
 
-res_raw <- g_index(keyword = NA, category = category_test,
+res_raw <- gtpreparation(keyword = NA, category = category_test,
                    time = str_c(start, " ", end),
                    lags = 2)
 
@@ -110,14 +110,3 @@ series %>%
   ggplot(aes(x = time, y = value, color = cat)) +
     geom_line() +
     theme(legend.position = "none")
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> cd2b3a7a6398ce30b61440e3ef66c94003622d75

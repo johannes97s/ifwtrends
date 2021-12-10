@@ -42,8 +42,4 @@ This method is not implemented as of the current development state.
 \code{trend_adj} takes a tibble
 of time series and returns a tibble with trend adjusted values.
 }
-\examples{
-series <- trendecon::ts_gtrends("ikea", time = "all")
-trend_adj(series, log.trafo = TRUE, method = "moving_avg")
-}
 \keyword{internal}

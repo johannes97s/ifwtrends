@@ -59,16 +59,15 @@ there is a polynom of degree 5
 with id-fixed effects estimated,
 which captures the common trend.
 The residuals where then used as the adjusted series.
-For further detail, see Woloszko et al. (2020). Attention:
-This method is not implemented as of the current development state.
+For further detail, see Woloszko et al. (2020).
 }
 
 \examples{
-series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "all")
+series <- trendecon::ts_gtrends("ikea", time = "all")
 gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 
 gttrend_adj(
-category = 179, timeframe = "2015-01-01 2021-01-01",
-method = "moving_avg", log.trafo = FALSE
+  category = 179, timeframe = "2015-01-01 2021-01-01",
+  method = "moving_avg", log.trafo = FALSE
 )
 }

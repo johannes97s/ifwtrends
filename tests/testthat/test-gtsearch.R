@@ -10,7 +10,10 @@ check_connection <- function() {
   )
 }
 
-test_that("returns a tbl in due length", {
+# -------------------------------------------------------------------------
+
+
+test_that("returns a tibble in due length", {
 
   skip_if_not(check_connection(), message = "No connection couldn't be established!")
 
@@ -44,3 +47,38 @@ test_that("returns a tbl in due length", {
     substring(time_frame, 12, 21)
   )
 })
+
+# -------------------------------------------------------------------------
+
+test_that("Function returns a tbl_ts if wished", {
+
+  skip_if_not(check_connection(), message = "No connection couldn't be established!")
+
+  keywords <- c("jupiter", "mars")
+  time_frame <- "2020-01-01 2020-06-01"
+
+  expectation1 <- gtsearch(
+    keyword = keywords,
+    timeframe = time_frame,
+    as_tbl_ts = TRUE
+  )
+
+  expect_s3_class(
+    expectation1,
+    "tbl_ts"
+  )
+
+  expectation2 <- gtsearch(
+    keyword = keywords,
+    timeframe = time_frame,
+    as_tbl_ts = FALSE
+  )
+
+  expect(!("tbl_ts" %in% class(expectation2)),
+         failure_message = "Tibble is a tsibble when it should not be!")
+
+})
+
+# -------------------------------------------------------------------------
+
+
