@@ -26,10 +26,11 @@
 #' factors <- dplyr::select(dat, date, 2:3)
 #'
 #' factorR2(series, factors, plot = TRUE)
-#' @import tibble ggplot2
+#' @import ggplot2
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr bind_cols
 #' @importFrom magrittr %>%
+#' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_c
 #' @importFrom stats lm

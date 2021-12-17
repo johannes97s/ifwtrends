@@ -3,11 +3,12 @@
 #' @description \code{est_trend} downloads for a sample
 #' of 250 random Google Trends categories the relative search volume.
 #' Based on this, a common trend is calculated and saved in an
-#' internal dataframe the user cannot access but the packages' functions do.
+#' internal dataframe the user cannot access
+#' but the packages' functions do.
 #' However, the user can use this
 #' function to calculate the trend for himself.
 #' The internal dataframe used in other functions is updated on a
-#' monthly basis (on the fifth day of each month) on GitHub.
+#' monthly basis (on the seventh day of each month) on GitHub.
 #'
 #' @return Returns a tibble with a
 #' time series, which consists of a polynomial trend
@@ -19,13 +20,14 @@
 #' @examples \dontrun{
 #' est_trend()
 #' }
-#' @import tibble gtrendsR rlang
+#' @import gtrendsR rlang
 #' @importFrom dplyr arrange
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom magrittr %>%
+#' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
 #' @importFrom stats lm
 #' @importFrom stats poly

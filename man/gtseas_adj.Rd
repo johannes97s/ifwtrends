@@ -61,5 +61,4 @@ series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-
 gtseas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
 
 gtseas_adj(category = 179, timeframe = "2015-01-01 2021-01-01", method = "arima")
-
 }

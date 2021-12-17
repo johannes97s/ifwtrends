@@ -34,6 +34,5 @@ time series and returns a tibble with seasonal adjusted values.
 \examples{
 series <- trendecon::ts_gtrends(c("ikea", "saturn"), time = "2020-01-01 2021-06-01")
 gtseas_adj(series, freq = "month", log.traf = TRUE, method = "firstdiff")
-
 }
 \keyword{internal}

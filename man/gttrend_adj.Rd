@@ -28,28 +28,21 @@ If another data format is given, it will be coerced to a tsibble.}
 \item{timeframe}{A time frame to search the queries in consisting of
 a start date and an end date in YYYY-MM-DD form.}
 
-\item{method}{Character, which method for
-adjustment should be choosen. See Details.}
+\item{method}{As trend adjustment method, one can choose
+between "moving_avg", "firstdiff", and "comtrend." See Details for
+more information.}
 
 \item{log.trafo}{Logical,
 indicates if value should be transformed to log(value).}
 }
 \value{
-Returns a tsibble with sesonal adjusted values and a
-date column. Any key column will be lost. Therefore, you should only
-to this with single time series with one keyword or category.
-}
-\description{
-This function can either trend adjust a given time series
-or create a new time series based on a Google Trends search query
-and then directly trend adjust it.
-}
-\section{Methods}{
+Returns a tibble with trend adjusted values and a
+date column.
 
-For trend_method there can be choosen between
+For a trend method, there can be choosen between
 \code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 If you choose \code{"firstdiff"},
-first differences with \code{lag = 1} is executed.
+first differences with \code{lag = 1} are computed.
 If you choose the moving average,
 the time series will be decomposed into its components
 and the trend will be subtracted
@@ -57,15 +50,23 @@ from the whole time series (using loess).
 With \code{"comtrend"},
 there is a polynom of degree 5
 with id-fixed effects estimated,
-which captures the common trend.
-The residuals where then used as the adjusted series.
-For further detail, see Woloszko et al. (2020).
+which captures the common trend of a sample of categories
+in Google Trends.
+The residuals are then used as the adjusted series.
+For further detail, see Woloszko et al. (2020) and
+the function \code{\link[=est_trend]{est_trend()}}.
 }
-
+\description{
+This function can either trend adjust a given time series
+or create a new time series based on a Google Trends search query
+and then directly trend adjust it.
+}
 \examples{
+# Trend adjusting a already established series.
 series <- trendecon::ts_gtrends("ikea", time = "all")
 gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 
+# Search for a new series and trend adjust it
 gttrend_adj(
   category = 179, timeframe = "2015-01-01 2021-01-01",
   method = "moving_avg", log.trafo = FALSE

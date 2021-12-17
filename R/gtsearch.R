@@ -24,7 +24,6 @@ helper_search <- function(series, is_keyword, timeframe, as_tbl_ts = TRUE) {
   # time. In that case, the gtrendsR function would return simply NULL.
   # This tries to catch that.
   if (is.null(series)) {
-
     message("No results for given keyword/category could be found. Returning a tibble with zeroes.")
 
     # download a dummy series that always exist, e.g. "google"
@@ -34,7 +33,7 @@ helper_search <- function(series, is_keyword, timeframe, as_tbl_ts = TRUE) {
       as_tibble()
 
     dummy$hits <- 0
-    dummy[,3] <- "no_data"
+    dummy[, 3] <- "no_data"
     series <- dummy
   }
 
@@ -86,7 +85,6 @@ helper_search <- function(series, is_keyword, timeframe, as_tbl_ts = TRUE) {
 #'
 #' @examples
 #' gtsearch(keyword = c("pluto", "saturn"), timeframe = "2020-01-01 2020-06-01")
-#' @import tibble
 #' @importFrom dplyr select
 #' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
@@ -110,17 +108,14 @@ gtsearch <- function(keyword = NA,
     )$interest_over_time %>%
       helper_search(is_keyword = FALSE, timeframe = timeframe, as_tbl_ts = as_tbl_ts)
 
-  # else go by keyword
+    # else go by keyword
   } else if (anyNA(category) | category == 0) {
     result <- gtrends(
       keyword = keyword, geo = geo,
       time = timeframe
     )$interest_over_time %>%
       helper_search(is_keyword = TRUE, timeframe = timeframe, as_tbl_ts = as_tbl_ts)
-
   }
 
   return(result)
 }
-
-

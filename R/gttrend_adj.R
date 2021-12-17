@@ -45,15 +45,16 @@ helper_adj <- function(series, log.trafo = F) {
 #' use a series with one keyword respective category.
 #' @param log.trafo Logical, indicates if value
 #' should be transformed to log(value).
-#' @param method Character which method for
-#' trend adjustment should be choosen. See Details.
+#' @param method As trend adjustment method, one can choose
+#' between "moving_avg", "firstdiff", and "comtrend." See Details for
+#' more information.
 #' @return Returns a tibble with trend adjusted values and a
 #' date column.
 #'
-#' For trend_method there can be choosen between
+#' For a trend method, there can be choosen between
 #' \code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 #' If you choose \code{"firstdiff"},
-#' first differences with \code{lag = 1} is executed.
+#' first differences with \code{lag = 1} are computed.
 #' If you choose the moving average,
 #' the time series will be decomposed into its components
 #' and the trend will be subtracted
@@ -61,10 +62,11 @@ helper_adj <- function(series, log.trafo = F) {
 #' With \code{"comtrend"},
 #' there is a polynom of degree 5
 #' with id-fixed effects estimated,
-#' which captures the common trend.
-#' The residuals where then used as the adjusted series.
-#' For further detail, see Woloszko et al. (2020). Attention:
-#' This method is not implemented as of the current development state.
+#' which captures the common trend of a sample of categories
+#' in Google Trends.
+#' The residuals are then used as the adjusted series.
+#' For further detail, see Woloszko et al. (2020) and
+#' the function [est_trend()].
 #'
 #' @importFrom dplyr group_by
 #' @importFrom dplyr left_join
@@ -126,17 +128,16 @@ trend_adj <- function(series, method = "moving_avg", log.trafo = FALSE) {
 #' a start date and an end date in YYYY-MM-DD form.
 #' @param log.trafo Logical,
 #' indicates if value should be transformed to log(value).
-#' @param method Character, which method for
-#' adjustment should be choosen. See Details.
-#' @return Returns a tsibble with sesonal adjusted values and a
-#' date column. Any key column will be lost. Therefore, you should only
-#' to this with single time series with one keyword or category.
+#' @param method As trend adjustment method, one can choose
+#' between "moving_avg", "firstdiff", and "comtrend." See Details for
+#' more information.
+#' @return Returns a tibble with trend adjusted values and a
+#' date column.
 #'
-#' @section Methods:
-#' For trend_method there can be choosen between
+#' For a trend method, there can be choosen between
 #' \code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 #' If you choose \code{"firstdiff"},
-#' first differences with \code{lag = 1} is executed.
+#' first differences with \code{lag = 1} are computed.
 #' If you choose the moving average,
 #' the time series will be decomposed into its components
 #' and the trend will be subtracted
@@ -144,14 +145,18 @@ trend_adj <- function(series, method = "moving_avg", log.trafo = FALSE) {
 #' With \code{"comtrend"},
 #' there is a polynom of degree 5
 #' with id-fixed effects estimated,
-#' which captures the common trend.
-#' The residuals where then used as the adjusted series.
-#' For further detail, see Woloszko et al. (2020).
+#' which captures the common trend of a sample of categories
+#' in Google Trends.
+#' The residuals are then used as the adjusted series.
+#' For further detail, see Woloszko et al. (2020) and
+#' the function [est_trend()].
 #'
 #' @examples
+#' # Trend adjusting a already established series.
 #' series <- trendecon::ts_gtrends("ikea", time = "all")
 #' gttrend_adj(series, log.trafo = TRUE, method = "moving_avg")
 #'
+#' # Search for a new series and trend adjust it
 #' gttrend_adj(
 #'   category = 179, timeframe = "2015-01-01 2021-01-01",
 #'   method = "moving_avg", log.trafo = FALSE
@@ -178,14 +183,14 @@ gttrend_adj <- function(timeseries = NULL, keyword = NA, category = NA,
       )
     }
 
-    # Additionally now, seasonal adjust the new time series
+    # Additionally now, trend adjust the new time series
     trend_adj_series <- trend_adj(
       series = series, method = method,
       log.trafo = log.trafo
     )
   } else if (!is.null(timeseries) & ((is.na(keyword) & is.na(category)))) {
 
-    # Seasonal adjust the new time series
+    # Trend adjust the new time series
     trend_adj_series <- trend_adj(
       series = timeseries, method = method,
       log.trafo = log.trafo

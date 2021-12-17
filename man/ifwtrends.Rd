@@ -18,21 +18,28 @@ and uses that to trend adjust in some other functions. This is updated on
 a monthly basis in the package. However, the user may use this function
 for himself on his own.
 \item \code{\link[=factorR2]{factorR2()}}: Estimates the R squared between keywords.
-\item \code{\link[=forecast_m]{forecast_m()}}: Makes a monthly forecast.
-\item \code{\link[=forecast_q]{forecast_q()}}: Makes a quarterly forecast.
+\item \code{\link[=forecast_m]{forecast_m()}}: Makes a monthly forecast on a time series based on the data
+of some Google Trends data. \strong{Does currently not work correctly.}
+\item \code{\link[=forecast_q]{forecast_q()}}: Makes a quarterly orecast on a time series based on the data
+of some Google Trends data. \strong{Does currently not work correctly.}
 \item \code{\link[=gtpreparation]{gtpreparation()}}: Makes a search query and applies a
 trend adjustment (with the common
 trend), a seasonal adjustment and, if wished, adds lag variables
 to the resulting data frame.
-\item \code{\link[=gtsearch]{gtsearch()}}: Makes a Google search.
+\item \code{\link[=gtsearch]{gtsearch()}}: Makes a simple Google search for either
+a keyword or a category.
 \item \code{\link[=gtseas_adj]{gtseas_adj()}}: Seasonal adjusts a given time series or uses
-\code{\link[=gtsearch]{gtsearch()}} to seasonal adjust a search query. The seasonal adjustment
+\code{\link[=gtsearch]{gtsearch()}} internally to seasonal
+adjust a search query. The seasonal adjustment
 is done via X-13-ARIMA-SEATS from \code{\link[seasonal:seas]{seasonal::seas()}}.
 \item \code{\link[=gttrend_adj]{gttrend_adj()}}: Trend adjusts a given time series or uses
-\code{\link[=gtsearch]{gtsearch()}} to trend adjust a search query. It either can use
-first differences or a moving average to adjust the time series.
+\code{\link[=gtsearch]{gtsearch()}} internally to trend
+adjust a search query. It either can use
+first differences, a moving average or the common trend computed
+by \code{\link[=est_trend]{est_trend()}} to adjust the time series.
 \item \code{\link[=pca]{pca()}}: Does a Principal Component Analysis on a search query.
-\item \code{\link[=roll]{roll()}}: Does a rolling \code{\link[=pca]{pca()}}.
+\item \code{\link[=roll]{roll()}}: Creates some rolling Google
+search queries for different time frames.
 \item \code{\link[=simple_daily_series]{simple_daily_series()}}: A more simplistic alternativ for
 \code{\link[=daily_series]{daily_series()}} that doesn't rely on inner functions from other packages.
 }
