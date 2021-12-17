@@ -50,7 +50,7 @@ datastream <- readxl::read_xlsx("./vignettes/service_imports.xlsx") %>%
 # Forecast the datastream data --------------------------------------------
 
 
-forecast_q <- function(r_list, dat, fd = T) {
+forecast_q <- function(r_list, data, fd = T) {
 
   # get quarterly data
   r_raw <- r_list[1:length(r_list) %% 3 == 0]
@@ -88,8 +88,8 @@ forecast_q <- function(r_list, dat, fd = T) {
 
 
   r_raw <- lapply(r_raw, function(x) {
-    left_join(x, dat[1:nrow(x), ], by = "time") %>%
-      select(time, dat = value, everything()) %>%
+    left_join(x, data[1:nrow(x), ], by = "time") %>%
+      select(time, id, data = value, everything()) %>%
       filter(time != as.Date("2011-01-01")) %>% # omit structural breaks
       filter(time != as.Date("2016-01-01")) %>%
       mutate(across(everything(), function(y) replace(y, y == -Inf, NA_real_))) %>%
@@ -114,33 +114,35 @@ forecast_q <- function(r_list, dat, fd = T) {
   })
   return(r)
 
-  # Function to estimate the model
+  # Function to estimate the model via RIDGE regression
   build_model <- function(series) {
-    y <- as.matrix(series[2])
-    x <- as.matrix(series[-c(1, 2)])
+    y <- as.matrix(series[1])
+    x <- as.matrix(series[-c(1)])
 
+    # Cross validation
+    #cv <- cv.glmnet(x, y, alpha = 0)
 
-    cv <- cv.glmnet(x, y, alpha = 0)
-    model <- glmnet(x, y, alpha = 0, lambda = 0) # cv$lambda.min) #alpha = 1 LASSO
-    return(model) # lambda= 0 OLS
+    # Alternative arguments for glmnet():
+    # OLS: lambda= 0
+    # LASSO: alpha = 1
+    model <- glmnet(x = x, y = y, alpha = 0, lambda = 0) # cv$lambda.min)
+
+    return(model)
   }
-
-
-
 
   # Trends Data to forecast with previous estimated model
   covariats <- lapply(r, function(x) data.matrix(x[-(1:3)]))
 
-  # estimate model, deselect everything besides variables
-  models <- lapply(data.matrix(r[-(1:3)]), function(x) build_model(x))
+  # estimate model, deselect everything besides variables (columns 1, 2)
+  models <- lapply(data.matrix(r), function(x) build_model(x[-(1:2)]))
 
-  pred_values <- mapply(predict, models, covariats[-c(1)]) # forecast
+  pred_values <- mapply(predict, object = models, newx = covariats) # forecast
 
   last_values <- sapply(pred_values, last) # select last value in each vintage as forecast
   # for relevant quarter
 
   forec <- tibble(
-    time = seq.Date(max(first(r)$time) + months(3), max(last(r)$time), by = "quarter"),
+    time = seq.Date(max(first(r)$time), max(last(r)$time), by = "quarter"),
     value = last_values
   ) %>%
     mutate(time = floor_date(time, "quarter")) %>%
@@ -153,7 +155,7 @@ forecast_q <- function(r_list, dat, fd = T) {
   )) # model estimated with contemporary data
 }
 
-forecast_q(r_list, dat, fd = T)$forec %>%
+forecast_q(r_list, datastream, fd = T)$forec %>%
   left_join(dat, by = "time") %>%
   pivot_longer(cols = -time, names_to = "id", values_to = "value") %>%
   ggplot(aes(x = time, y = value, color = id)) +
