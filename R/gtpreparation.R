@@ -76,7 +76,7 @@ add_id_column <- function(data, keyword, category) {
 #' (optionally with additional columns containing
 #' lags).
 #'
-#' @import tibble zoo
+#' @import zoo
 #' @importFrom dplyr across
 #' @importFrom dplyr filter
 #' @importFrom dplyr full_join

@@ -39,6 +39,8 @@
 #' @importFrom glmnet cv.glmnet
 #' @importFrom glmnet glmnet
 #' @importFrom stats predict
+#' @importFrom tibble as_tibble
+#' @importFrom tibble tibble
 #' @export
 forecast_m <- function(r_list, data, fd = T) {
   colnames(data)[1] <- "time"

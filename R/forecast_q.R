@@ -40,6 +40,8 @@
 #' @importFrom glmnet cv.glmnet
 #' @importFrom glmnet glmnet
 #' @importFrom stats predict
+#' @importFrom tibble as_tibble
+#' @importFrom tibble tibble
 #' @export
 forecast_q <- function(r_list, data, fd = T) {
 

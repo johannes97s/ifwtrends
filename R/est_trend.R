@@ -20,13 +20,14 @@
 #' @examples \dontrun{
 #' est_trend()
 #' }
-#' @import tibble gtrendsR rlang
+#' @import gtrendsR rlang
 #' @importFrom dplyr arrange
 #' @importFrom dplyr bind_cols
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom magrittr %>%
+#' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
 #' @importFrom stats lm
 #' @importFrom stats poly
