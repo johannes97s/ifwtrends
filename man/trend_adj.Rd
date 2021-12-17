@@ -12,8 +12,9 @@ with columns \code{time}, \code{value} and optional column \code{id}.
 Be careful, that when using the method \code{moving_avg}, you can only
 use a series with one keyword respective category.}
 
-\item{method}{Character which method for
-trend adjustment should be choosen. See Details.}
+\item{method}{As trend adjustment method, one can choose
+between "moving_avg", "firstdiff", and "comtrend." See Details for
+more information.}
 
 \item{log.trafo}{Logical, indicates if value
 should be transformed to log(value).}
@@ -22,10 +23,10 @@ should be transformed to log(value).}
 Returns a tibble with trend adjusted values and a
 date column.
 
-For trend_method there can be choosen between
+For a trend method, there can be choosen between
 \code{"firstdiff"}, \code{"moving_avg"} and \code{"comtrend"}.
 If you choose \code{"firstdiff"},
-first differences with \code{lag = 1} is executed.
+first differences with \code{lag = 1} are computed.
 If you choose the moving average,
 the time series will be decomposed into its components
 and the trend will be subtracted
@@ -33,10 +34,11 @@ from the whole time series (using loess).
 With \code{"comtrend"},
 there is a polynom of degree 5
 with id-fixed effects estimated,
-which captures the common trend.
-The residuals where then used as the adjusted series.
-For further detail, see Woloszko et al. (2020). Attention:
-This method is not implemented as of the current development state.
+which captures the common trend of a sample of categories
+in Google Trends.
+The residuals are then used as the adjusted series.
+For further detail, see Woloszko et al. (2020) and
+the function \code{\link[=est_trend]{est_trend()}}.
 }
 \description{
 \code{trend_adj} takes a tibble

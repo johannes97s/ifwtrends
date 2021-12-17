@@ -1,9 +1,9 @@
 ###
-#Takes a list of vintages r_list, generated with roll and a quarterly target variable dat
-#to evaluate a forecast.
-#Google Data should be log-transformed
-#currently it uses a RIDGE-Regression but other models such as OLS, LASSO or
-#PCA are available (change the relevant lines of code)
+# Takes a list of vintages r_list, generated with roll and a quarterly target variable dat
+# to evaluate a forecast.
+# Google Data should be log-transformed
+# currently it uses a RIDGE-Regression but other models such as OLS, LASSO or
+# PCA are available (change the relevant lines of code)
 
 
 #' Quarterly forecast evaluation of vintages
@@ -34,7 +34,7 @@
 #' results.
 #'
 #' @examples
-#' 1+1
+#' 1 + 1
 #' 1 + 2
 #' @importFrom magrittr %>%
 #' @importFrom glmnet cv.glmnet
@@ -103,7 +103,6 @@ forecast_q <- function(r_list, data, fd = T) {
     x[is.na(x)] <- 0
     return(x)
   })
-  return(r)
 
   # Function to estimate the model
   build_model <- function(series) {

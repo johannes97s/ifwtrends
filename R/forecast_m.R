@@ -47,7 +47,7 @@ forecast_m <- function(r_list, data, fd = T) {
     r_list <-
       lapply(
         r_list,
-        function(x){
+        function(x) {
           mutate(x,
             time = time,
             across(
@@ -59,7 +59,7 @@ forecast_m <- function(r_list, data, fd = T) {
         }
       )
   }
-  print("fd ok")
+
   r_raw <- lapply(r_list, function(x) {
     left_join(x, data[1:nrow(x), ], by = "time") %>%
       select(time, data = value, everything()) %>%
@@ -69,7 +69,6 @@ forecast_m <- function(r_list, data, fd = T) {
       mutate(across(everything(), function(y) replace(y, y == Inf, NA_real_)))
   })
 
-  print("r_raw ok")
   # use PCA
   # r_factors <- lapply(r_raw, function(x){
   #   pc <- as_tibble(prcomp(x[-c(1,2)])$x)
@@ -93,11 +92,11 @@ forecast_m <- function(r_list, data, fd = T) {
     lm(data ~ ., data = series[-1])
   }
 
-  covariats <- lapply(r, function(x) x[-c(1,2)]) #Trends Data to forecast with
-  #previous estimated model
-  models <- lapply(lag(r)[-1], function(x) build_model(x))           #estimate model
+  covariats <- lapply(r, function(x) x[-c(1, 2)]) # Trends Data to forecast with
+  # previous estimated model
+  models <- lapply(lag(r)[-1], function(x) build_model(x)) # estimate model
 
-  print("models ok")
+
   pred_values <- mapply(predict, models, covariats[-c(1)]) # forecast
 
   last_values <- sapply(pred_values, last) # select last value in each vintage as forecast
@@ -112,10 +111,11 @@ forecast_m <- function(r_list, data, fd = T) {
     rename(index = value)
 
 
-  last_model = last(models)
-  s_niv = lapply(models, function(x) summary(x)$coef[,4])
-  return(list(forec = forec,             #returns forcasted values and
-              last_model = last_model,
-              s_niv = s_niv))
-
+  last_model <- last(models)
+  s_niv <- lapply(models, function(x) summary(x)$coef[, 4])
+  return(list(
+    forec = forec, # returns forcasted values and
+    last_model = last_model,
+    s_niv = s_niv
+  ))
 }

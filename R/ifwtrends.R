@@ -15,28 +15,35 @@
 #'
 #' * [factorR2()]: Estimates the R squared between keywords.
 #'
-#' * [forecast_m()]: Makes a monthly forecast.
+#' * [forecast_m()]: Makes a monthly forecast on a time series based on the data
+#' of some Google Trends data. **Does currently not work correctly.**
 #'
-#' * [forecast_q()]: Makes a quarterly forecast.
+#' * [forecast_q()]: Makes a quarterly orecast on a time series based on the data
+#' of some Google Trends data. **Does currently not work correctly.**
 #'
 #' * [gtpreparation()]: Makes a search query and applies a
 #' trend adjustment (with the common
 #' trend), a seasonal adjustment and, if wished, adds lag variables
 #' to the resulting data frame.
 #'
-#' * [gtsearch()]: Makes a Google search.
+#' * [gtsearch()]: Makes a simple Google search for either
+#' a keyword or a category.
 #'
 #' * [gtseas_adj()]: Seasonal adjusts a given time series or uses
-#' [gtsearch()] to seasonal adjust a search query. The seasonal adjustment
+#' [gtsearch()] internally to seasonal
+#' adjust a search query. The seasonal adjustment
 #' is done via X-13-ARIMA-SEATS from [seasonal::seas()].
 #'
 #' * [gttrend_adj()]: Trend adjusts a given time series or uses
-#' [gtsearch()] to trend adjust a search query. It either can use
-#' first differences or a moving average to adjust the time series.
+#' [gtsearch()] internally to trend
+#' adjust a search query. It either can use
+#' first differences, a moving average or the common trend computed
+#' by [est_trend()] to adjust the time series.
 #'
 #' * [pca()]: Does a Principal Component Analysis on a search query.
 #'
-#' * [roll()]: Does a rolling [pca()].
+#' * [roll()]: Creates some rolling Google
+#' search queries for different time frames.
 #'
 #' * [simple_daily_series()]: A more simplistic alternativ for
 #' [daily_series()] that doesn't rely on inner functions from other packages.

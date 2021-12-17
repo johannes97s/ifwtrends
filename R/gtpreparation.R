@@ -17,13 +17,13 @@
 #' @importFrom magrittr %>%
 #' @importFrom tidyselect everything
 #' @keywords internal
-add_id_column <- function(data, keyword, category){
-
-  if (!("id" %in%  colnames(data))) {
-    # Case if a single keyword are used
+add_id_column <- function(data, keyword, category) {
+  if (!("id" %in% colnames(data))) {
+    # Case if a single keyword is used
     if (length(keyword == 1) & category == 0) {
       data <- mutate(
-        data, id = keyword
+        data,
+        id = keyword
       ) %>%
         select(id, everything())
     } else {
@@ -32,12 +32,14 @@ add_id_column <- function(data, keyword, category){
         data,
         id = as.character(
           gtrendsR::categories[gtrendsR::categories$id == category, 1]
-        )) %>%
+        )
+      ) %>%
         select(id, everything())
     }
     # If more than one keyword is used, the ID
     # column will be automatically added by the
-    # search function before.
+    # search function before. Hence, this function
+    # doesn't need a thing to do.
   }
   return(data)
 }
@@ -74,18 +76,26 @@ add_id_column <- function(data, keyword, category){
 #' (optionally with additional columns containing
 #' lags).
 #'
-#' @import tibble zoo dplyr
+#' @import tibble zoo
+#' @importFrom dplyr across
+#' @importFrom dplyr filter
+#' @importFrom dplyr full_join
+#' @importFrom dplyr lag
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom gtrendsR gtrends
 #' @importFrom magrittr %>%
+#' @importFrom lubridate as_date
+#' @importFrom lubridate years
+#' @importFrom lubridate ymd
+#' @importFrom stringr str_c
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyselect any_of
-#' @importFrom lubridate as_date
-#' @importFrom lubridate ymd
-#' @importFrom lubridate years
-#' @importFrom stringr str_c
-#' @importFrom gtrendsR gtrends
 #' @importFrom trendecon ts_gtrends
 #' @importFrom tsibble as_tsibble
+#' @importFrom tsibble group_by_key
 #' @examples
 #' gtpreparation(keyword = "ikea", time = "2015-01-01 2021-01-01")
 #' @export
@@ -103,7 +113,7 @@ gtpreparation <- function(keyword = NA,
   # Only monthly time series can be used. Hence,
   # anything shorter than 5 years cannot be analysed (as this
   # are weekly/daily time series).
-  stopifnot("You need to use a time frame longer than 5 years (otherwise we wont have monthly data)!" =  ymd(end) - ymd(start) > years(5))
+  stopifnot("You need to use a time frame longer than 5 years (otherwise we wont have monthly data)!" = ymd(end) - ymd(start) > years(5))
 
   # data containing a trend calculated on 250 GTrends time series'.
   # comtrend is saved as internal data in
@@ -151,7 +161,7 @@ gtpreparation <- function(keyword = NA,
   result <- grouped_data %>%
     ungroup() %>%
     rename(lag_0 = s_adj) %>%
-    filter(across(everything(), ~ !is.na(.)))%>%
+    filter(across(everything(), ~ !is.na(.))) %>%
     pivot_longer(cols = -c(id, time), names_to = "lag", values_to = "value") %>%
     pivot_wider(names_from = lag, values_from = value)
 
@@ -161,7 +171,8 @@ gtpreparation <- function(keyword = NA,
       result,
       id = as.character(
         gtrendsR::categories[gtrendsR::categories$id == category, 1]
-      ))
+      )
+    )
   }
 
   return(result)

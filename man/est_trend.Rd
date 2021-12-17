@@ -15,11 +15,12 @@ of degree five of a category.
 \code{est_trend} downloads for a sample
 of 250 random Google Trends categories the relative search volume.
 Based on this, a common trend is calculated and saved in an
-internal dataframe the user cannot access but the packages' functions do.
+internal dataframe the user cannot access
+but the packages' functions do.
 However, the user can use this
 function to calculate the trend for himself.
 The internal dataframe used in other functions is updated on a
-monthly basis (on the fifth day of each month) on GitHub.
+monthly basis (on the seventh day of each month) on GitHub.
 }
 \section{Warning}{
 

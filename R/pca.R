@@ -16,7 +16,6 @@
 #' @examples
 #' pca(keywords = c("ikea", "saturn"), time = "2018-01-01 2020-01-01")
 #'
-#' @import tibble
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
@@ -24,12 +23,14 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom magrittr %>%
 #' @importFrom gtrendsR gtrends
+#' @importFrom lubridate as_date
+#' @importFrom tibble as_tibble
+#' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
-#' @importFrom stats prcomp
 #' @importFrom tidyselect any_of
 #' @importFrom tsbox ts_ts
-#' @importFrom lubridate as_date
+#' @importFrom stats prcomp
 #' @importFrom stringr str_c
 #' @importFrom stringr str_sub
 #' @export
@@ -53,13 +54,13 @@ pca <- function(keywords = NA,
   }
 
   dates <- seq.Date(as.Date(start), as.Date(end), by = "month")
-  dat <- tibble::tibble()
+  dat <- tibble()
 
   # Loop through input to get a temporary result df for every input
   for (kw in keywords) {
     for (cat in categories) {
       temp <-
-        tibble::as_tibble(gtrends(
+        as_tibble(gtrends(
           keyword = kw,
           category = cat,
           geo = geo,
